@@ -1,0 +1,17 @@
+.header { height: 88px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #dfe4df; }
+.logo { color: #1f3b37; font-size: 23px; font-weight: 700; letter-spacing: -1.3px; text-decoration: none; }
+.logo span { color: #d77757; }
+.nav { display: flex; gap: 31px; margin-left: 120px; }
+.nav a, .footer > a:last-child { color: #556663; font-size: 14px; text-decoration: none; transition: color .2s ease; }
+.nav a:hover, .footer > a:last-child:hover { color: #d77757; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 16px; padding: 15px 23px; background: #254b45; color: #fffdf8; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; box-shadow: 0 8px 20px rgba(31, 59, 55, .12); transition: transform .2s ease, background .2s ease; }
+.button:hover { background: #183a35; transform: translateY(-2px); }
+.button-small { padding: 11px 17px; font-size: 13px; }
+.text-button { display: inline-flex; gap: 11px; align-items: center; color: #254b45; font-size: 14px; font-weight: 700; text-decoration: none; }
+.text-button span, .button b { font-size: 19px; font-weight: 400; transition: transform .2s ease; }
+.text-button:hover span, .button:hover b { transform: translateX(4px); }
+.feature-card { min-height: 255px; padding: 26px 25px 23px; background: #fffefa; border: 1px solid #e1e4dd; border-radius: 10px; display: flex; flex-direction: column; transition: transform .25s ease, box-shadow .25s ease; }
+.feature-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(37, 75, 69, .09); }
+.feature-top { display: flex; justify-content: space-between; align-items: center; }.feature-icon { width: 38px; height: 38px; display: grid; place-items: center; color: #25584d; background: #e5eee9; border-radius: 50%; font-size: 20px; }.feature-number { color: #a3aaa3; font-family: 'DM Mono', monospace; font-size: 11px; }.feature-card h3 { margin: 24px 0 9px; color: #29433e; font-size: 18px; letter-spacing: -.4px; }.feature-card p { margin: 0; color: #74807b; font-size: 13px; line-height: 1.65; }.feature-card a { margin-top: auto; padding-top: 17px; color: #31564f; font-size: 12px; font-weight: 700; text-decoration: none; }.feature-card a span { padding-left: 4px; font-size: 16px; }
+.footer { max-width: 1180px; margin: auto; padding: 32px 0; border-top: 1px solid #dce1db; display: flex; justify-content: space-between; align-items: center; }.footer .logo { font-size: 19px; }.footer p { color: #88918b; font-size: 12px; }
+@media (max-width: 720px) { .header { height: 72px; }.nav { display: none; }.button-small { padding: 10px 13px; }.footer { margin: 0 24px; flex-wrap: wrap; gap: 15px; }.footer p { order: 3; width: 100%; margin: 0; } }
