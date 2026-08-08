@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 function HeroSection() {
   return (
     <section className="hero-section" id="top">
@@ -6,7 +8,7 @@ function HeroSection() {
         <h1>Stop Following Generic Roadmaps. <em>Learn What the Industry Demands.</em></h1>
         <p className="hero-text">Cognivue tracks your skill mastery, analyzes real-time market trends, and builds explainable learning paths tailored for you.</p>
         <div className="hero-actions">
-          <a className="button" href="#dashboard">Get Started <b>→</b></a>
+          <Link className="button" to="/sign-in">Get Started <b>→</b></Link>
           <a className="text-button" href="#methodology">Read Paper <span>↗</span></a>
         </div>
         <div className="hero-note"><span className="note-icon">✦</span> Market intelligence meets personal momentum</div>

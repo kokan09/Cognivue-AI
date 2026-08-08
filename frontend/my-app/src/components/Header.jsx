@@ -1,5 +1,6 @@
 import { Lightbulb } from "@theme-toggles/react";
 import "@theme-toggles/react/styles/lightbulb.css";
+import { Link } from 'react-router-dom'
 
 function Header({ theme, setTheme }) {
   // Use a functional state update to prevent the toggle from ever getting stuck
@@ -22,9 +23,10 @@ function Header({ theme, setTheme }) {
       </nav>
 
       <div className="header-actions">
-        <a className="button button-small" href="#demo">
-          Try Demo
-        </a>
+        <div className="auth-links">
+          <Link className="button button-small" to="/sign-in">Login</Link>
+          <Link className="button button-small button-secondary" to="/sign-up">Create Account</Link>
+        </div>
         {/* The onClick handler must be on this wrapper div */}
         <div 
           className={`theme-bulb-wrapper ${theme}`} 
