@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import FeatureCard from '../components/FeatureCard'
 import FaqItem from '../components/FaqItem'
@@ -62,13 +61,7 @@ const faqList = [
   }
 ]
 
-function LandingPage() {
-  const [theme, setTheme] = useState('dark')
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme
-  }, [theme])
-
+function LandingPage({ theme, setTheme }) {
   return (
     <main>
       <div className="page-shell">
