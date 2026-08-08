@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 function Header({ theme, setTheme }) {
   return (
     <header className="header">
@@ -8,7 +10,10 @@ function Header({ theme, setTheme }) {
         <a href="#tech">Tech Stack</a>
       </nav>
       <div className="header-actions">
-        <a className="button button-small" href="#dashboard">Explore Demo</a>
+        <div className="auth-links">
+          <Link className="button button-small" to="/sign-in">Sign In</Link>
+          <Link className="button button-small button-secondary" to="/sign-up">Sign Up</Link>
+        </div>
         <button
           type="button"
           className={`theme-toggle ${theme === 'dark' ? 'dark' : 'light'}`}
