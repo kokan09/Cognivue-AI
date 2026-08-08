@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import HeroSection from '../components/HeroSection'
 import FeatureCard from '../components/FeatureCard'
@@ -15,10 +16,16 @@ const featureList = [
 const techList = ['React', 'Node.js', 'FastAPI', 'spaCy', 'LangChain', 'Random Forest', 'Neo4j', 'ChromaDB', 'Web Scraping']
 
 function LandingPage() {
+  const [theme, setTheme] = useState('light')
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+  }, [theme])
+
   return (
     <main>
       <div className="page-shell">
-        <Header />
+        <Header theme={theme} setTheme={setTheme} />
         <HeroSection />
       </div>
 
