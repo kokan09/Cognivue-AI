@@ -1,11 +1,7 @@
-<<<<<<< HEAD
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSignIn } from '@clerk/react'
 import '../styles/auth.css'
-=======
-import { Link } from 'react-router-dom'
->>>>>>> 3f6469b83d139e2b547e4cd586038e0a7d63e3c3
 
 function SignInPage() {
   const { isLoaded, signIn, setActive } = useSignIn()
@@ -79,94 +75,6 @@ function SignInPage() {
 
   return (
     <main className="auth-page">
-<<<<<<< HEAD
-      <div className="auth-card">
-        <div className="auth-header">
-          <p className="eyebrow">Welcome back</p>
-          <h1>Sign in to Cognivue</h1>
-          <p>
-            Access your personalized career insights and resume-ready skill planning.
-          </p>
-        </div>
-
-        <div className="divider">
-          <span>use email to sign in</span>
-        </div>
-
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="you@domain.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          {error && (
-            <p className="auth-error">
-              {error}
-            </p>
-          )}
-
-          <div className="auth-help">
-            <Link to="/sign-up">Create account</Link>
-            <a href="#forgot">Forgot password?</a>
-          </div>
-
-          <button
-            type="submit"
-            className="button auth-submit"
-            disabled={loading || !isLoaded}
-          >
-            {loading ? 'Signing in...' : 'Sign in'}
-          </button>
-
-          <div className="divider">
-            <span>or continue with</span>
-          </div>
-
-          <div className="social-grid">
-            <button
-              type="button"
-              className="social-button social-google"
-              onClick={() => handleOAuthSignIn('oauth_google', 'Google')}
-              disabled={loading || oauthLoading !== ''}
-            >
-              <span>G</span>
-              {oauthLoading === 'oauth_google' ? 'Redirecting...' : 'Continue with Google'}
-            </button>
-
-            <button
-              type="button"
-              className="social-button social-github"
-              onClick={() => handleOAuthSignIn('oauth_github', 'GitHub')}
-              disabled={loading || oauthLoading !== ''}
-            >
-              <span>GH</span>
-              {oauthLoading === 'oauth_github' ? 'Redirecting...' : 'Continue with GitHub'}
-            </button>
-          </div>
-        </form>
-      </div>
-=======
       <section className="auth-card" aria-labelledby="sign-in-title">
         <Link className="auth-brand" to="/" aria-label="Back to Cognivue home">Cognivue<span>.</span></Link>
         <div className="auth-intro">
@@ -187,7 +95,6 @@ function SignInPage() {
         </form>
         <p className="auth-switch">New to Cognivue? <Link to="/sign-up">Create an account</Link></p>
       </section>
->>>>>>> 3f6469b83d139e2b547e4cd586038e0a7d63e3c3
     </main>
   )
 }
