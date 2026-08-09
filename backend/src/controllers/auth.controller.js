@@ -8,7 +8,7 @@ import userModel from "../models/user.model.js";
  * @returns {json}
  */
 export async function authControllerRegister(req, res){
-    const { full_name, email, password } = req.body;
+    const { full_name, email, password, role, DOB, sex } = req.body;
     
     const userExists = await userModel.findOne({ email : email });
 
@@ -18,7 +18,7 @@ export async function authControllerRegister(req, res){
         error : "User Exist's with this email"
     })
 
-    const user = await userModel.create({ full_name, email, password });
+    const user = await userModel.create({ full_name, email, password, role, sex, DOB });
 
     const token = await jwt.sign({id : user._id}, config.JWT_SECRET);
 

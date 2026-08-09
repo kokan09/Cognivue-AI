@@ -6,7 +6,6 @@ import cookieParser from "cookie-parser";
 //Routes
 import authRouter from "./routes/auth.route.js";
 
-
 const app = express();
 
 //Middleware
