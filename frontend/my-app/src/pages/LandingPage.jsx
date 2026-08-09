@@ -2,6 +2,7 @@ import Header from '../components/Header'
 import FeatureCard from '../components/FeatureCard'
 import FaqItem from '../components/FaqItem'
 import Footer from '../components/Footer'
+import { Link } from 'react-router-dom'
 
 const featureList = [
   {
@@ -80,9 +81,9 @@ function LandingPage({ theme, setTheme }) {
               Cognivue analyzes real-time industry demand, evaluates your skill mastery, and builds clear, evidence-backed learning paths.
             </p>
             <div className="hero-actions">
-              <a className="button" href="#demo">
+              <Link className="button" to="/sign-up">
                 Get Started Free <b>→</b>
-              </a>
+              </Link>
               <a className="text-button" href="#how-it-works">
                 See How It Works <span>↗</span>
               </a>
