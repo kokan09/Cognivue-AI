@@ -1,21 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useSignIn } from '@clerk/react/legacy'
-import { useUser } from '@clerk/react'
+import { useSignIn } from '@clerk/react'
 import '../styles/auth.css'
 
 function SignInPage() {
   const { isLoaded, signIn, setActive } = useSignIn()
   const navigate = useNavigate()
-  const authReady = isLoaded && Boolean(signIn)
-
-  const { isLoaded: userLoaded, isSignedIn } = useUser()
-
-  useEffect(() => {
-    if (userLoaded && isSignedIn) {
-      navigate('/test-page')
-    }
-  }, [userLoaded, isSignedIn, navigate])
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,7 +16,7 @@ function SignInPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!authReady) return
+    if (!isLoaded) return
 
     setError('')
     setLoading(true)
@@ -42,7 +32,7 @@ function SignInPage() {
           session: result.createdSessionId,
         })
 
-        navigate('/test-page')
+        navigate('/')
       } else {
         console.log('Additional verification required:', result)
       }
@@ -59,7 +49,7 @@ function SignInPage() {
   const handleOAuthSignIn = async (strategy, providerName) => {
     if (loading || oauthLoading) return
 
-    if (!authReady) {
+    if (!isLoaded || !signIn) {
       setError('Authentication is still loading. Please try again in a moment.')
       return
     }
@@ -70,14 +60,8 @@ function SignInPage() {
     try {
       await signIn.authenticateWithRedirect({
         strategy,
-        redirectUrl: new URL(
-          '/sign-in/sso-callback',
-          window.location.origin
-        ).toString(),
-        redirectUrlComplete: new URL(
-          '/test-page',
-          window.location.origin
-        ).toString(),
+        redirectUrl: '/sign-in/sso-callback',
+        redirectUrlComplete: '/',
       })
     } catch (err) {
       setError(
@@ -145,7 +129,7 @@ function SignInPage() {
           <button
             type="submit"
             className="button auth-submit"
-            disabled={loading || !authReady}
+            disabled={loading || !isLoaded}
           >
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
@@ -159,28 +143,20 @@ function SignInPage() {
               type="button"
               className="social-button social-google"
               onClick={() => handleOAuthSignIn('oauth_google', 'Google')}
-              disabled={loading || !authReady || oauthLoading !== ''}
+              disabled={loading || oauthLoading !== ''}
             >
               <span>G</span>
-              {!authReady
-                ? 'Preparing Google...'
-                : oauthLoading === 'oauth_google'
-                  ? 'Redirecting...'
-                  : 'Continue with Google'}
+              {oauthLoading === 'oauth_google' ? 'Redirecting...' : 'Continue with Google'}
             </button>
 
             <button
               type="button"
               className="social-button social-github"
               onClick={() => handleOAuthSignIn('oauth_github', 'GitHub')}
-              disabled={loading || !authReady || oauthLoading !== ''}
+              disabled={loading || oauthLoading !== ''}
             >
               <span>GH</span>
-              {!authReady
-                ? 'Preparing GitHub...'
-                : oauthLoading === 'oauth_github'
-                  ? 'Redirecting...'
-                  : 'Continue with GitHub'}
+              {oauthLoading === 'oauth_github' ? 'Redirecting...' : 'Continue with GitHub'}
             </button>
           </div>
         </form>
