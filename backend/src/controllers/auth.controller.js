@@ -35,6 +35,8 @@ export async function authControllerRegister(req, res){
         user : {
             full_name : user.full_name,
             email : user.email,
+            gender : user.sex,
+            DOB : user.DOB,
             role : user.role
         }
     });

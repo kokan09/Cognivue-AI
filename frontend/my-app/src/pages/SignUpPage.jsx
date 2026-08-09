@@ -1,6 +1,31 @@
 import { Link } from 'react-router-dom'
+import useAuthContext from '../Features/auth/hook/auth.hook';
 
 function SignUpPage() {
+
+  const {sign_up_user} = useAuthContext();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+
+    const payload = {
+      full_name: form.elements.name.value,
+      email: form.elements.email.value,
+      password: form.elements.password.value,
+      DOB: form.elements.birthDate.value,
+      sex: form.elements.gender.value,
+    };
+
+    console.log(payload);
+
+    const res = await sign_up_user(payload);
+      
+    console.log(resp);
+    
+  }
+
   return (
     <main className="auth-page">
       <section className="auth-card" aria-labelledby="sign-up-title">
@@ -10,7 +35,7 @@ function SignUpPage() {
           <h1 id="sign-up-title">Create your account</h1>
           <p>Set up your profile and get a learning path built around your career goal.</p>
         </div>
-        <form className="auth-form" onSubmit={(event) => event.preventDefault()}>
+        <form className="auth-form" onSubmit={handleSubmit}>
           <label htmlFor="sign-up-name">Full name</label>
           <input id="sign-up-name" name="name" type="text" placeholder="Enter your full name" autoComplete="name" />
           <label htmlFor="sign-up-email">Email address</label>
