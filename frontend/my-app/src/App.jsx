@@ -3,9 +3,8 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import LandingPage from './pages/LandingPage'
 import SignInPage from './pages/SignInPage'
 import SignUpPage from './pages/SignUpPage'
-import SSOCallback from './pages/SSOCallback'
 import TestPage from './pages/TestPage'
-import {AuthContextProvider} from "./Features/auth/auth.context.jsx";
+import { AuthContextProvider } from './Features/auth/auth.context.jsx'
 
 function getInitialTheme() {
   if (typeof window === 'undefined') return 'dark'
@@ -24,42 +23,34 @@ function App() {
   }, [theme])
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={<LandingPage theme={theme} setTheme={setTheme} />}
-      />
+    <AuthContextProvider>
+      <Routes>
+        <Route
+          path="/"
+          element={<LandingPage theme={theme} setTheme={setTheme} />}
+        />
 
-      <Route
-        path="/sign-in/sso-callback"
-        element={<SSOCallback />}
-      />
+        <Route
+          path="/sign-in/*"
+          element={<SignInPage />}
+        />
 
-      <Route
-        path="/sign-up/sso-callback"
-        element={<SSOCallback />}
-      />
+        <Route
+          path="/sign-up/*"
+          element={<SignUpPage />}
+        />
 
-      <Route
-        path="/sign-in/*"
-        element={<SignInPage />}
-      />
+        <Route
+          path="/test-page"
+          element={<TestPage theme={theme} setTheme={setTheme} />}
+        />
 
-      <Route
-        path="/sign-up/*"
-        element={<SignUpPage />}
-      />
-
-      <Route
-        path="/test-page"
-        element={<TestPage theme={theme} setTheme={setTheme} />}
-      />
-
-      <Route
-        path="*"
-        element={<Navigate replace to="/" />}
-      />
-    </Routes>
+        <Route
+          path="*"
+          element={<Navigate replace to="/" />}
+        />
+      </Routes>
+    </AuthContextProvider>
   )
 }
 

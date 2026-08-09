@@ -21,8 +21,8 @@ function SignUpPage() {
     console.log(payload);
 
     const res = await sign_up_user(payload);
-      
-    console.log(resp);
+
+    console.log(res);
     
   }
 
