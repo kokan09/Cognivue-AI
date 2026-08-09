@@ -33,9 +33,7 @@ function Header({ theme, setTheme }) {
           onClick={handleThemeToggle}
           style={{ cursor: 'pointer' }}
         >
-          <Lightbulb 
-            toggled={theme === 'light'} 
-          />
+          <Lightbulb aria-pressed={theme === 'light'} />
         </div>
       </div>
     </header>

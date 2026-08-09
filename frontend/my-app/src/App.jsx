@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import LandingPage from './pages/LandingPage'
 import SignInPage from './pages/SignInPage'
 import SignUpPage from './pages/SignUpPage'
+import SSOCallback from './pages/SSOCallback'
+import TestPage from './pages/TestPage'
 
 function getInitialTheme() {
   if (typeof window === 'undefined') return 'dark'
@@ -21,14 +23,42 @@ function App() {
   }, [theme])
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage theme={theme} setTheme={setTheme} />} />
-        <Route path="/sign-in" element={<SignInPage />} />
-        <Route path="/sign-up" element={<SignUpPage />} />
-        <Route path="*" element={<Navigate replace to="/" />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route
+        path="/"
+        element={<LandingPage theme={theme} setTheme={setTheme} />}
+      />
+
+      <Route
+        path="/sign-in/sso-callback"
+        element={<SSOCallback />}
+      />
+
+      <Route
+        path="/sign-up/sso-callback"
+        element={<SSOCallback />}
+      />
+
+      <Route
+        path="/sign-in/*"
+        element={<SignInPage />}
+      />
+
+      <Route
+        path="/sign-up/*"
+        element={<SignUpPage />}
+      />
+
+      <Route
+        path="/test-page"
+        element={<TestPage theme={theme} setTheme={setTheme} />}
+      />
+
+      <Route
+        path="*"
+        element={<Navigate replace to="/" />}
+      />
+    </Routes>
   )
 }
 
