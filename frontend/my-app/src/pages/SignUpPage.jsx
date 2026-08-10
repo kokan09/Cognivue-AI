@@ -23,7 +23,7 @@ function SignUpPage() {
       
     alert(resp.message);
     
-    // navigate("/");
+    navigate("/home");
   }
 
   return (

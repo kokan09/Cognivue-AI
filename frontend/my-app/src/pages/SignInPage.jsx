@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useAuthContext from '../Features/auth/hook/auth.hook';
 
 function SignInPage() {
   const {sign_in_user} = useAuthContext();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -17,6 +18,8 @@ function SignInPage() {
     const resp = await sign_in_user(payload);
       
     alert(resp.message);
+
+    navigate("/home");
   }
 
   return (

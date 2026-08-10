@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage'
 import SignInPage from './pages/SignInPage'
 import SignUpPage from './pages/SignUpPage'
 import {AuthContextProvider} from "./Features/auth/auth.context.jsx";
+import HomePage from './pages/HomePage.jsx'
 
 function getInitialTheme() {
   if (typeof window === 'undefined') return 'dark'
@@ -28,6 +29,7 @@ function App() {
           <Route path="/" element={<LandingPage theme={theme} setTheme={setTheme} />} />
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/sign-up" element={<SignUpPage />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
       </BrowserRouter>
