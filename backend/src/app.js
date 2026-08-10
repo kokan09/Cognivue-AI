@@ -6,6 +6,7 @@ import cors from "cors";
 
 //Routes
 import authRouter from "./routes/auth.route.js";
+import scraperRouter from "./routes/scraperRoute.js";
 
 const app = express();
 
@@ -22,6 +23,7 @@ else app.use(morgan("dev"));
 
 //Routes
 app.use("/api/auth", authRouter);
+app.use("/api/scraper", scraperRouter);
 
 app.get("/", (req, res) => {
     res.status(200).json({
