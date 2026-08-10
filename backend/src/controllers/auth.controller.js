@@ -32,6 +32,7 @@ export async function authControllerRegister(req, res){
 
     res.status(201).json({
         success : true,
+        message : "Successfull Register a user",
         user : {
             full_name : user.full_name,
             email : user.email,
@@ -40,4 +41,46 @@ export async function authControllerRegister(req, res){
             role : user.role
         }
     });
+}
+
+export async function authControllerLogin(req, res){
+    const {email, password} = req.body;
+
+    const user = await userModel.findOne({ email }).select("+password");
+
+    if(!user) return res.status(400).json({
+        success : false, 
+        message : "Invalid Credentials",
+        error : "User with this email does not exist"
+    })
+
+    const isValid = await user.comparePassword(password);
+
+    if(!isValid) return res.status(400).json({
+        success: false,
+        message : "Invalid Credentials",
+        error : "Incorrect Password"
+    })
+
+    const token = await jwt.sign({id : user._id}, config.JWT_SECRET);
+
+    res.cookie("auth_token", token, {
+        maxAge: 24 * 60 * 60 * 1000, // Expires in 24 hours (in milliseconds)
+        httpOnly: true,              // Blocks client-side JS access
+        secure: true,                // Requires HTTPS
+        sameSite: 'lax',             // CSRF protection balance
+        path: '/'                    // Valid for all paths
+    });
+
+    res.status(201).json({
+        success : true,
+        message : "Logined-in Successfull",
+        user : {
+            full_name : user.full_name,
+            email : user.email,
+            gender : user.sex,
+            DOB : user.DOB,
+            role : user.role
+        }
+    })
 }

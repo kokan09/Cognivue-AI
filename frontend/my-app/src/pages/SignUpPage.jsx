@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useAuthContext from '../Features/auth/hook/auth.hook';
 
 function SignUpPage() {
 
   const {sign_up_user} = useAuthContext();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -18,12 +19,11 @@ function SignUpPage() {
       sex: form.elements.gender.value,
     };
 
-    console.log(payload);
-
-    const res = await sign_up_user(payload);
+    const resp = await sign_up_user(payload);
       
-    console.log(resp);
+    alert(resp.message);
     
+    // navigate("/");
   }
 
   return (

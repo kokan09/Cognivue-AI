@@ -24,4 +24,9 @@ export const authValidateSignUp = [
 
     validateRequest
 ]
+export const authValidateSignIn = [
+    body("email").notEmpty().trim().isEmail().withMessage("Email is required"),
+    body("password").notEmpty().trim().isLength({ min : 6 }).withMessage("Password is required"),
+    validateRequest
+]
 

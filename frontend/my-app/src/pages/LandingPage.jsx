@@ -3,6 +3,7 @@ import FeatureCard from '../components/FeatureCard'
 import FaqItem from '../components/FaqItem'
 import Footer from '../components/Footer'
 import { Link } from 'react-router-dom'
+import { useLayoutEffect } from 'react'
 
 const featureList = [
   {

@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import {sign_up} from "./service/auth.service.js";
+import {sign_up, sign_in} from "./service/auth.service.js";
 
 export const authContext = createContext();
 
@@ -10,17 +10,25 @@ export function AuthContextProvider({children}){
         try{
             const response = await sign_up(data);
 
-            console.log(response);
+            setUser(response);
+            return response;
+        }catch(err){
+            console.error(err);
+        }
+    }
+
+    const sign_in_user = async function(data){
+        try{
+            const response = await sign_in(data);
 
             setUser(response);
             return response;
         }catch(err){
             console.error(err);
-            throw err;
         }
     }
 
-    return <authContext.Provider value={{sign_up_user}}>
+    return <authContext.Provider value={{sign_up_user, sign_in_user}}>
         {children}
     </authContext.Provider>
 }
