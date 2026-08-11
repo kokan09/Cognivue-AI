@@ -3,6 +3,7 @@ import morgan from "morgan";
 import config from "./config/config.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import scraperRouter from "./routes/scraper.route.js";
 
 //Routes
 import authRouter from "./routes/auth.route.js";
@@ -22,6 +23,7 @@ else app.use(morgan("dev"));
 
 //Routes
 app.use("/api/auth", authRouter);
+app.use("/api/scraper", scraperRouter);
 
 app.get("/", (req, res) => {
     res.status(200).json({
