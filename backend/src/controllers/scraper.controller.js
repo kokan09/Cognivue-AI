@@ -1,8 +1,9 @@
-import * as cheerio from "cheerio";
+import { getHtmlWithCheerio, parseHtml } from "../utils/cheerio.js";
+import { getRenderedHtml } from "../utils/playwright.js";
 
 export async function scrapeWebsite(req, res) {
     try {
-        const { url } = req.query;
+        const { url, mode = "playwright" } = req.query;
 
         if (!url) {
             return res.status(400).json({
@@ -29,59 +30,36 @@ export async function scrapeWebsite(req, res) {
             });
         }
 
-        const response = await fetch(targetUrl, {
-            headers: {
-                "User-Agent": "Cognivue-Scraper/1.0"
-            },
-            signal: AbortSignal.timeout(10000)
-        });
+        let html;
 
-        if (!response.ok) {
-            return res.status(502).json({
+        if (mode === "cheerio") {
+            html = await getHtmlWithCheerio(targetUrl.href);
+        } else if (mode === "playwright") {
+            html = await getRenderedHtml(targetUrl.href);
+        } else {
+            return res.status(400).json({
                 success: false,
-                message: `Failed to fetch website: ${response.status}`
+                message: "Mode must be cheerio or playwright"
             });
         }
 
-        const html = await response.text();
-
-        const $ = cheerio.load(html);
-
-        const title = $("title").first().text().trim();
-
-        const mainHeading = $("h1").first().text().trim();
-
-        const links = [];
-
-        $("a").each((index, element) => {
-            const href = $(element).attr("href");
-            const text = $(element).text().trim();
-
-            if (!href) return;
-
-            try {
-                const absoluteUrl = new URL(href, targetUrl).href;
-
-                links.push({
-                    text,
-                    url: absoluteUrl
-                });
-            } catch (error) {
-            }
-        });
+        const data = parseHtml(html, targetUrl);
 
         return res.status(200).json({
             success: true,
-            data: {
-                url: targetUrl.href,
-                title,
-                mainHeading,
-                links
-            }
+            mode,
+            data
         });
 
     } catch (error) {
         console.error("Scraper Error:", error);
+
+        if (error.name === "TimeoutError") {
+            return res.status(504).json({
+                success: false,
+                message: "Website took too long to load"
+            });
+        }
 
         return res.status(500).json({
             success: false,
