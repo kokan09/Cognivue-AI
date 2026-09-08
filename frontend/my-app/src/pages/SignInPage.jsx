@@ -22,7 +22,7 @@ function SignInPage() {
 
     setTimeout(() => {
       setLoading(false)
-      navigate('/test-page')
+      navigate('/home-page')
     }, 300)
   }
 

@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import LandingPage from './pages/LandingPage'
 import SignInPage from './pages/SignInPage'
 import SignUpPage from './pages/SignUpPage'
+import HomePage from './pages/HomePage'
 import TestPage from './pages/TestPage'
 import { AuthContextProvider } from './Features/auth/auth.context.jsx'
 
@@ -31,6 +32,16 @@ function App() {
         />
 
         <Route
+          path="/home-page"
+          element={<HomePage theme={theme} setTheme={setTheme} />}
+        />
+
+        <Route
+          path="/home"
+          element={<HomePage theme={theme} setTheme={setTheme} />}
+        />
+
+        <Route
           path="/sign-in/*"
           element={<SignInPage />}
         />
@@ -42,7 +53,7 @@ function App() {
 
         <Route
           path="/test-page"
-          element={<TestPage theme={theme} setTheme={setTheme} />}
+          element={<HomePage theme={theme} setTheme={setTheme} />}
         />
 
         <Route
