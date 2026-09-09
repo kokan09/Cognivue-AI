@@ -59,12 +59,18 @@ function HomePage({ theme, setTheme }) {
   }
 
   const handleSelectConcept = (conceptId) => {
-    setSelectedConceptId(conceptId)
-    const concept = graphData?.conceptNodes?.find(c => c.id === conceptId)
-    if (concept && concept.modules && concept.modules.length > 0) {
-      setSelectedModule(concept.modules[0])
+    // If user clicks a new concept, select it and expand its orbiting modules (do NOT open modal)
+    if (conceptId !== selectedConceptId) {
+      setSelectedConceptId(conceptId)
+      const concept = graphData?.conceptNodes?.find(c => c.id === conceptId)
+      if (concept && concept.modules && concept.modules.length > 0) {
+        setSelectedModule(concept.modules[0])
+      }
+      setIsModalOpen(false)
+    } else {
+      // If user clicks the already-selected concept again, open its module viewer modal
+      setIsModalOpen(true)
     }
-    setIsModalOpen(true) // Display modal box over the screen
   }
 
   const handleSelectModule = (mod, concept) => {
@@ -72,7 +78,7 @@ function HomePage({ theme, setTheme }) {
       setSelectedConceptId(concept.id)
     }
     setSelectedModule(mod)
-    setIsModalOpen(true) // Display modal box over the screen
+    setIsModalOpen(true) // Clicking any satellite module opens the modal
   }
 
   const activeConcept = graphData?.conceptNodes?.find(c => c.id === selectedConceptId) || graphData?.conceptNodes?.[0] || null
