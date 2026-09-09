@@ -1,0 +1,2367 @@
+{
+  "technologies": [
+    {
+      "id": "java",
+      "name": "Java",
+      "icon": "☕",
+      "category": "Enterprise Backend & OOP Language",
+      "description": "High-performance, strongly-typed object-oriented language powering scalable enterprise backends, Android apps, and microservices.",
+      "topics": [
+        {
+          "id": "java-syntax",
+          "title": "Java Syntax & Data Types",
+          "summary": "Master primitives, reference types, variables, type casting, operators, and String immutability in Java.",
+          "level": "Beginner",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "Java Syntax Core & Type System",
+              "tag": "Theory & Fundamentals",
+              "description": "How the JVM executes bytecode, primitive vs reference types, and strict typing rules.",
+              "content": {
+                "overview": "Java is a statically-typed language where every variable must be declared with a data type before use. The compiler converts source code (.java) into bytecode (.class) which the Java Virtual Machine (JVM) executes across any OS platform.",
+                "keyPoints": [
+                  "8 Primitive Data Types: byte, short, int, long, float, double, char, and boolean.",
+                  "Reference Types: Classes, Interfaces, and Arrays stored on the heap with memory managed by Garbage Collection.",
+                  "Type Casting: Implicit Widening (int to double) vs Explicit Narrowing (`(int) myDouble`).",
+                  "String Immutability: Strings are immutable objects stored in the String Constant Pool for memory optimization."
+                ],
+                "codeSnippet": "public class SyntaxDemo {\n    public static void main(String[] args) {\n        // Primitive declarations\n        int userCount = 1450;\n        double avgScore = 94.75;\n        boolean isActive = true;\n\n        // Reference type and String formatting\n        String techTrack = \"Java Backend Engineering\";\n        System.out.printf(\"Track: %s | Users: %d | Active: %b%n\", techTrack, userCount, isActive);\n    }\n}"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: Java Syntax Masterclass",
+              "tag": "Video Masterclass",
+              "description": "Deep-dive video covering JVM memory architecture, stack vs heap, and modern Java syntax features.",
+              "content": {
+                "videoTitle": "Java Syntax & Memory Fundamentals in 15 Minutes",
+                "instructor": "Cognivue Java Architect",
+                "duration": "16:30",
+                "videoUrl": "https://www.youtube.com/embed/eIrMbAQSU34",
+                "keyTakeaways": [
+                  "01:30 - JVM, JRE, and JDK architecture explained",
+                  "05:10 - Stack vs Heap allocation for primitives and objects",
+                  "09:40 - var keyword for local variable type inference (Java 10+)",
+                  "13:20 - Text blocks (`\"\"\"`) and formatted template strings"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples & Patterns",
+              "tag": "Production Code",
+              "description": "Standard Java syntax patterns including StringBuilder, Switch expressions, and Records.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Modern Java Record & Enhanced Switch",
+                    "code": "public record CourseRecord(String id, String title, int durationMinutes) {}\n\npublic class RecordDemo {\n    public static String getCategory(String track) {\n        return switch (track.toLowerCase()) {\n            case \"java\", \"spring\" -> \"Backend Engineering\";\n            case \"react\", \"vue\" -> \"Frontend UI\";\n            default -> \"General Engineering\";\n        };\n    }\n}"
+                  },
+                  {
+                    "title": "Efficient String Manipulation with StringBuilder",
+                    "code": "public class StringBuilderDemo {\n    public static String buildLog(String[] modules) {\n        StringBuilder sb = new StringBuilder(\"Modules Loaded: [\");\n        for (int i = 0; i < modules.length; i++) {\n            sb.append(modules[i]);\n            if (i < modules.length - 1) sb.append(\", \");\n        }\n        sb.append(\"]\");\n        return sb.toString();\n    }\n}"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on Java Syntax",
+              "tag": "Interactive Quiz",
+              "description": "Test understanding of Java data types, type casting, and string pool memory.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "What is the default value of an uninitialized instance boolean variable in Java?",
+                    "options": [
+                      "true",
+                      "false",
+                      "null",
+                      "0"
+                    ],
+                    "correctIndex": 1,
+                    "explanation": "In Java, instance boolean fields default to `false` when not explicitly assigned."
+                  },
+                  {
+                    "id": "q2",
+                    "question": "Which memory area stores String literals created with double quotes (e.g. `String s = \"Java\"`)?",
+                    "options": [
+                      "Call Stack",
+                      "String Constant Pool (Heap)",
+                      "Method Code Area",
+                      "Native Stack"
+                    ],
+                    "correctIndex": 1,
+                    "explanation": "String literals are cached in the String Constant Pool inside the Heap to reuse identical string instances."
+                  },
+                  {
+                    "id": "q3",
+                    "question": "What will `(int) 9.99` evaluate to in Java?",
+                    "options": [
+                      "10",
+                      "9",
+                      "9.99",
+                      "Compile Error"
+                    ],
+                    "correctIndex": 1,
+                    "explanation": "Explicit narrowing cast to `int` truncates the decimal portion, returning `9` without rounding."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "Java Syntax & Bug Fixing Challenge",
+              "tag": "Interactive Test",
+              "description": "Fix type conversion errors and array initialization bugs in Java methods.",
+              "content": {
+                "challengeType": "Java Syntax Correction",
+                "instruction": "Fix the method so it correctly calculates the average of an integer array as a double without integer truncation.",
+                "buggyCode": "public double calculateAverage(int[] numbers) {\n    int sum = 0;\n    for (int n : numbers) {\n        sum += n;\n    }\n    return sum / numbers.length;\n}",
+                "correctSolution": "public double calculateAverage(int[] numbers) {\n    if (numbers == null || numbers.length == 0) return 0.0;\n    double sum = 0;\n    for (int n : numbers) {\n        sum += n;\n    }\n    return sum / numbers.length;\n}",
+                "hints": [
+                  "Dividing two integers in Java results in integer division, discarding decimal precision.",
+                  "Cast `sum` to `double` or declare `sum` as a `double`."
+                ],
+                "quizPrompt": "Which Java keyword prevents a variable from being re-assigned after initialization?",
+                "quizOptions": [
+                  "const",
+                  "final",
+                  "static",
+                  "immutable"
+                ],
+                "correctOptionIndex": 1,
+                "quizExplanation": "The `final` keyword in Java defines a constant reference that cannot be re-assigned."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a Student Grade Calculator",
+              "tag": "Hands-On Exercise",
+              "description": "Write a console-based Java application to parse scores, calculate weighted averages, and print formatted report cards.",
+              "content": {
+                "taskGoal": "Create a Java utility that reads student names and test scores, performs statistical calculations, and formats tabular output using String formatting.",
+                "requirements": [
+                  "Use modern Java records to represent `StudentRecord(String name, int[] scores)`.",
+                  "Implement input validation checking for non-empty arrays and valid score ranges (0-100).",
+                  "Format terminal output using `System.out.printf` with clean columns and letter grade mappings."
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "java-oops",
+          "title": "Java Object-Oriented Programming (OOP)",
+          "summary": "Master Encapsulation, Inheritance, Polymorphism, Abstraction, Interfaces, and Abstract Classes.",
+          "level": "Intermediate",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "Core Pillars of Java OOP",
+              "tag": "Theory & Fundamentals",
+              "description": "Deep understanding of Encapsulation, Abstraction, Inheritance, and Runtime Polymorphism.",
+              "content": {
+                "overview": "Java is founded on the 4 pillars of Object-Oriented Programming. OOP organizes code into reusable, modular classes that bundle state (fields) and behavior (methods) while protecting internal implementation details.",
+                "keyPoints": [
+                  "Encapsulation: Restricting direct access to object state via private fields and public getter/setter methods.",
+                  "Inheritance (`extends`): Reusing superclass properties while enabling hierarchical domain modeling.",
+                  "Polymorphism: Method Overloading (compile-time) and Method Overriding (`@Override` dynamic runtime dispatch).",
+                  "Abstraction (`interface` and `abstract class`): Defining contracts and abstract behaviors separated from concrete implementations."
+                ],
+                "codeSnippet": "public interface PaymentProcessor {\n    boolean processPayment(double amount);\n}\n\npublic class CreditCardProcessor implements PaymentProcessor {\n    private final String cardNumber;\n    \n    public CreditCardProcessor(String cardNumber) {\n        this.cardNumber = cardNumber;\n    }\n    \n    @Override\n    public boolean processPayment(double amount) {\n        System.out.printf(\"Processing $%.2f via Card: %s%n\", amount, cardNumber);\n        return true;\n    }\n}"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: Java OOP in Depth",
+              "tag": "Video Masterclass",
+              "description": "Visual breakdown of interface design, abstract classes, and method overriding dispatch.",
+              "content": {
+                "videoTitle": "Java OOP Architecture: Design Patterns & Principles",
+                "instructor": "Cognivue Senior Architect",
+                "duration": "22:15",
+                "videoUrl": "https://www.youtube.com/embed/pTB0EiLXUC8",
+                "keyTakeaways": [
+                  "03:10 - Interface vs Abstract Class: When to use which",
+                  "08:45 - The `@Override` annotation and dynamic method lookup",
+                  "14:20 - Composition over Inheritance in modern enterprise Java",
+                  "18:50 - Default and static methods in Java interfaces"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: Polymorphic Architecture",
+              "tag": "Design Patterns",
+              "description": "Clean implementation of Factory pattern and Interface segregation in Java.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Abstract Class with Template Method Pattern",
+                    "code": "public abstract class BaseCurriculumExporter {\n    // Template method\n    public final void export(String data) {\n        validate(data);\n        String formatted = formatData(data);\n        saveToFile(formatted);\n    }\n    \n    protected abstract String formatData(String data);\n    \n    private void validate(String data) {\n        if (data == null || data.isEmpty()) throw new IllegalArgumentException(\"Data cannot be empty\");\n    }\n    \n    private void saveToFile(String content) {\n        System.out.println(\"Saved to disk: \" + content.length() + \" bytes\");\n    }\n}"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on Java OOP",
+              "tag": "Interactive Quiz",
+              "description": "Test understanding of inheritance restrictions, interfaces, and polymorphism.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "Can a Java class directly inherit from multiple classes using `extends`?",
+                    "options": [
+                      "Yes, multiple class inheritance is supported",
+                      "No, Java supports single class inheritance but multiple interface implementation",
+                      "Only if both classes are abstract",
+                      "Only in Java 17+"
+                    ],
+                    "correctIndex": 1,
+                    "explanation": "Java avoids the 'Diamond Problem' by supporting single class inheritance while allowing a class to implement multiple interfaces."
+                  },
+                  {
+                    "id": "q2",
+                    "question": "What is the result of declaring a method as `final` in a Java class?",
+                    "options": [
+                      "It cannot be called",
+                      "It cannot be overridden by subclasses",
+                      "It runs in parallel threads",
+                      "It must return void"
+                    ],
+                    "correctIndex": 1,
+                    "explanation": "A `final` method cannot be overridden by any subclass, locking its implementation."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "OOP Syntax & Polymorphism Test",
+              "tag": "Interactive Test",
+              "description": "Fix constructor chaining and interface implementation bugs.",
+              "content": {
+                "challengeType": "Constructor Chaining & Interface Test",
+                "instruction": "Fix the subclass constructor so it properly calls the parent class constructor using `super()`.",
+                "buggyCode": "public class Developer extends Employee {\n    private String primarySkill;\n    \n    public Developer(String name, double salary, String primarySkill) {\n        this.primarySkill = primarySkill;\n        super(name, salary); // Bug: super must be first line\n    }\n}",
+                "correctSolution": "public class Developer extends Employee {\n    private String primarySkill;\n    \n    public Developer(String name, double salary, String primarySkill) {\n        super(name, salary);\n        this.primarySkill = primarySkill;\n    }\n}",
+                "hints": [
+                  "`super()` constructor calls MUST be the very first statement in a subclass constructor."
+                ],
+                "quizPrompt": "Which access modifier allows access within the same package AND subclasses in different packages?",
+                "quizOptions": [
+                  "public",
+                  "protected",
+                  "default (package-private)",
+                  "private"
+                ],
+                "correctOptionIndex": 1,
+                "quizExplanation": "`protected` allows visibility within the same package and to subclasses regardless of package."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a Bank Account Hierarchy System",
+              "tag": "Capstone OOP Project",
+              "description": "Design an extensible OOP banking system with savings, checking accounts, and transaction logging.",
+              "content": {
+                "taskGoal": "Construct an abstract `Account` base class with polymorphic `SavingsAccount` and `CheckingAccount` implementations supporting deposits, withdrawals, and interest compounding.",
+                "requirements": [
+                  "Define abstract `calculateMonthlyInterest()` and concrete `deposit()` / `withdraw()` methods.",
+                  "Enforce encapsulation with private balances and immutable account numbers.",
+                  "Implement an `Auditable` interface logging all transactional state changes."
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "java-collections",
+          "title": "Java Collections & Generics",
+          "summary": "Lists, Sets, Maps, Queues, Iterators, Comparable/Comparator, and Generic Type Safety.",
+          "level": "Intermediate",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "Collections Hierarchy & Map Framework",
+              "tag": "Data Structures",
+              "description": "ArrayList vs LinkedList, HashSet vs TreeSet, HashMap vs ConcurrentHashMap.",
+              "content": {
+                "overview": "The Java Collections Framework provides standardized data structure interfaces and implementations to store, manipulate, and query groups of objects with type-safe Generics.",
+                "keyPoints": [
+                  "List: Ordered collections allowing duplicates (ArrayList for fast O(1) random access, LinkedList for fast insertions).",
+                  "Set: Unordered collections of unique elements (HashSet using hash codes, TreeSet maintaining sorted order).",
+                  "Map: Key-Value pairs with unique keys (HashMap providing average O(1) get/put lookups).",
+                  "Generics (`<T>`): Compile-time type checking preventing `ClassCastException` at runtime."
+                ],
+                "codeSnippet": "import java.util.*;\n\npublic class CollectionsDemo {\n    public static void main(String[] args) {\n        Map<String, List<String>> techCategories = new HashMap<>();\n        techCategories.put(\"Backend\", List.of(\"Java\", \"Spring Boot\", \"Node.js\"));\n        techCategories.put(\"Frontend\", List.of(\"React\", \"Vue\", \"TypeScript\"));\n        \n        techCategories.forEach((cat, skills) -> {\n            System.out.printf(\"Category: %s -> %s%n\", cat, skills);\n        });\n    }\n}"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: Mastering Java Collections",
+              "tag": "Video Masterclass",
+              "description": "Time complexity benchmarks, HashMap internal bucket collision resolution, and Stream API integration.",
+              "content": {
+                "videoTitle": "Java Collections Framework & Streams API Explained",
+                "instructor": "Cognivue Senior Java Engineer",
+                "duration": "19:40",
+                "videoUrl": "https://www.youtube.com/embed/gdA4k7G-n_U",
+                "keyTakeaways": [
+                  "02:40 - How HashMap works under the hood (hashCode, equals, and Red-Black tree conversion)",
+                  "07:15 - Custom sorting with Comparable vs Comparator",
+                  "12:30 - Stream API operations (`filter`, `map`, `collect`)",
+                  "16:45 - Thread-safe collections: ConcurrentHashMap and CopyOnWriteArrayList"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: Stream API & Sorting",
+              "tag": "Stream Patterns",
+              "description": "Functional collection filtering, grouping, and parallel streaming in Java.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Group By and Summarize with Java Streams",
+                    "code": "import java.util.*;\nimport java.util.stream.Collectors;\n\npublic record Developer(String name, String tech, int experienceYears) {}\n\npublic class StreamDemo {\n    public static Map<String, List<Developer>> groupDevelopers(List<Developer> devs) {\n        return devs.stream()\n            .filter(d -> d.experienceYears() >= 2)\n            .collect(Collectors.groupingBy(Developer::tech));\n    }\n}"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on Collections & Generics",
+              "tag": "Interactive Quiz",
+              "description": "Test your grasp of collection time complexities and hashing requirements.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "What must be overridden together in a custom Java class to ensure proper behavior in a HashSet or HashMap?",
+                    "options": [
+                      "equals() and hashCode()",
+                      "toString() and clone()",
+                      "compareTo() only",
+                      "finalize() and notify()"
+                    ],
+                    "correctIndex": 0,
+                    "explanation": "If two objects are equal according to `equals()`, they MUST produce the same `hashCode()` for hash-based collections to work reliably."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "Collections Syntax & Generics Test",
+              "tag": "Interactive Test",
+              "description": "Fix type safety and concurrent modification exceptions in Java collection loops.",
+              "content": {
+                "challengeType": "ConcurrentModification & Generics Bug Fix",
+                "instruction": "Fix the loop removing elements from a List so it avoids ConcurrentModificationException.",
+                "buggyCode": "public void removeInactiveUsers(List<User> users) {\n    for (User u : users) {\n        if (!u.isActive()) {\n            users.remove(u); // Bug: throws ConcurrentModificationException\n        }\n    }\n}",
+                "correctSolution": "public void removeInactiveUsers(List<User> users) {\n    users.removeIf(u -> !u.isActive());\n}",
+                "hints": [
+                  "Modifying a collection during a standard foreach loop throws `ConcurrentModificationException`.",
+                  "Use `list.removeIf(...)` or an explicit `Iterator.remove()`."
+                ],
+                "quizPrompt": "Which Collection implementation maintains elements in naturally sorted order?",
+                "quizOptions": [
+                  "HashSet",
+                  "TreeSet",
+                  "LinkedHashSet",
+                  "ArrayList"
+                ],
+                "correctOptionIndex": 1,
+                "quizExplanation": "`TreeSet` uses a Red-Black tree to guarantee elements are sorted in ascending natural order or by a custom Comparator."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a Course Enrollment Manager",
+              "tag": "Hands-On Capstone",
+              "description": "Construct an in-memory course catalog with fast search, student waitlists (Queues), and grade maps.",
+              "content": {
+                "taskGoal": "Create a high-performance course enrollment manager utilizing ArrayLists for catalogs, HashMaps for student lookups, and PriorityQueues for course waitlists.",
+                "requirements": [
+                  "Provide O(1) student lookup by UUID using `HashMap<String, Student>`.",
+                  "Implement a priority-based waitlist using `PriorityQueue<Student>` with GPA sorting.",
+                  "Export enrollment statistics via Java Stream collectors."
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "java-springboot",
+          "title": "Spring Boot & REST Microservices",
+          "summary": "Dependency Injection, Spring MVC, REST Controllers, Spring Data JPA, and Microservice patterns.",
+          "level": "Advanced",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "Spring Boot Core & Inversion of Control",
+              "tag": "Enterprise Framework",
+              "description": "Spring IoC Container, Dependency Injection (@Autowired, @Service, @Repository), and REST endpoints.",
+              "content": {
+                "overview": "Spring Boot is the industry-standard Java enterprise framework for building production-ready standalone microservices. It eliminates boilerplate XML configuration with sensible auto-configuration and an embedded Tomcat server.",
+                "keyPoints": [
+                  "Inversion of Control (IoC): The Spring ApplicationContext manages object lifecycle and instantiates beans.",
+                  "Dependency Injection: Injecting collaborating services via constructor injection (`@Service`, `@Component`).",
+                  "Spring MVC: Handling HTTP requests with `@RestController`, `@GetMapping`, `@PostMapping`, and `@RequestBody`.",
+                  "Spring Data JPA: Automating CRUD and query generation with Hibernate ORM and `JpaRepository` interfaces."
+                ],
+                "codeSnippet": "@RestController\n@RequestMapping(\"/api/v1/curriculum\")\npublic class CurriculumController {\n    private final CurriculumService curriculumService;\n    \n    public CurriculumController(CurriculumService curriculumService) {\n        this.curriculumService = curriculumService;\n    }\n    \n    @GetMapping(\"/{topicId}\")\n    public ResponseEntity<TopicDTO> getTopic(@PathVariable String topicId) {\n        TopicDTO topic = curriculumService.findTopicById(topicId);\n        return ResponseEntity.ok(topic);\n    }\n}"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: Building Spring Boot REST APIs",
+              "tag": "Video Masterclass",
+              "description": "Complete walkthrough of building production REST microservices with Spring Boot 3 and PostgreSQL.",
+              "content": {
+                "videoTitle": "Spring Boot 3 REST API Masterclass from Scratch",
+                "instructor": "Cognivue Enterprise Architect",
+                "duration": "24:50",
+                "videoUrl": "https://www.youtube.com/embed/9SGDpanrc8U",
+                "keyTakeaways": [
+                  "03:20 - Initializing Spring Boot with Spring Initializr & Maven",
+                  "08:15 - Writing Service, Repository, and Controller layers cleanly",
+                  "14:40 - Exception handling with `@RestControllerAdvice` and `@ExceptionHandler`",
+                  "19:30 - Securing endpoints with Spring Security and JWT tokens"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: Spring Data JPA Repository",
+              "tag": "Data Access Patterns",
+              "description": "Custom query derivation and transactional service methods in Spring Boot.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Spring Data JPA Repository Interface",
+                    "code": "@Repository\npublic interface CourseRepository extends JpaRepository<CourseEntity, Long> {\n    List<CourseEntity> findByCategoryIgnoreCaseAndIsPublishedTrue(String category);\n    \n    @Query(\"SELECT c FROM CourseEntity c WHERE c.rating >= :minRating\")\n    List<CourseEntity> findHighRatedCourses(@Param(\"minRating\") double minRating);\n}"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on Spring Boot",
+              "tag": "Interactive Quiz",
+              "description": "Test knowledge of Spring annotations, bean scopes, and JPA queries.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "Which annotation combines `@Controller` and `@ResponseBody` in Spring MVC?",
+                    "options": [
+                      "@RestController",
+                      "@Service",
+                      "@Endpoint",
+                      "@ApiResource"
+                    ],
+                    "correctIndex": 0,
+                    "explanation": "`@RestController` indicates that every method returns domain objects serialized directly into HTTP response bodies (JSON/XML)."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "Spring Boot Controller & Annotation Test",
+              "tag": "Interactive Test",
+              "description": "Fix missing path variable bindings and incorrect HTTP status responses.",
+              "content": {
+                "challengeType": "Spring MVC Annotation Fix",
+                "instruction": "Fix the endpoint so it receives the URL path parameter and returns 201 Created status.",
+                "buggyCode": "@PostMapping(\"/users/{id}\")\npublic User createUser(Long id, @RequestBody User user) {\n    return userService.save(user);\n}",
+                "correctSolution": "@PostMapping(\"/users/{id}\")\n@ResponseStatus(HttpStatus.CREATED)\npublic User createUser(@PathVariable(\"id\") Long id, @RequestBody @Valid User user) {\n    return userService.save(user);\n}",
+                "hints": [
+                  "Use `@PathVariable` to bind `{id}` from the URI path.",
+                  "Add `@ResponseStatus(HttpStatus.CREATED)` to return HTTP 201."
+                ],
+                "quizPrompt": "What is the default bean scope in Spring ApplicationContext?",
+                "quizOptions": [
+                  "Singleton",
+                  "Prototype",
+                  "Request",
+                  "Session"
+                ],
+                "correctOptionIndex": 0,
+                "quizExplanation": "By default, all Spring beans are `Singleton` (one shared instance per Spring IoC container)."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a Spring Boot Microservice API",
+              "tag": "Enterprise Capstone",
+              "description": "Build an end-to-end curriculum management REST microservice with JPA persistence and validation.",
+              "content": {
+                "taskGoal": "Construct a production Spring Boot REST API for managing technical learning roadmaps with full CRUD, global exception handlers, and DTO mapping.",
+                "requirements": [
+                  "Implement 3-tier architecture: Controller -> Service -> Repository.",
+                  "Provide global error handling with `@RestControllerAdvice` returning standard RFC 7807 problem details.",
+                  "Write integration tests using `@SpringBootTest` and MockMvc."
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "python",
+      "name": "Python",
+      "icon": "🐍",
+      "category": "AI, Data & Backend Language",
+      "description": "High-level, versatile language emphasizing clean syntax, powering Machine Learning, AI models, Data Engineering, and modern REST APIs.",
+      "topics": [
+        {
+          "id": "python-syntax",
+          "title": "Python Syntax & Data Structures",
+          "summary": "Variables, dynamic typing, lists, dictionaries, tuples, sets, slicing, and list comprehensions.",
+          "level": "Beginner",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "Pythonic Syntax Core & Built-in Collections",
+              "tag": "Theory & Fundamentals",
+              "description": "Indentation rules, dynamic typing, mutability, and high-performance collection types.",
+              "content": {
+                "overview": "Python is an interpreted, high-level language renowned for its expressive and readable syntax. Rather than braces, Python uses significant whitespace indentation to structure blocks of code.",
+                "keyPoints": [
+                  "Dynamic Typing: Variables are dynamically typed and bound at runtime.",
+                  "4 Core Collections: Lists `[]` (mutable), Tuples `()` (immutable), Dictionaries `{}` (key-value hash maps), Sets `{}` (unique elements).",
+                  "List Comprehensions: `[f(x) for x in iterable if condition]` providing concise, readable mappings.",
+                  "F-Strings: Modern string interpolation with `f\"Hello {user_name}\"`."
+                ],
+                "codeSnippet": "# Pythonic data processing with comprehension and dictionary\nraw_scores = [88, 92, 79, 95, 64, 82]\nhonor_roll = [score for score in raw_scores if score >= 85]\n\nstudent_profile = {\n    'name': 'Priya',\n    'track': 'AI & Machine Learning',\n    'honor_count': len(honor_roll)\n}\n\nprint(f\"{student_profile['name']} mastered {student_profile['honor_count']} topics!\")"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: Python Fundamentals Masterclass",
+              "tag": "Video Masterclass",
+              "description": "Visual breakdown of Python memory management, list comprehensions, and dictionary optimizations.",
+              "content": {
+                "videoTitle": "Python Core & Advanced Syntax in 18 Minutes",
+                "instructor": "Cognivue Python Lead",
+                "duration": "18:20",
+                "videoUrl": "https://www.youtube.com/embed/_uQrJ0TkZlc",
+                "keyTakeaways": [
+                  "02:15 - How Python manages object references and Garbage Collection",
+                  "06:40 - Advanced slicing techniques `[start:stop:step]`",
+                  "11:10 - Dictionary comprehensions and zip() function",
+                  "15:30 - Unpacking operators (`*args` and `**kwargs`)"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: Pythonic Patterns",
+              "tag": "Idiomatic Python",
+              "description": "Generator expressions, Context Managers, and Collections module utilities.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Dictionary Comprehension & DefaultDict",
+                    "code": "from collections import defaultdict\n\nwords = ['apple', 'banana', 'apricot', 'blueberry', 'cherry']\ngrouped = defaultdict(list)\n\nfor word in words:\n    grouped[word[0]].append(word)\n\nprint(dict(grouped)) # {'a': ['apple', 'apricot'], 'b': ['banana', 'blueberry'], 'c': ['cherry']}"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on Python Syntax",
+              "tag": "Interactive Quiz",
+              "description": "Test understanding of list mutability, dictionary lookups, and tuple packing.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "What is the output of `[x * 2 for x in [1, 2, 3]]` in Python?",
+                    "options": [
+                      "[1, 2, 3]",
+                      "[2, 4, 6]",
+                      "6",
+                      "TypeError"
+                    ],
+                    "correctIndex": 1,
+                    "explanation": "This list comprehension evaluates `x * 2` for each integer in `[1, 2, 3]`, producing `[2, 4, 6]`."
+                  },
+                  {
+                    "id": "q2",
+                    "question": "Which Python data collection is IMMUTABLE and cannot be modified after creation?",
+                    "options": [
+                      "List",
+                      "Dictionary",
+                      "Tuple",
+                      "Set"
+                    ],
+                    "correctIndex": 2,
+                    "explanation": "Tuples `(1, 2, 3)` are immutable sequence structures in Python."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "Python Syntax & Indentation Challenge",
+              "tag": "Interactive Test",
+              "description": "Fix indentation errors and mutable default argument bugs in Python functions.",
+              "content": {
+                "challengeType": "Mutable Default Argument & Indentation Fix",
+                "instruction": "Fix the function so it does not share a mutable default list across multiple function calls.",
+                "buggyCode": "def add_module(module_name, module_list=[]):\n    module_list.append(module_name)\n    return module_list",
+                "correctSolution": "def add_module(module_name, module_list=None):\n    if module_list is None:\n        module_list = []\n    module_list.append(module_name)\n    return module_list",
+                "hints": [
+                  "Default argument values in Python are evaluated once when the function is defined.",
+                  "Use `None` as the default argument value and initialize a new list inside the body."
+                ],
+                "quizPrompt": "Which built-in Python function returns the memory identity address of an object?",
+                "quizOptions": [
+                  "id()",
+                  "type()",
+                  "hash()",
+                  "ref()"
+                ],
+                "correctOptionIndex": 0,
+                "quizExplanation": "`id(obj)` returns the unique integer memory address for the lifetime of that object."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a Log Parsing & Analysis Tool",
+              "tag": "Hands-On Exercise",
+              "description": "Create a Python CLI script that ingests server logs and generates statistical reports.",
+              "content": {
+                "taskGoal": "Construct a Python utility that parses access logs, calculates HTTP status code frequencies with dictionaries, and outputs top IP addresses.",
+                "requirements": [
+                  "Use regular expressions (`re` module) to extract timestamp, status code, and endpoint.",
+                  "Utilize `collections.Counter` to rank the most requested API endpoints.",
+                  "Format summaries with clean tabular output."
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "python-fastapi",
+          "title": "FastAPI & Asynchronous Web APIs",
+          "summary": "Pydantic data validation, async/await route handlers, dependency injection, and OpenAPI swagger docs.",
+          "level": "Intermediate",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "FastAPI Core & Type Annotations",
+              "tag": "Async Backend",
+              "description": "How FastAPI leverages Python type hints and Pydantic for high-concurrency async APIs.",
+              "content": {
+                "overview": "FastAPI is a modern, high-performance web framework for building APIs with Python based on standard Python type hints and ASGI servers (Uvicorn). It matches NodeJS and Go in speed while auto-generating interactive Swagger documentation.",
+                "keyPoints": [
+                  "Asynchronous Concurrency: Non-blocking async endpoints utilizing `async def` and Python `asyncio`.",
+                  "Pydantic Models: Automatic request serialization, deserialization, and strict validation.",
+                  "Dependency Injection: Powerful `Depends()` system for auth, database sessions, and headers.",
+                  "Auto-generated Docs: Real-time Swagger UI at `/docs` and ReDoc at `/redoc`."
+                ],
+                "codeSnippet": "from fastapi import FastAPI, HTTPException\nfrom pydantic import BaseModel\n\napp = FastAPI(title=\"Cognivue AI Curriculum API\")\n\nclass TopicRequest(BaseModel):\n    title: String = None\n    tech: str\n    modules_count: int = 6\n\n@app.get(\"/api/topics/{topic_id}\")\nasync def get_topic(topic_id: str):\n    return {\"status\": \"success\", \"topic_id\": topic_id, \"ready\": True}"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: Building Modern APIs with FastAPI",
+              "tag": "Video Masterclass",
+              "description": "End-to-end guide to asynchronous Python APIs, Pydantic v2 schemas, and JWT authentication.",
+              "content": {
+                "videoTitle": "FastAPI Masterclass: Modern Python Backends in 20 Minutes",
+                "instructor": "Cognivue Python Lead",
+                "duration": "21:15",
+                "videoUrl": "https://www.youtube.com/embed/0sOvCWFmrtA",
+                "keyTakeaways": [
+                  "03:10 - Setting up FastAPI with Uvicorn server",
+                  "07:45 - Building type-safe Pydantic request models",
+                  "13:20 - Async database integration with SQLAlchemy async session",
+                  "17:50 - Securing endpoints with OAuth2 and JWT bearer tokens"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: Pydantic Validation & CRUD",
+              "tag": "FastAPI Patterns",
+              "description": "Dependency injection patterns and error handling in FastAPI.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "FastAPI Dependency Injection for DB Sessions",
+                    "code": "from fastapi import Depends, APIRouter\n\nrouter = APIRouter(prefix=\"/modules\")\n\nasync def get_db_session():\n    session = \"MockDBSession\"\n    try:\n        yield session\n    finally:\n        pass # Cleanup\n\n@router.get(\"/\")\nasync def list_modules(db = Depends(get_db_session)):\n    return [{\"id\": 1, \"title\": \"FastAPI Async Endpoints\"}]"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on FastAPI",
+              "tag": "Interactive Quiz",
+              "description": "Test understanding of ASGI, Pydantic schemas, and path parameters.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "Which library does FastAPI use for data validation and schema serialization?",
+                    "options": [
+                      "Pydantic",
+                      "Marshmallow",
+                      "Django ORM",
+                      "NumPy"
+                    ],
+                    "correctIndex": 0,
+                    "explanation": "FastAPI is built on top of Pydantic, enforcing data validation and automatic conversion based on Python type hints."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "FastAPI Async & Route Bug Challenge",
+              "tag": "Interactive Test",
+              "description": "Fix route parameter binding and HTTP status code exceptions.",
+              "content": {
+                "challengeType": "FastAPI Route Handler Bug Fix",
+                "instruction": "Fix the endpoint so it raises an HTTPException with a 404 status when a topic is not found.",
+                "buggyCode": "@app.get('/topics/{id}')\ndef get_topic(id: str):\n    topic = database.find(id)\n    if not topic:\n        return {'error': 'not found'} # Bug: should raise HTTPException(404)\n    return topic",
+                "correctSolution": "@app.get('/topics/{id}')\nasync def get_topic(id: str):\n    topic = database.find(id)\n    if not topic:\n        raise HTTPException(status_code=404, detail='Topic not found')\n    return topic",
+                "hints": [
+                  "Import `HTTPException` from `fastapi`.",
+                  "Use `raise HTTPException(status_code=404, detail='...')` to send standard REST error responses."
+                ],
+                "quizPrompt": "What is the default interactive API documentation URL in FastAPI applications?",
+                "quizOptions": [
+                  "/docs",
+                  "/swagger",
+                  "/api/v1/spec",
+                  "/dashboard"
+                ],
+                "correctOptionIndex": 0,
+                "quizExplanation": "FastAPI serves interactive OpenAPI Swagger documentation automatically at the `/docs` route."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a Machine Learning Model Serving API",
+              "tag": "Capstone Project",
+              "description": "Build an asynchronous FastAPI microservice that accepts inference requests, validates inputs, and returns predictions.",
+              "content": {
+                "taskGoal": "Create a high-speed prediction serving microservice with input schema validation, request rate limiting, and response timing headers.",
+                "requirements": [
+                  "Implement Pydantic models with field constraints (e.g. `gt=0`, `le=100`).",
+                  "Use `async def` handlers to handle high concurrent throughput.",
+                  "Auto-document request and response examples in Swagger UI."
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mern",
+      "name": "MERN Stack",
+      "icon": "🚀",
+      "category": "Full Stack Architecture",
+      "description": "Unified full-stack JavaScript architecture connecting MongoDB, Express.js, React, and Node.js with CSS and client-server integration.",
+      "topics": [
+        {
+          "id": "mern-mongodb",
+          "title": "MongoDB & Mongoose Data Layer",
+          "summary": "NoSQL document store, BSON data types, Mongoose schema modeling, CRUD operations, indexing, and aggregation pipelines.",
+          "level": "Beginner to Intermediate",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "MongoDB Architecture & Mongoose Modeling",
+              "tag": "Theory & Fundamentals",
+              "description": "Understanding NoSQL document architecture, schema design, and validations.",
+              "content": {
+                "overview": "MongoDB is a document-oriented NoSQL database storing JSON-like BSON records. Mongoose provides a schema-based solution to model application data with built-in type casting, validation, query building, and business logic hooks.",
+                "keyPoints": [
+                  "Collections & Documents: Dynamic schemas holding flexible JSON-like documents with auto-generated `_id`.",
+                  "Mongoose Schemas & Models: Defining data structures, required fields, custom validators, and default values.",
+                  "CRUD Queries: `create()`, `find()`, `findByIdAndUpdate()`, and `deleteOne()`.",
+                  "Indexes & Performance: B-tree indexing on frequently queried fields to optimize lookups."
+                ],
+                "codeSnippet": "import mongoose from 'mongoose';\n\nconst userSchema = new mongoose.Schema({\n  name: { type: String, required: true },\n  email: { type: String, required: true, unique: true },\n  role: { type: String, enum: ['user', 'admin'], default: 'user' }\n}, { timestamps: true });\n\nexport const User = mongoose.model('User', userSchema);"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: MongoDB & Mongoose in 15 Mins",
+              "tag": "Video Masterclass",
+              "description": "Master database schemas, relations, and aggregation pipelines.",
+              "content": {
+                "videoTitle": "MongoDB & Mongoose Masterclass",
+                "instructor": "Cognivue Database Lead",
+                "duration": "16:20",
+                "videoUrl": "https://www.youtube.com/embed/W-b9KGwVUCE",
+                "keyTakeaways": [
+                  "02:10 - Connecting to MongoDB Atlas with connection strings",
+                  "05:45 - Building Mongoose schemas with validation",
+                  "09:30 - Querying with filters, projection, and pagination",
+                  "13:50 - Aggregation pipeline `$match`, `$group`, and `$sort`"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: Queries & Relations",
+              "tag": "Production Patterns",
+              "description": "Practical Mongoose query patterns and population across documents.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Document Reference & Population",
+                    "code": "const postSchema = new mongoose.Schema({\n  title: String,\n  content: String,\n  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }\n});\n\nconst post = await Post.findById(postId).populate('author', 'name email');"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on MongoDB",
+              "tag": "Interactive Quiz",
+              "description": "Test your understanding of NoSQL schemas, queries, and indexing.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "Which field is automatically created by MongoDB as a primary key for every document?",
+                    "options": [
+                      "id",
+                      "_id",
+                      "uuid",
+                      "pk"
+                    ],
+                    "correctIndex": 1,
+                    "explanation": "MongoDB automatically assigns a unique 12-byte BSON `_id` to each document."
+                  },
+                  {
+                    "id": "q2",
+                    "question": "Which Mongoose method replaces an ObjectId reference with actual document data from another collection?",
+                    "options": [
+                      "populate()",
+                      "join()",
+                      "link()",
+                      "aggregate()"
+                    ],
+                    "correctIndex": 0,
+                    "explanation": "`populate()` fetches and embeds referenced documents automatically."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "MongoDB Query & Connection Fix Challenge",
+              "tag": "Interactive Test",
+              "description": "Fix Mongoose connection errors and async query bugs.",
+              "content": {
+                "challengeType": "Mongoose Connection & Async Query Fix",
+                "instruction": "Fix the function so it connects to MongoDB with proper async/await handling.",
+                "buggyCode": "function connectDB(uri) {\n  mongoose.connect(uri);\n  console.log('Connected');\n}",
+                "correctSolution": "async function connectDB(uri) {\n  try {\n    await mongoose.connect(uri);\n    console.log('MongoDB Connected Successfully');\n  } catch (err) {\n    console.error('Connection failed:', err.message);\n  }\n}",
+                "hints": [
+                  "`mongoose.connect()` returns a Promise, so use `async/await` with `try/catch`."
+                ],
+                "quizPrompt": "Which aggregation stage filters documents in MongoDB?",
+                "quizOptions": [
+                  "$match",
+                  "$filter",
+                  "$find",
+                  "$where"
+                ],
+                "correctOptionIndex": 0,
+                "quizExplanation": "`$match` filters documents in an aggregation pipeline like a `WHERE` clause."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a MongoDB Data Aggregation Engine",
+              "tag": "Hands-On Capstone",
+              "description": "Create an aggregation script calculating analytics across collections.",
+              "content": {
+                "taskGoal": "Write a Mongoose service that generates sales or learning progress analytics using MongoDB aggregation pipelines.",
+                "requirements": [
+                  "Create schemas with relationships using ObjectId refs.",
+                  "Write pipeline with `$match`, `$group`, and `$project` stages.",
+                  "Add indexing on date and category fields."
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mern-express",
+          "title": "Express.js REST APIs & Middleware",
+          "summary": "Routing, controller architecture, centralized error handling, middleware pipelines, CORS, and request validation.",
+          "level": "Beginner to Intermediate",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "Express.js Architecture & Middleware Flow",
+              "tag": "Theory & Fundamentals",
+              "description": "Request-Response lifecycle, router modularization, and middleware chaining.",
+              "content": {
+                "overview": "Express is a fast, unopinionated minimalist web framework for Node.js. It acts as a routing and middleware web framework that processes HTTP requests sequentially through a chain of handler functions.",
+                "keyPoints": [
+                  "Middleware Lifecycle: Functions receiving `(req, res, next)` to manipulate headers, parse payloads, and authenticate requests.",
+                  "Router Modularization: `express.Router()` splitting endpoints into clean domain controllers.",
+                  "Request Parsing: `express.json()` and `express.urlencoded()` parsing incoming request bodies.",
+                  "Centralized Error Handling: Error middleware with 4 arguments `(err, req, res, next)` capturing runtime failures."
+                ],
+                "codeSnippet": "import express from 'express';\nconst app = express();\n\napp.use(express.json());\n\napp.get('/api/health', (req, res) => {\n  res.json({ status: 'ok', timestamp: new Date().toISOString() });\n});"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: Building REST APIs with Express",
+              "tag": "Video Masterclass",
+              "description": "Build robust REST endpoints with error handling and middleware.",
+              "content": {
+                "videoTitle": "Express.js REST API Masterclass",
+                "instructor": "Cognivue Backend Lead",
+                "duration": "17:40",
+                "videoUrl": "https://www.youtube.com/embed/L72fhGm1tfE",
+                "keyTakeaways": [
+                  "02:30 - Setting up Express app and JSON middleware",
+                  "06:15 - Structuring routes, controllers, and models",
+                  "11:00 - Custom error handling middleware and async wrappers",
+                  "15:20 - Testing API routes with Postman/Thunder Client"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: Middleware & Error Handlers",
+              "tag": "Production Patterns",
+              "description": "Production-ready error middleware and authentication guards.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Centralized Error Handler Middleware",
+                    "code": "export const errorHandler = (err, req, res, next) => {\n  const statusCode = err.statusCode || 500;\n  res.status(statusCode).json({\n    success: false,\n    message: err.message || 'Internal Server Error',\n    stack: process.env.NODE_ENV === 'production' ? null : err.stack\n  });\n};"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on Express.js",
+              "tag": "Interactive Quiz",
+              "description": "Test your understanding of Express routing, middleware, and HTTP status codes.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "How does Express identify an error-handling middleware function?",
+                    "options": [
+                      "By its name `errorMiddleware`",
+                      "By taking exactly 4 parameters: `(err, req, res, next)`",
+                      "By returning an Error object",
+                      "By calling `app.error()`"
+                    ],
+                    "correctIndex": 1,
+                    "explanation": "Express recognizes error handlers by their 4-parameter signature `(err, req, res, next)`."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "Express Async Controller Bug Fix Challenge",
+              "tag": "Interactive Test",
+              "description": "Fix hanging requests and uncaught async rejections.",
+              "content": {
+                "challengeType": "Express Route Bug Fix",
+                "instruction": "Fix the route handler so it catches async errors and passes them to `next()`.",
+                "buggyCode": "app.get('/api/items/:id', async (req, res) => {\n  const item = await Item.findById(req.params.id);\n  res.json(item);\n});",
+                "correctSolution": "app.get('/api/items/:id', async (req, res, next) => {\n  try {\n    const item = await Item.findById(req.params.id);\n    if (!item) return res.status(404).json({ error: 'Item not found' });\n    res.json(item);\n  } catch (err) {\n    next(err);\n  }\n});",
+                "hints": [
+                  "Use `try/catch` and pass caught errors to `next(err)`."
+                ],
+                "quizPrompt": "Which method advances execution to the next middleware in Express?",
+                "quizOptions": [
+                  "next()",
+                  "continue()",
+                  "forward()",
+                  "resume()"
+                ],
+                "correctOptionIndex": 0,
+                "quizExplanation": "Calling `next()` passes control to the next handler in the stack."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a Modular REST API Gateway",
+              "tag": "Hands-On Capstone",
+              "description": "Create an Express API router with rate limiting, helmet security, and CORS.",
+              "content": {
+                "taskGoal": "Build a production Express server with router modularity, CORS configuration, and request logging.",
+                "requirements": [
+                  "Create modular routes for users, courses, and auth.",
+                  "Integrate `cors` and `helmet` security headers.",
+                  "Implement a 404 handler and centralized error middleware."
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mern-react",
+          "title": "React.js & Frontend State",
+          "summary": "Component architecture, Hooks (useState, useEffect, useMemo), custom data fetching hooks, and UI component composition.",
+          "level": "Intermediate",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "React Components & State Management",
+              "tag": "Theory & Fundamentals",
+              "description": "JSX virtual DOM reconciliation, unidirectional data flow, and React Hooks.",
+              "content": {
+                "overview": "React is a component-driven JavaScript library for building user interfaces. It uses a Virtual DOM to optimize updates and standard Hooks to manage state and lifecycle without class components.",
+                "keyPoints": [
+                  "Virtual DOM: In-memory DOM representation reconciled with browser DOM for 60fps UI performance.",
+                  "Core Hooks: `useState` for local state, `useEffect` for side-effects and API subscriptions.",
+                  "Component Composition: Reusable modular components receiving props.",
+                  "State Lifting: Elevating state to common parent components for synchronized UI rendering."
+                ],
+                "codeSnippet": "import React, { useState, useEffect } from 'react';\n\nexport function TopicBadge({ topic }) {\n  const [completed, setCompleted] = useState(false);\n  return (\n    <button className={completed ? 'done' : ''} onClick={() => setCompleted(!completed)}>\n      {topic.title} {completed ? '✓' : ''}\n    </button>\n  );\n}"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: Modern React with Hooks",
+              "tag": "Video Masterclass",
+              "description": "Deep dive into React state, hooks, and clean component architecture.",
+              "content": {
+                "videoTitle": "Modern React Hooks in 18 Minutes",
+                "instructor": "Cognivue React Architect",
+                "duration": "18:30",
+                "videoUrl": "https://www.youtube.com/embed/bMknfKXIFA8",
+                "keyTakeaways": [
+                  "02:15 - Virtual DOM and JSX compilation with Vite",
+                  "06:30 - useState and state immutability principles",
+                  "11:20 - useEffect dependency arrays and cleanup functions",
+                  "15:45 - Building custom data fetching hooks"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: Custom React Hooks",
+              "tag": "Production Patterns",
+              "description": "Reusable custom hooks for API calls, debounce, and local storage.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Custom useFetch Hook",
+                    "code": "export function useFetch(url) {\n  const [data, setData] = useState(null);\n  const [loading, setLoading] = useState(true);\n  useEffect(() => {\n    fetch(url).then(r => r.json()).then(d => { setData(d); setLoading(false); });\n  }, [url]);\n  return { data, loading };\n}"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on React",
+              "tag": "Interactive Quiz",
+              "description": "Test understanding of component state, useEffect dependencies, and keys in lists.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "What happens if you pass an empty dependency array `[]` to `useEffect`?",
+                    "options": [
+                      "It runs on every state change",
+                      "It runs only once after the initial component render",
+                      "It never runs",
+                      "It causes an infinite loop"
+                    ],
+                    "correctIndex": 1,
+                    "explanation": "An empty dependency array `[]` ensures the effect runs only once on mount."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "React State Mutation Bug Challenge",
+              "tag": "Interactive Test",
+              "description": "Fix direct state mutation bugs and stale closures.",
+              "content": {
+                "challengeType": "React State Immutability Fix",
+                "instruction": "Fix the state updater so it updates state immutably without mutating the array directly.",
+                "buggyCode": "const addItem = (item) => {\n  items.push(item);\n  setItems(items);\n};",
+                "correctSolution": "const addItem = (item) => {\n  setItems(prev => [...prev, item]);\n};",
+                "hints": [
+                  "Never mutate state directly (`push`); create a new array with the spread operator `[...prev, item]`."
+                ],
+                "quizPrompt": "Which hook memoizes expensive calculation values across renders?",
+                "quizOptions": [
+                  "useMemo",
+                  "useCallback",
+                  "useRef",
+                  "useEffect"
+                ],
+                "correctOptionIndex": 0,
+                "quizExplanation": "`useMemo` returns a memoized value that only recalculates when dependencies change."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build an Interactive Curriculum UI Dashboard",
+              "tag": "Hands-On Capstone",
+              "description": "Create a reactive dashboard with filtering, search dropdown, and module checkboxes.",
+              "content": {
+                "taskGoal": "Build a responsive React learning portal with live search, topic filtering, and state persistence.",
+                "requirements": [
+                  "Implement custom hooks for data fetching.",
+                  "Use memoization on search filtering functions.",
+                  "Support dark/light theme switching with CSS variables."
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mern-node",
+          "title": "Node.js Runtime & Async Architecture",
+          "summary": "Event loop, libuv thread pool, non-blocking I/O, npm packages, fs/path modules, and environment configuration.",
+          "level": "Intermediate",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "Node.js Event-Driven Architecture",
+              "tag": "Theory & Fundamentals",
+              "description": "How Node.js executes JavaScript on the server using the V8 engine and libuv.",
+              "content": {
+                "overview": "Node.js is an open-source, cross-platform JavaScript runtime built on Chrome's V8 engine. Its single-threaded event loop and asynchronous, non-blocking I/O model make it lightweight and efficient for data-intensive real-time applications.",
+                "keyPoints": [
+                  "V8 Engine: Compiles JavaScript directly into machine code.",
+                  "libuv: Multi-platform C library handling the event loop and asynchronous thread pool.",
+                  "Non-Blocking I/O: Offloading network and file system operations without freezing the main execution thread.",
+                  "ES Modules vs CommonJS: Using `import/export` via `\"type\": \"module\"` in `package.json`."
+                ],
+                "codeSnippet": "import fs from 'fs/promises';\nimport path from 'path';\n\nasync function loadConfig() {\n  const configPath = path.resolve('config.json');\n  const rawData = await fs.readFile(configPath, 'utf8');\n  return JSON.parse(rawData);\n}"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: Node.js Architecture in Depth",
+              "tag": "Video Masterclass",
+              "description": "Visual exploration of the event loop phases, microtasks, and thread pools.",
+              "content": {
+                "videoTitle": "Node.js Architecture & Event Loop Explained",
+                "instructor": "Cognivue Node.js Specialist",
+                "duration": "17:15",
+                "videoUrl": "https://www.youtube.com/embed/zqrqqZpS3aI",
+                "keyTakeaways": [
+                  "02:40 - Single thread vs Multi-threaded C++ thread pool in libuv",
+                  "07:15 - Event loop phases: Timers, I/O callbacks, Poll, Check (setImmediate), Close",
+                  "12:30 - Streams and Buffers for large data payloads",
+                  "15:50 - Process environment variables and graceful shutdown"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: File Streams & Events",
+              "tag": "Production Patterns",
+              "description": "High-throughput streams and EventEmitter patterns.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Streaming Large Files with Node.js",
+                    "code": "import { createReadStream, createWriteStream } from 'fs';\n\nconst reader = createReadStream('large_dataset.json');\nconst writer = createWriteStream('output.json');\n\nreader.pipe(writer);\nwriter.on('finish', () => console.log('Transfer complete'));"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on Node.js",
+              "tag": "Interactive Quiz",
+              "description": "Test understanding of non-blocking I/O, event loop, and global objects.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "Which C library provides the cross-platform asynchronous I/O and event loop for Node.js?",
+                    "options": [
+                      "libuv",
+                      "V8",
+                      "Babel",
+                      "Webpack"
+                    ],
+                    "correctIndex": 0,
+                    "explanation": "`libuv` handles the event loop and thread pool in Node.js."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "Node.js Stream & Path Resolution Fix",
+              "tag": "Interactive Test",
+              "description": "Fix path joining bugs and uncaught stream errors.",
+              "content": {
+                "challengeType": "Node.js Path Resolution Fix",
+                "instruction": "Fix the file path resolver so it works cross-platform on Windows and Linux.",
+                "buggyCode": "const file = __dirname + '/data/config.json'; // Fails on Windows backslashes",
+                "correctSolution": "import path from 'path';\nimport { fileURLToPath } from 'url';\nconst __dirname = path.dirname(fileURLToPath(import.meta.url));\nconst file = path.join(__dirname, 'data', 'config.json');",
+                "hints": [
+                  "Use `path.join()` or `path.resolve()` instead of string concatenation with `/`."
+                ],
+                "quizPrompt": "Which global object provides access to environment variables in Node.js?",
+                "quizOptions": [
+                  "process.env",
+                  "global.env",
+                  "system.env",
+                  "node.env"
+                ],
+                "correctOptionIndex": 0,
+                "quizExplanation": "`process.env` contains all environment variables passed to the Node.js process."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a High-Speed File Processing CLI",
+              "tag": "Hands-On Capstone",
+              "description": "Construct a Node.js CLI script using streams to compress and process telemetry data.",
+              "content": {
+                "taskGoal": "Build a Node.js utility that streams large JSON datasets, validates schemas, and generates summary reports.",
+                "requirements": [
+                  "Use Node.js streams to process data without loading everything into RAM.",
+                  "Handle `SIGINT` and `SIGTERM` signals for graceful process termination.",
+                  "Read configuration from `.env` using native `process.loadEnvFile()` or `dotenv`."
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mern-js-core",
+          "title": "JavaScript & Async Logic",
+          "summary": "ES6+ features, closures, prototypes, Promises, async/await, array transformations, and event-driven patterns.",
+          "level": "Beginner to Intermediate",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "JavaScript Fundamentals & Asynchronous Flow",
+              "tag": "Theory & Fundamentals",
+              "description": "Closures, Lexical Scope, Event Loop Microtasks, and Promises.",
+              "content": {
+                "overview": "JavaScript is the core language powering both the browser frontend and the Node.js backend in the MERN stack. Mastering asynchronous promises, closures, and object destructuring is critical for full-stack mastery.",
+                "keyPoints": [
+                  "Async / Await: Syntactic sugar over Promises facilitating sequential, readable async code.",
+                  "Higher-Order Functions: `map()`, `filter()`, `reduce()` for immutable data transformations.",
+                  "Closures: Functions retaining access to their outer lexical scope after the parent function returns.",
+                  "Destructuring & Spread: Efficient object/array unpacking and shallow cloning."
+                ],
+                "codeSnippet": "const processCurriculum = async (topics) => {\n  const activeTopics = topics.filter(t => t.modules && t.modules.length > 0);\n  const totalModules = activeTopics.reduce((sum, t) => sum + t.modules.length, 0);\n  return { count: activeTopics.length, totalModules };\n};"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: Full-Stack JavaScript Essentials",
+              "tag": "Video Masterclass",
+              "description": "Modern JavaScript patterns used throughout the MERN ecosystem.",
+              "content": {
+                "videoTitle": "JavaScript for Full-Stack Developers in 16 Minutes",
+                "instructor": "Cognivue Senior Instructor",
+                "duration": "16:45",
+                "videoUrl": "https://www.youtube.com/embed/hdI2bqOjy3c",
+                "keyTakeaways": [
+                  "02:15 - Deep dive into Closures and Lexical Scope",
+                  "06:30 - Promise chaining vs async/await error handling",
+                  "10:45 - Destructuring, Rest/Spread operators, and Object methods",
+                  "14:10 - Array reduce and functional programming patterns"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: Functional Data Pipelines",
+              "tag": "Production Patterns",
+              "description": "Clean data pipeline transformations with reduce and map.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Curriculum Topic Aggregation with Reduce",
+                    "code": "const groupTopicsByLevel = (topics) => {\n  return topics.reduce((acc, topic) => {\n    const level = topic.level || 'General';\n    acc[level] = acc[level] || [];\n    acc[level].push(topic.title);\n    return acc;\n  }, {});\n};"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on JavaScript Logic",
+              "tag": "Interactive Quiz",
+              "description": "Test your mastery of closures, arrow functions, and array methods.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "Which array method returns a single accumulated value calculated across all elements?",
+                    "options": [
+                      "map()",
+                      "filter()",
+                      "reduce()",
+                      "forEach()"
+                    ],
+                    "correctIndex": 2,
+                    "explanation": "`reduce()` executes a reducer callback on each element, resulting in a single output value."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "Async Function Error Handling Challenge",
+              "tag": "Interactive Test",
+              "description": "Fix unhandled promise rejections and asynchronous race conditions.",
+              "content": {
+                "challengeType": "Async Promise Rejection Fix",
+                "instruction": "Fix the function so it safely catches fetch errors and returns fallback data instead of throwing.",
+                "buggyCode": "async function loadData(url) {\n  const res = await fetch(url);\n  return res.json();\n}",
+                "correctSolution": "async function loadData(url) {\n  try {\n    const res = await fetch(url);\n    if (!res.ok) throw new Error(`HTTP ${res.status}`);\n    return await res.json();\n  } catch (err) {\n    console.error('Fetch failed:', err.message);\n    return null;\n  }\n}",
+                "hints": [
+                  "Wrap the `await fetch()` in a `try...catch` block and check `res.ok`."
+                ],
+                "quizPrompt": "Which keyword creates a block-scoped constant reference in JavaScript?",
+                "quizOptions": [
+                  "const",
+                  "let",
+                  "var",
+                  "final"
+                ],
+                "correctOptionIndex": 0,
+                "quizExplanation": "`const` declares a block-scoped identifier that cannot be reassigned."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a Pure JS State Store Engine",
+              "tag": "Hands-On Capstone",
+              "description": "Implement a Redux-like event pub/sub state manager in pure JavaScript.",
+              "content": {
+                "taskGoal": "Construct a lightweight state store with `getState()`, `dispatch()`, and `subscribe()` functions using closures.",
+                "requirements": [
+                  "Maintain private state encapsulated within a closure.",
+                  "Implement an action dispatcher with reducer execution.",
+                  "Allow components to subscribe and unsubscribe cleanly."
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mern-css",
+          "title": "CSS & Responsive UI Design",
+          "summary": "Modern CSS Grid, Flexbox, CSS Variables, dark mode palettes, glassmorphism, responsive breakpoints, and UI animations.",
+          "level": "Beginner to Intermediate",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "Modern CSS Layouts & Design Systems",
+              "tag": "Theory & Fundamentals",
+              "description": "Grid, Flexbox, tokens, and theme-adaptive variables for modern web apps.",
+              "content": {
+                "overview": "CSS forms the visual presentation layer of the MERN stack. Modern Vanilla CSS with CSS Custom Properties (Variables), Flexbox, and CSS Grid enables responsive, high-performance user interfaces without bloated framework dependencies.",
+                "keyPoints": [
+                  "CSS Variables (`--primary`): Centralized design tokens enabling dynamic theme switching (Dark/Light).",
+                  "CSS Grid & Flexbox: Multi-dimensional layout systems for responsive component matrices.",
+                  "Glassmorphism & Shadows: `backdrop-filter: blur()`, subtle borders, and layered drop-shadows for a premium feel.",
+                  "Smooth Transitions: Hardware-accelerated GPU transforms (`scale`, `translate3d`) for 60fps micro-animations."
+                ],
+                "codeSnippet": ":root {\n  --surface: #0f172a;\n  --accent: #10b981;\n  --text-main: #f8fafc;\n}\n\n.card {\n  background: var(--surface);\n  border: 1px solid rgba(255, 255, 255, 0.1);\n  border-radius: 12px;\n  backdrop-filter: blur(8px);\n  transition: transform 0.2s ease;\n}"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: Modern CSS Layouts & Grid",
+              "tag": "Video Masterclass",
+              "description": "Build clean, responsive layouts using modern CSS Grid and Flexbox.",
+              "content": {
+                "videoTitle": "CSS Grid & Flexbox Mastery in 15 Minutes",
+                "instructor": "Cognivue UI/UX Designer",
+                "duration": "15:20",
+                "videoUrl": "https://www.youtube.com/embed/rg7Fvvl3taU",
+                "keyTakeaways": [
+                  "02:00 - Flexbox for one-dimensional alignments and centering",
+                  "06:30 - CSS Grid for complex 2D responsive matrices",
+                  "10:45 - CSS variables for dynamic Dark/Light themes",
+                  "13:50 - Micro-interactions, hover states, and smooth easing curves"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: Responsive Layouts",
+              "tag": "Production Patterns",
+              "description": "Clean responsive CSS Grid templates and card styles.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Responsive Auto-Fitting Grid",
+                    "code": ".card-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));\n  gap: 20px;\n  width: 100%;\n}"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on Modern CSS",
+              "tag": "Interactive Quiz",
+              "description": "Test your mastery of CSS Grid, Flexbox, and CSS Custom Properties.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "Which CSS function creates responsive grid columns that automatically wrap based on available width?",
+                    "options": [
+                      "repeat(auto-fit, minmax(250px, 1fr))",
+                      "grid-auto-wrap: true",
+                      "flex-wrap: wrap",
+                      "columns: auto"
+                    ],
+                    "correctIndex": 0,
+                    "explanation": "`repeat(auto-fit, minmax(min, 1fr))` creates responsive columns that adjust automatically without media queries."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "CSS Layout Overflow Bug Challenge",
+              "tag": "Interactive Test",
+              "description": "Fix layout breakage, horizontal overflow, and flex shrinking issues.",
+              "content": {
+                "challengeType": "CSS Flex & Text Overflow Fix",
+                "instruction": "Fix the CSS class so that long text truncates with an ellipsis (`...`) instead of overflowing out of its container.",
+                "buggyCode": ".title {\n  white-space: nowrap;\n}",
+                "correctSolution": ".title {\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  max-width: 100%;\n}",
+                "hints": [
+                  "Text truncation requires `white-space: nowrap`, `overflow: hidden`, and `text-overflow: ellipsis`."
+                ],
+                "quizPrompt": "Which CSS property applies a frosted glass blur to elements behind the target element?",
+                "quizOptions": [
+                  "backdrop-filter",
+                  "filter",
+                  "box-shadow",
+                  "background-blur"
+                ],
+                "correctOptionIndex": 0,
+                "quizExplanation": "`backdrop-filter: blur(...)` blurs the graphical area behind an element."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Design a Dark Mode Glassmorphic UI Card",
+              "tag": "Hands-On Capstone",
+              "description": "Create an interactive glassmorphic card component with hover elevation and responsive layout.",
+              "content": {
+                "taskGoal": "Build a polished UI component using CSS variables, subtle glassmorphism borders, and smooth hover micro-animations.",
+                "requirements": [
+                  "Use CSS variables for theme colors.",
+                  "Implement `backdrop-filter: blur()` with a subtle border.",
+                  "Add smooth hover elevation effects with `transform: translateY(-4px)`."
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "mern-integration",
+          "title": "MERN Full Stack Integration & Deployment",
+          "summary": "Connecting React client to Express REST API, CORS configuration, JWT auth, and state sync.",
+          "level": "Advanced",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "Basic Concepts: Client-Server Architecture & Full Stack Flow",
+              "tag": "Theory & Fundamentals",
+              "description": "How the 4 tiers of MERN work together in a decoupled production environment.",
+              "content": {
+                "overview": "The MERN stack is a JavaScript-only full-stack framework consisting of MongoDB (Database), Express.js (Backend Framework), React (Frontend UI Library), and Node.js (JavaScript Runtime). The React client executes in the browser and communicates with the Express REST API via JSON HTTP requests, which in turn queries MongoDB using Mongoose models.",
+                "keyPoints": [
+                  "Client-Server Separation: Decoupled frontend (Vite/React) and backend (Express/Node.js) communicating via RESTful API endpoints.",
+                  "Cross-Origin Resource Sharing (CORS): Express middleware configuring origin headers to allow secure requests from the React client.",
+                  "State Synchronization: Managing remote data fetching, loading spinners, caching, and optimistic UI updates on the React client.",
+                  "JWT Authentication: Node.js signs cryptographic JSON Web Tokens; React stores tokens in secure memory or cookies and attaches them to `Authorization: Bearer <token>` headers.",
+                  "Environment Configuration: Storing sensitive secrets (MongoDB connection string, JWT secrets, port) inside `.env` files."
+                ],
+                "codeSnippet": "// Client-Side API Service (React)\nexport async function fetchModules(techId) {\n  const token = localStorage.getItem('authToken');\n  const res = await fetch(`/api/tech/${techId}/modules`, {\n    headers: {\n      'Content-Type': 'application/json',\n      'Authorization': `Bearer ${token}`\n    }\n  });\n  if (!res.ok) throw new Error(`API Error: ${res.status}`);\n  return res.json();\n}"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: Building Full-Stack MERN Apps",
+              "tag": "Video Masterclass",
+              "description": "End-to-end walkthrough on connecting React frontend to Express backend and MongoDB database.",
+              "content": {
+                "videoTitle": "Full Stack MERN Architecture in 20 Minutes",
+                "instructor": "Cognivue Full-Stack Lead",
+                "duration": "18:45",
+                "videoUrl": "https://www.youtube.com/embed/7CqJlxBYj-M",
+                "keyTakeaways": [
+                  "02:15 - Setting up Express API server with CORS and JSON middleware",
+                  "06:30 - Defining Mongoose schemas and connecting to MongoDB Atlas",
+                  "11:10 - Creating async controllers and error handling middleware",
+                  "15:40 - Fetching and rendering dynamic state inside React components with custom hooks"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples & Integration Patterns",
+              "tag": "Production Patterns",
+              "description": "Clean controller, router, and client-side service patterns used in enterprise MERN applications.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Express Route Controller with Mongoose",
+                    "code": "// server/controllers/curriculumController.js\nimport { TopicModel } from '../models/Topic.js';\n\nexport const getTopicCurriculum = async (req, res, next) => {\n  try {\n    const { topicId } = req.params;\n    const topic = await TopicModel.findOne({ id: topicId }).lean();\n    if (!topic) {\n      return res.status(404).json({ success: false, message: 'Topic not found' });\n    }\n    return res.status(200).json({ success: true, data: topic });\n  } catch (err) {\n    next(err); // Forward to centralized error middleware\n  }\n};"
+                  },
+                  {
+                    "title": "React Custom Data Fetching Hook",
+                    "code": "// client/hooks/useCurriculum.js\nimport { useState, useEffect } from 'react';\n\nexport function useCurriculum(topicId) {\n  const [data, setData] = useState(null);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState(null);\n\n  useEffect(() => {\n    if (!topicId) return;\n    let isMounted = true;\n    setLoading(true);\n\n    fetch(`/api/topics/${topicId}`)\n      .then(res => res.json())\n      .then(json => { if (isMounted) { setData(json.data); setLoading(false); } })\n      .catch(err => { if (isMounted) { setError(err.message); setLoading(false); } });\n\n    return () => { isMounted = false; };\n  }, [topicId]);\n\n  return { data, loading, error };\n}"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on MERN Architecture",
+              "tag": "Interactive Quiz",
+              "description": "Test your mastery of client-server integration, CORS, and JWT authentication.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "What is the primary role of the CORS middleware in an Express.js backend?",
+                    "options": [
+                      "To compress HTTP response payloads",
+                      "To permit web browsers on different domains/ports (like React on 5173) to request backend resources",
+                      "To encrypt passwords before saving to MongoDB",
+                      "To compile JSX into browser-compatible JavaScript"
+                    ],
+                    "correctIndex": 1,
+                    "explanation": "CORS (Cross-Origin Resource Sharing) sets HTTP headers telling browsers that the API server authorizes requests originating from other origins/ports."
+                  },
+                  {
+                    "id": "q2",
+                    "question": "Where should sensitive configuration keys like the MongoDB connection URI and JWT secrets be stored?",
+                    "options": [
+                      "Directly in React component files",
+                      "In public git commits",
+                      "Inside server-side environment variables (.env) that are never exposed to the client",
+                      "In browser localStorage"
+                    ],
+                    "correctIndex": 2,
+                    "explanation": "Server environment variables (.env) keep database passwords and private keys safe from public exposure or client inspection."
+                  },
+                  {
+                    "id": "q3",
+                    "question": "How does React typically transmit a JWT auth token to a protected Express endpoint?",
+                    "options": [
+                      "In the `Authorization: Bearer <token>` HTTP request header",
+                      "Inside the HTML title tag",
+                      "As a query string parameter in the favicon URL",
+                      "By modifying the CSS stylesheet"
+                    ],
+                    "correctIndex": 0,
+                    "explanation": "Standard REST practices use the HTTP `Authorization` request header with the `Bearer` token scheme."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "MERN Syntax & API Debugging Challenge",
+              "tag": "Interactive Test",
+              "description": "Identify and fix common async controller bugs and CORS header mistakes.",
+              "content": {
+                "challengeType": "Full Stack API & Async Correction",
+                "instruction": "Fix the Express controller below so it properly awaits the database query and handles errors with try/catch instead of hanging the HTTP connection.",
+                "buggyCode": "app.get('/api/users', (req, res) => {\n  const users = UserModel.find({});\n  res.send(users);\n});",
+                "correctSolution": "app.get('/api/users', async (req, res) => {\n  try {\n    const users = await UserModel.find({});\n    res.status(200).json({ success: true, data: users });\n  } catch (err) {\n    res.status(500).json({ success: false, error: err.message });\n  }\n});",
+                "hints": [
+                  "Mongoose queries are asynchronous; add the `async` keyword to the route handler and `await` the query.",
+                  "Wrap async database calls in `try...catch` to prevent unhandled promise rejections."
+                ],
+                "quizPrompt": "What HTTP response status code should be returned when a requested MERN resource is not found in MongoDB?",
+                "quizOptions": [
+                  "200 OK",
+                  "404 Not Found",
+                  "500 Internal Server Error",
+                  "301 Moved Permanently"
+                ],
+                "correctOptionIndex": 1,
+                "quizExplanation": "Status code `404 Not Found` correctly indicates that the server cannot find the requested document."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a Production Full-Stack Project Task",
+              "tag": "Hands-On Capstone",
+              "description": "Construct a full-stack learning tracker with CRUD capabilities, Mongoose models, and live React updates.",
+              "content": {
+                "taskGoal": "Build an end-to-end full-stack module completion tracker where users can check off modules, store progress in MongoDB, and view live statistics on React.",
+                "requirements": [
+                  "Backend: Express endpoints for `/api/progress/:userId` supporting GET and POST with validation.",
+                  "Database: MongoDB schema with fields `userId`, `topicId`, `completedModuleIds: [Number]`, `updatedAt`.",
+                  "Frontend: React progress bar that updates state immediately with optimistic rendering and synchronizes with the Express API.",
+                  "Security: Validate request payloads and sanitize inputs before querying MongoDB."
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "javascript",
+      "name": "JavaScript",
+      "icon": "🟨",
+      "category": "Frontend & Backend Core Language",
+      "description": "The foundational programming language of the modern web, enabling interactive client-side and server-side applications.",
+      "topics": [
+        {
+          "id": "js-syntax",
+          "title": "JavaScript Syntax & Fundamentals",
+          "summary": "Master variables, data types, operators, template literals, and control flow statements.",
+          "level": "Beginner",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "Basic Concepts & Syntax Overview",
+              "tag": "Theory & Fundamentals",
+              "description": "Understand how JavaScript executes code in the browser and runtime environments.",
+              "content": {
+                "overview": "JavaScript is a lightweight, interpreted (or just-in-time compiled) programming language with first-class functions. Syntax rules dictate how JavaScript programs are constructed and interpreted by JavaScript engines (like V8 in Chrome and Node.js).",
+                "keyPoints": [
+                  "Variable declarations using let, const, and var (prefer const by default, let when reassigning).",
+                  "Primitive Data Types: string, number, boolean, null, undefined, symbol, and bigint.",
+                  "Strict Equality (===) vs Loose Equality (==) to prevent unexpected type coercion.",
+                  "Template Literals (`${variable}`) for multiline strings and dynamic string interpolation."
+                ],
+                "codeSnippet": "// Variable declaration and template literal\nconst userName = 'Alex';\nlet masteryLevel = 1;\n\nconsole.log(`Welcome ${userName}! Your current level is ${masteryLevel}.`);\n\n// Type Checking and Comparison\nconst age = 21;\nif (typeof age === 'number' && age >= 18) {\n  console.log('Access granted to advanced engineering track.');\n}"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial & Code Walkthrough",
+              "tag": "Video Masterclass",
+              "description": "High-yield video breakdown on modern ES6+ syntax and execution contexts.",
+              "content": {
+                "videoTitle": "Modern JavaScript Syntax in 15 Minutes",
+                "instructor": "Cognivue Senior Instructor",
+                "duration": "14:20",
+                "videoUrl": "https://www.youtube.com/embed/W6NZfCO5SIk",
+                "keyTakeaways": [
+                  "01:15 - Difference between Lexical Scope and Block Scope (let vs var)",
+                  "04:30 - Arrow Functions: Syntactic sugar and lexical 'this' binding",
+                  "08:45 - Destructuring objects and arrays cleanly",
+                  "12:10 - Spread (...) and Rest parameters in function arguments"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples & Patterns",
+              "tag": "Practical Code Snippets",
+              "description": "Common real-world syntax patterns used daily by frontend and backend engineers.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Object and Array Destructuring",
+                    "code": "const userProfile = {\n  id: 'usr_1092',\n  name: 'Sarah Chen',\n  skills: ['JavaScript', 'React', 'Node.js'],\n  stats: { solvedProblems: 142, streakDays: 28 }\n};\n\n// Destructuring with default values\nconst { name, skills, stats: { streakDays = 0 } } = userProfile;\nconst [primarySkill, secondarySkill] = skills;\n\nconsole.log(`${name} is mastering ${primarySkill} with a ${streakDays}-day streak!`);"
+                  },
+                  {
+                    "title": "Ternary and Short-Circuit Evaluation",
+                    "code": "const isLoggedIn = true;\nconst userRole = 'admin';\n\n// Nullish coalescing and optional chaining\nconst currentTheme = localStorage.getItem('theme') ?? 'dark';\nconst permissions = userRole === 'admin' ? ['read', 'write', 'delete'] : ['read'];\n\nconsole.log('Applied Theme:', currentTheme);\nconsole.log('Permissions:', permissions);"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs & Concept Check",
+              "tag": "Interactive Quiz",
+              "description": "Test your grasp of variable declaration, scopes, and data coercion.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "Which keyword should be used by default to declare a variable that won't be reassigned?",
+                    "options": [
+                      "var",
+                      "let",
+                      "const",
+                      "static"
+                    ],
+                    "correctIndex": 2,
+                    "explanation": "'const' declares a block-scoped constant reference, preventing accidental reassignment and making code intent clear."
+                  },
+                  {
+                    "id": "q2",
+                    "question": "What is the output of `typeof null` in JavaScript?",
+                    "options": [
+                      "'null'",
+                      "'undefined'",
+                      "'object'",
+                      "'boolean'"
+                    ],
+                    "correctIndex": 2,
+                    "explanation": "`typeof null` returns 'object' due to a historical bug in the original implementation of JavaScript."
+                  },
+                  {
+                    "id": "q3",
+                    "question": "What will `5 === '5'` evaluate to?",
+                    "options": [
+                      "true",
+                      "false",
+                      "TypeError",
+                      "undefined"
+                    ],
+                    "correctIndex": 1,
+                    "explanation": "Strict equality (===) checks both value and type without coercion, so number 5 is not equal to string '5'."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "Syntax Test & Debugging Challenge",
+              "tag": "Interactive Test",
+              "description": "Fix broken syntax and predict the correct evaluation of code snippets.",
+              "content": {
+                "challengeType": "Syntax Correction & Bug Fixing",
+                "instruction": "Fix the syntax errors in the following ES6 function so that it correctly formats the full name and returns the uppercase output.",
+                "buggyCode": "function formatFullName(user) {\n  let { first name, last name } = user;\n  return `${first name} ${last name}`.toUppercase();\n}",
+                "correctSolution": "function formatFullName(user) {\n  const { firstName, lastName } = user;\n  return `${firstName} ${lastName}`.toUpperCase();\n}",
+                "hints": [
+                  "Identifiers cannot have spaces (use camelCase like firstName).",
+                  "JavaScript methods are case-sensitive: it is `.toUpperCase()` with a capital 'C'."
+                ],
+                "quizPrompt": "Which declaration keyword has function-scope instead of block-scope in JavaScript?",
+                "quizOptions": [
+                  "let",
+                  "const",
+                  "var",
+                  "def"
+                ],
+                "correctOptionIndex": 2,
+                "quizExplanation": "`var` declarations are scoped to the nearest enclosing function context, whereas `let` and `const` are block-scoped."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a Small Practical Task",
+              "tag": "Mini-Project",
+              "description": "Create an interactive user profile card with dynamic state changes and theme toggling.",
+              "content": {
+                "taskGoal": "Construct a clean, responsive JavaScript profile badge that dynamically computes user status, formats date strings, and tracks completion badges.",
+                "requirements": [
+                  "Declare user state with `const` and `let` according to reassignment needs.",
+                  "Format output using template literals with embedded ternary calculations.",
+                  "Handle edge cases using nullish coalescing (`??`) for missing user avatar URLs."
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "js-async",
+          "title": "Asynchronous JavaScript (Promises & Event Loop)",
+          "summary": "Callbacks, Promises, Async/Await, Error Handling with try/catch, and Event Loop Microtasks.",
+          "level": "Advanced",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "Basic Concepts: Promises, Async/Await & Event Loop",
+              "tag": "Theory & Fundamentals",
+              "description": "How JavaScript manages single-threaded non-blocking I/O operations.",
+              "content": {
+                "overview": "JavaScript is single-threaded with an Event Loop. Asynchronous operations (network requests, timers, file I/O) are delegated to browser/runtime APIs and resolve via Microtask/Macrotask queues.",
+                "keyPoints": [
+                  "Promises have 3 states: Pending, Fulfilled (resolved), and Rejected.",
+                  "async functions always return a Promise; await pauses execution until the Promise resolves.",
+                  "try...catch blocks handle rejected Promises gracefully without crashing the application.",
+                  "Promise.all() and Promise.allSettled() handle concurrent async tasks."
+                ],
+                "codeSnippet": "async function fetchCourseData(courseId) {\n  try {\n    const response = await fetch(`/api/courses/${courseId}`);\n    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);\n    const data = await response.json();\n    return data;\n  } catch (err) {\n    console.error('Failed to load course:', err.message);\n    return null;\n  }\n}"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: Event Loop & Microtasks",
+              "tag": "Video Masterclass",
+              "description": "Visualize how the Call Stack, Web APIs, Microtask Queue, and Callback Queue interact in real time.",
+              "content": {
+                "videoTitle": "What the heck is the event loop anyway?",
+                "instructor": "Philip Roberts / Cognivue Curation",
+                "duration": "26:40",
+                "videoUrl": "https://www.youtube.com/embed/8aGhZQkoFbQ",
+                "keyTakeaways": [
+                  "03:15 - The JavaScript Call Stack and single thread limits",
+                  "09:30 - How Browser WebAPIs process timers and HTTP requests",
+                  "15:45 - Microtask Queue priority (Promises) over Task Queue (setTimeout)",
+                  "21:10 - Avoiding call stack blocking with non-blocking async loops"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: Promise Patterns",
+              "tag": "Async Patterns",
+              "description": "Parallel data fetching with Promise.all and graceful error handling.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Parallel API Fetching with Promise.all",
+                    "code": "async function loadDashboardData() {\n  try {\n    const [userRes, coursesRes] = await Promise.all([\n      fetch('/api/user/profile'),\n      fetch('/api/curriculum/tracks')\n    ]);\n    const user = await userRes.json();\n    const courses = await coursesRes.json();\n    return { user, courses };\n  } catch (error) {\n    console.error('Failed to load dashboard:', error);\n    throw error;\n  }\n}"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on Async JavaScript",
+              "tag": "Interactive Quiz",
+              "description": "Test your understanding of promise states and microtask execution order.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "What is the return type of any function marked with the `async` keyword?",
+                    "options": [
+                      "Promise",
+                      "Object",
+                      "Function",
+                      "Callback"
+                    ],
+                    "correctIndex": 0,
+                    "explanation": "Any function declared with `async` automatically returns a Promise resolving to the return value."
+                  },
+                  {
+                    "id": "q2",
+                    "question": "Which queue has higher execution priority in the JavaScript Event Loop?",
+                    "options": [
+                      "Macrotask Queue (setTimeout)",
+                      "Microtask Queue (Promise.then)",
+                      "Render Queue",
+                      "Worker Queue"
+                    ],
+                    "correctIndex": 1,
+                    "explanation": "Microtasks (Promises, queueMicrotask) are executed immediately after the current script and before any macrotasks."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "Async Test: Concurrent Promise Execution",
+              "tag": "Interactive Test",
+              "description": "Choose the optimal method to fetch multiple independent API endpoints concurrently.",
+              "content": {
+                "challengeType": "Performance & Concurrency Test",
+                "instruction": "Use Promise.all to fetch users and courses in parallel instead of sequentially.",
+                "buggyCode": "async function loadDashboard() {\n  const users = await fetch('/api/users').then(r => r.json());\n  const courses = await fetch('/api/courses').then(r => r.json());\n  return { users, courses };\n}",
+                "correctSolution": "async function loadDashboard() {\n  const [users, courses] = await Promise.all([\n    fetch('/api/users').then(r => r.json()),\n    fetch('/api/courses').then(r => r.json())\n  ]);\n  return { users, courses };\n}",
+                "hints": [
+                  "Promise.all takes an array of promises and runs them in parallel."
+                ],
+                "quizPrompt": "What happens if one promise in `Promise.all` rejects?",
+                "quizOptions": [
+                  "The entire Promise.all immediately rejects",
+                  "It ignores the error",
+                  "It retries 3 times",
+                  "It returns null"
+                ],
+                "correctOptionIndex": 0,
+                "quizExplanation": "Promise.all has fail-fast behavior: if any input promise rejects, the returned promise immediately rejects with that reason."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build an Async Rate-Limited Data Fetcher",
+              "tag": "Capstone Project",
+              "description": "Construct an asynchronous batch fetcher with exponential backoff and retry mechanism.",
+              "content": {
+                "taskGoal": "Build a resilient data service that fetches multiple curriculum topics with automatic retry on 503/429 errors and timeout handling.",
+                "requirements": [
+                  "Implement exponential backoff delay (`Math.pow(2, attempt) * 1000`).",
+                  "Use `AbortController` to timeout requests taking longer than 5 seconds.",
+                  "Return a unified summary object with fulfilled data and error logs."
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "react",
+      "name": "React.js",
+      "icon": "⚛️",
+      "category": "Frontend UI Library",
+      "description": "Declarative, component-driven frontend library for building modern interactive web applications.",
+      "topics": [
+        {
+          "id": "react-components",
+          "title": "React Components & JSX Syntax",
+          "summary": "Functional components, props, conditional rendering, list rendering with keys, and JSX rules.",
+          "level": "Beginner",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "Basic Concepts: JSX & Component Tree",
+              "tag": "Theory & Fundamentals",
+              "description": "How React transforms JSX into virtual DOM nodes and renders UI efficiently.",
+              "content": {
+                "overview": "React uses JSX (JavaScript XML) to write HTML-like markup inside JavaScript. Components are reusable building blocks that receive props and return JSX elements describing what should appear on screen.",
+                "keyPoints": [
+                  "JSX expressions require a single parent element or a Fragment (`<>...</>`).",
+                  "Props are read-only inputs passed from parent components to child components.",
+                  "Key prop is required when rendering lists with `.map()` for reconciliation efficiency.",
+                  "Event handlers are passed as functions (`onClick={handleClick}` not `onClick={handleClick()}`)."
+                ],
+                "codeSnippet": "function CourseCard({ title, duration, rating, onSelect }) {\n  return (\n    <div className=\"course-card\">\n      <h3>{title}</h3>\n      <p>Duration: {duration}</p>\n      <span>Rating: {rating} ★</span>\n      <button type=\"button\" onClick={onSelect}>\n        Start Module\n      </button>\n    </div>\n  );\n}"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: React Fundamentals",
+              "tag": "Video Masterclass",
+              "description": "Component structure, props destructuring, and conditional rendering patterns in React 18+.",
+              "content": {
+                "videoTitle": "React 18 Crash Course for Modern Developers",
+                "instructor": "Cognivue React Lead",
+                "duration": "19:10",
+                "videoUrl": "https://www.youtube.com/embed/w7ejDZ8SWv8",
+                "keyTakeaways": [
+                  "02:20 - Anatomy of a functional React component",
+                  "06:45 - Props vs State: Uni-directional data flow",
+                  "11:30 - Efficient list rendering and the importance of unique keys",
+                  "16:15 - Lifting state up to common ancestor components"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: Conditional Rendering & Lists",
+              "tag": "UI Patterns",
+              "description": "Ternary conditions, logical AND rendering, and list mapping with keys.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "Dynamic Component Rendering with Badges",
+                    "code": "export function TopicList({ topics, onSelect, activeId }) {\n  return (\n    <div className=\"topic-list\">\n      {topics.map((t) => (\n        <button\n          key={t.id}\n          className={`topic-btn ${t.id === activeId ? 'active' : ''}`}\n          onClick={() => onSelect(t.id)}\n        >\n          <span>{t.icon || '📌'}</span>\n          <h4>{t.title}</h4>\n          {t.isNew && <span className=\"new-badge\">NEW</span>}\n        </button>\n      ))}\n    </div>\n  );\n}"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on React Basics",
+              "tag": "Interactive Quiz",
+              "description": "Test your knowledge of JSX rules, props, and component structure.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "Why is the `key` prop required when rendering an array of elements in React?",
+                    "options": [
+                      "To style the elements",
+                      "To help React identify which items have changed, added, or removed during reconciliation",
+                      "To bind event listeners",
+                      "To make elements accessible"
+                    ],
+                    "correctIndex": 1,
+                    "explanation": "React's Virtual DOM diffing algorithm uses the unique `key` prop to identify list item changes without re-rendering the whole list."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "React Syntax Test: Fix the JSX Error",
+              "tag": "Interactive Test",
+              "description": "Identify and correct common JSX syntax bugs.",
+              "content": {
+                "challengeType": "JSX Syntax Correction",
+                "instruction": "Fix the JSX syntax where class is used instead of className and multiple root elements lack a Fragment.",
+                "buggyCode": "function Header() {\n  return (\n    <header class=\"site-header\">\n      <h1>Cognivue</h1>\n    </header>\n    <nav>Links</nav>\n  );\n}",
+                "correctSolution": "function Header() {\n  return (\n    <>\n      <header className=\"site-header\">\n        <h1>Cognivue</h1>\n      </header>\n      <nav>Links</nav>\n    </>\n  );\n}",
+                "hints": [
+                  "Use `<>` and `</>` to wrap multiple sibling roots.",
+                  "Use `className` instead of `class` in JSX."
+                ],
+                "quizPrompt": "Which HTML attribute becomes `htmlFor` in JSX?",
+                "quizOptions": [
+                  "href",
+                  "for",
+                  "action",
+                  "src"
+                ],
+                "correctOptionIndex": 1,
+                "quizExplanation": "`for` is a reserved keyword in JavaScript, so JSX uses `htmlFor` for `<label>` elements."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a Filterable Technical Catalog",
+              "tag": "Hands-On Exercise",
+              "description": "Construct a responsive component grid with search filtering, tag selections, and modal detail views.",
+              "content": {
+                "taskGoal": "Build a modular topic explorer component that dynamically renders child cards based on user search queries and active level filters.",
+                "requirements": [
+                  "Structure clean reusable components: `CatalogHeader`, `FilterPills`, `CardGrid`, `EmptyState`.",
+                  "Pass callback functions down through props to trigger parent state updates.",
+                  "Implement accessible keyboard navigation with `onKeyDown` event handling."
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "react-hooks",
+          "title": "React State Management & Modern Hooks",
+          "summary": "useState, useEffect, useMemo, useCallback, useRef, and custom hook design.",
+          "level": "Intermediate",
+          "modules": [
+            {
+              "id": "m1",
+              "number": 1,
+              "type": "concepts",
+              "title": "Basic Concepts: useState & useEffect Lifecycle",
+              "tag": "Theory & Fundamentals",
+              "description": "How state triggers component re-renders and handling side-effects with dependency arrays.",
+              "content": {
+                "overview": "React Hooks allow functional components to manage local state and perform lifecycle side effects. `useState` preserves values between renders, while `useEffect` synchronizes components with external systems.",
+                "keyPoints": [
+                  "Never mutate state directly; always use the setter function `setState(newValue)`.",
+                  "Functional state updates (`setCount(prev => prev + 1)`) prevent race conditions.",
+                  "Dependency array in `useEffect` controls when the effect executes (empty `[]` runs once on mount).",
+                  "Return a cleanup function from `useEffect` to clear timers or unsubscribe listeners."
+                ],
+                "codeSnippet": "import { useState, useEffect } from 'react';\n\nfunction SearchBar({ onSearch }) {\n  const [query, setQuery] = useState('');\n\n  useEffect(() => {\n    const timer = setTimeout(() => {\n      onSearch(query);\n    }, 300);\n\n    return () => clearTimeout(timer); // Debounce cleanup\n  }, [query, onSearch]);\n\n  return (\n    <input\n      type=\"text\"\n      value={query}\n      onChange={(e) => setQuery(e.target.value)}\n      placeholder=\"Search technology...\"\n    />\n  );\n}"
+              }
+            },
+            {
+              "id": "m2",
+              "number": 2,
+              "type": "video",
+              "title": "Watch Tutorial: React Hooks in Depth",
+              "tag": "Video Masterclass",
+              "description": "Master useState, useEffect dependency pitfalls, useRef DOM manipulation, and custom hook extraction.",
+              "content": {
+                "videoTitle": "All React Hooks Explained in 15 Minutes",
+                "instructor": "Cognivue React Lead",
+                "duration": "17:40",
+                "videoUrl": "https://www.youtube.com/embed/TNhaISOUy6Q",
+                "keyTakeaways": [
+                  "02:10 - Rules of Hooks: Top-level calls and React component scope",
+                  "06:30 - useEffect cleanup functions and memory leak prevention",
+                  "10:45 - useRef for preserving values without triggering re-renders",
+                  "14:15 - Custom hook design pattern: useDebounce and useLocalStorage"
+                ]
+              }
+            },
+            {
+              "id": "m3",
+              "number": 3,
+              "type": "code-examples",
+              "title": "Follow Code Examples: Custom Hook Design",
+              "tag": "Hooks Pattern",
+              "description": "Building custom hooks for theme persistence and responsive window dimensions.",
+              "content": {
+                "examples": [
+                  {
+                    "title": "useLocalStorage Custom Hook",
+                    "code": "import { useState, useEffect } from 'react';\n\nexport function useLocalStorage(key, initialValue) {\n  const [value, setValue] = useState(() => {\n    try {\n      const item = window.localStorage.getItem(key);\n      return item ? JSON.parse(item) : initialValue;\n    } catch (error) {\n      return initialValue;\n    }\n  });\n\n  useEffect(() => {\n    window.localStorage.setItem(key, JSON.stringify(value));\n  }, [key, value]);\n\n  return [value, setValue];\n}"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m4",
+              "number": 4,
+              "type": "mcq",
+              "title": "Solve MCQs on React Hooks",
+              "tag": "Interactive Quiz",
+              "description": "Test understanding of dependency arrays and hook execution rules.",
+              "content": {
+                "questions": [
+                  {
+                    "id": "q1",
+                    "question": "What happens if you omit the dependency array in `useEffect(() => { ... })`?",
+                    "options": [
+                      "It runs once on mount",
+                      "It never runs",
+                      "It runs on every single render of the component",
+                      "It throws a compile error"
+                    ],
+                    "correctIndex": 2,
+                    "explanation": "Without a dependency array, useEffect executes after every render cycle, which can cause performance issues or infinite loops."
+                  }
+                ]
+              }
+            },
+            {
+              "id": "m5",
+              "number": 5,
+              "type": "test",
+              "title": "Hooks Dependency Bug Challenge",
+              "tag": "Interactive Test",
+              "description": "Fix state synchronization and stale closure bugs in useEffect.",
+              "content": {
+                "challengeType": "Stale Closure Fix",
+                "instruction": "Fix the interval timer inside useEffect so it increments count properly without stale state closure.",
+                "buggyCode": "useEffect(() => {\n  const id = setInterval(() => {\n    setCount(count + 1); // Bug: stale state reference\n  }, 1000);\n  return () => clearInterval(id);\n}, []);",
+                "correctSolution": "useEffect(() => {\n  const id = setInterval(() => {\n    setCount(prev => prev + 1);\n  }, 1000);\n  return () => clearInterval(id);\n}, []);",
+                "hints": [
+                  "Use functional state updater `setCount(prev => prev + 1)` to always access the latest state value."
+                ],
+                "quizPrompt": "Which hook is used to access and manipulate direct DOM nodes in React?",
+                "quizOptions": [
+                  "useDOM",
+                  "useRef",
+                  "useMemo",
+                  "useContext"
+                ],
+                "correctOptionIndex": 1,
+                "quizExplanation": "`useRef` returns a mutable ref object whose `.current` property can hold a reference to real DOM elements."
+              }
+            },
+            {
+              "id": "m6",
+              "number": 6,
+              "type": "project",
+              "title": "Build a Real-Time Countdown & Timer Hub",
+              "tag": "Hands-On Capstone",
+              "description": "Build an interactive study timer with start/pause/reset controls, audio notifications, and localStorage session history.",
+              "content": {
+                "taskGoal": "Create a Pomodoro study timer component using custom hooks, clean interval clearing, and persistent streak statistics.",
+                "requirements": [
+                  "Extract timer logic into a custom `useTimer(initialSeconds)` hook.",
+                  "Store completed study sessions in `localStorage`.",
+                  "Provide intuitive visual progress indicators with CSS circular SVG dash offsets."
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

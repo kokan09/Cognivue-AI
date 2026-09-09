@@ -58,6 +58,12 @@ Thumbs.db
 .netlify/
 .render/
 
+# Large Datasets
+*.csv
+*.tsv
+*.parquet
+frontend/my-app/src/data/*.csv
+
 # Misc
 *.swp
 *.swo
