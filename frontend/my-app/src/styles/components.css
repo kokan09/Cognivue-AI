@@ -2348,33 +2348,35 @@
     opacity: 0.9;
 }
 
-/* NATIVE HIGH-CONTRAST SVG CONCEPT BADGES */
-.svg-concept-badge-rect {
-    fill: #090d16;
-    stroke: rgba(255, 255, 255, 0.18);
-    stroke-width: 1.2;
-    transition: stroke 0.2s ease, fill 0.2s ease;
-}
-
-.svg-concept-badge-text {
+.concept-inner-title {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 11.5px;
     font-weight: 700;
-    fill: #f1f5f9;
+    fill: var(--text-primary);
     pointer-events: none;
+    letter-spacing: -0.2px;
 }
 
-.concept-node-group:hover .svg-concept-badge-rect,
-.svg-concept-badge-rect.active {
-    stroke: var(--accent-strong);
-    stroke-width: 2;
-    fill: #0f172a;
-}
-
-.concept-node-group:hover .svg-concept-badge-text,
-.svg-concept-badge-text.active {
-    fill: var(--accent-strong);
+.concept-inner-title.single-line {
+    font-size: 12.5px;
     font-weight: 800;
+}
+
+.concept-node-group:hover .concept-inner-title,
+.concept-node-group.active-concept-node .concept-inner-title {
+    fill: #ffffff;
+    font-weight: 800;
+}
+
+.concept-bottom-pill-rect {
+    transition: stroke 0.2s ease, fill 0.2s ease;
+}
+
+.concept-bottom-pill-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    pointer-events: none;
 }
 
 /* SATELLITE MODULE NODES */
