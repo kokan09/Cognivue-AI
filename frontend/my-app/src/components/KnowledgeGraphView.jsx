@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const MODULE_TYPE_META = {
   concepts: { icon: '📖', label: 'Theory', color: '#10b981' },
@@ -11,7 +11,6 @@ const MODULE_TYPE_META = {
 
 function formatConceptLines(label) {
   if (!label) return { line1: 'Concept', line2: '' }
-  // Clean up and split title into 1 or 2 balanced lines
   const words = label.split(' ')
   if (words.length <= 2) {
     return { line1: words.join(' '), line2: '' }
@@ -31,21 +30,21 @@ function KnowledgeGraphView({
   onSelectModule
 }) {
   const { tech, conceptNodes = [] } = graphData || {}
+  const [hiddenConceptIds, setHiddenConceptIds] = useState(new Set())
 
-  // Active concept node
+  // Active concept node (defaults to first concept on load)
   const activeConcept = conceptNodes.find(c => c.id === selectedConceptId) || conceptNodes[0] || null
-  const activeModules = activeConcept?.modules || []
 
-  // Expansive, high-resolution SVG dimensions
-  const viewWidth = 1120
-  const viewHeight = 780
+  // High-resolution SVG dimensions
+  const viewWidth = 1380
+  const viewHeight = 900
   const centerX = viewWidth / 2
   const centerY = viewHeight / 2
 
-  // Spacious orbital geometry for large nodes
-  const conceptOrbitRadius = 265
+  // Spacious orbital geometry
+  const conceptOrbitRadius = 310
   const totalConcepts = conceptNodes.length || 1
-  const moduleOrbitRadius = 106
+  const satelliteOrbitRadius = 96
 
   // Calculate coordinates for all concept nodes
   const conceptPositions = conceptNodes.map((concept, idx) => {
@@ -56,60 +55,47 @@ function KnowledgeGraphView({
     return { ...concept, x, y, angle, textLines }
   })
 
-  // Coordinates for the 6 satellite module nodes around active concept
-  const activeConceptPos = conceptPositions.find(c => c.id === activeConcept?.id) || { x: centerX, y: centerY }
-  const totalModules = activeModules.length || 1
-
-  const modulePositions = activeModules.map((mod, idx) => {
-    const angle = (idx / totalModules) * (2 * Math.PI) - Math.PI / 2
-    const x = Math.round(activeConceptPos.x + moduleOrbitRadius * Math.cos(angle))
-    const y = Math.round(activeConceptPos.y + moduleOrbitRadius * Math.sin(angle))
-    return { ...mod, x, y, angle }
+  // Calculate satellite module coordinates for ALL concept nodes
+  const allConceptModulePositions = conceptPositions.map((cPos) => {
+    const modules = cPos.modules || []
+    const totalMods = modules.length || 6
+    const moduleNodes = modules.map((mod, mIdx) => {
+      // 360 degree orbital ring around each concept
+      const modAngle = (mIdx / totalMods) * (2 * Math.PI) - Math.PI / 2
+      const mx = Math.round(cPos.x + satelliteOrbitRadius * Math.cos(modAngle))
+      const my = Math.round(cPos.y + satelliteOrbitRadius * Math.sin(modAngle))
+      return { ...mod, x: mx, y: my, conceptId: cPos.id, parentConcept: cPos }
+    })
+    return { conceptId: cPos.id, moduleNodes }
   })
+
+  const handleConceptClick = (conceptId) => {
+    setHiddenConceptIds(prev => {
+      const next = new Set(prev)
+      if (next.has(conceptId)) {
+        next.delete(conceptId)
+      } else {
+        next.add(conceptId)
+      }
+      return next
+    })
+    onSelectConcept(conceptId)
+  }
 
   return (
     <div className="knowledge-graph-panel large-graph-view">
-      {/* GRAPH HEADER */}
-      <div className="graph-panel-header">
-        <div className="graph-title-group">
-          <div className="tech-avatar-orb">
-            <span className="graph-tech-icon">{tech?.icon || '⚡'}</span>
-          </div>
-          <div>
-            <div className="graph-title-eyebrow">
-              <span className="live-graph-dot"></span>
-              <span>INTERACTIVE TECHNICAL NETWORK</span>
-            </div>
-            <h3 className="graph-tech-name">{tech?.name || 'Technical'} Knowledge Graph</h3>
-            <span className="graph-subtitle">
-              Click a concept node to view its orbiting modules &bull; Click any module node to open learning content
-            </span>
-          </div>
-        </div>
-
-        <div className="graph-metrics-pill">
-          <span className="metrics-badge-item">
-            <strong>{totalConcepts}</strong> Concepts
-          </span>
-          <span className="dot-sep">&bull;</span>
-          <span className="metrics-badge-item">
-            <strong>{totalConcepts * 6}</strong> Modules
-          </span>
-        </div>
-      </div>
-
-      {/* EXPANSIVE VISUAL SVG KNOWLEDGE GRAPH */}
+      {/* EXPANSIVE VISUAL SVG ROADMAP */}
       <div className="svg-canvas-container large-canvas">
         <svg
           viewBox={`0 0 ${viewWidth} ${viewHeight}`}
           className="knowledge-graph-svg"
-          aria-label="Interactive Technical Knowledge Graph"
+          aria-label={`${tech?.name || 'Technology'} Interactive Roadmap`}
         >
           {/* SVG GRADIENTS */}
           <defs>
             <radialGradient id="centerRadialGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="var(--accent-strong)" stopOpacity="0.14" />
-              <stop offset="65%" stopColor="var(--accent-strong)" stopOpacity="0.03" />
+              <stop offset="0%" stopColor="var(--accent-strong)" stopOpacity="0.16" />
+              <stop offset="65%" stopColor="var(--accent-strong)" stopOpacity="0.04" />
               <stop offset="100%" stopColor="transparent" stopOpacity="0" />
             </radialGradient>
 
@@ -120,17 +106,17 @@ function KnowledgeGraphView({
           </defs>
 
           {/* BACKGROUND AMBIENT GLOW */}
-          <circle cx={centerX} cy={centerY} r={conceptOrbitRadius * 1.35} fill="url(#centerRadialGlow)" />
+          <circle cx={centerX} cy={centerY} r={conceptOrbitRadius * 1.36} fill="url(#centerRadialGlow)" />
 
           {/* BACKGROUND CONCENTRIC RADAR RINGS */}
-          <circle cx={centerX} cy={centerY} r={conceptOrbitRadius * 1.18} className="orbit-track-ring outer-faint-track" />
+          <circle cx={centerX} cy={centerY} r={conceptOrbitRadius * 1.28} className="orbit-track-ring outer-faint-track" />
           <circle cx={centerX} cy={centerY} r={conceptOrbitRadius} className="orbit-track-ring main-track" />
-          <circle cx={centerX} cy={centerY} r={conceptOrbitRadius * 0.56} className="orbit-track-ring inner-track" />
+          <circle cx={centerX} cy={centerY} r={conceptOrbitRadius * 0.58} className="orbit-track-ring inner-track" />
           <circle cx={centerX} cy={centerY} r={conceptOrbitRadius * 0.28} className="orbit-track-ring core-faint-track" />
 
           {/* RADAR CROSSHAIR AXES */}
-          <line x1={centerX - conceptOrbitRadius * 1.15} y1={centerY} x2={centerX + conceptOrbitRadius * 1.15} y2={centerY} className="radar-grid-line" />
-          <line x1={centerX} y1={centerY - conceptOrbitRadius * 1.15} x2={centerX} y2={centerY + conceptOrbitRadius * 1.15} className="radar-grid-line" />
+          <line x1={centerX - conceptOrbitRadius * 1.22} y1={centerY} x2={centerX + conceptOrbitRadius * 1.22} y2={centerY} className="radar-grid-line" />
+          <line x1={centerX} y1={centerY - conceptOrbitRadius * 1.22} x2={centerX} y2={centerY + conceptOrbitRadius * 1.22} className="radar-grid-line" />
 
           {/* CONNECTOR LINKS: ROOT TO ALL CONCEPT NODES */}
           {conceptPositions.map((pos) => {
@@ -148,7 +134,7 @@ function KnowledgeGraphView({
                   <circle
                     cx={Math.round(centerX + (pos.x - centerX) * 0.5)}
                     cy={Math.round(centerY + (pos.y - centerY) * 0.5)}
-                    r={4}
+                    r={4.5}
                     className="synapse-pulse-dot"
                   />
                 )}
@@ -156,37 +142,48 @@ function KnowledgeGraphView({
             )
           })}
 
-          {/* SATELLITE CONNECTOR LINKS: ACTIVE CONCEPT TO SATELLITE MODULES */}
-          {activeConcept &&
-            modulePositions.map((mPos) => {
+          {/* SATELLITE CONNECTOR LINKS (WHEN NOT HIDDEN FOR THAT CONCEPT) */}
+          {allConceptModulePositions.map(({ conceptId, moduleNodes }) => {
+            if (hiddenConceptIds.has(conceptId)) return null
+            const isConceptSelected = conceptId === activeConcept?.id
+            const cPos = conceptPositions.find(c => c.id === conceptId)
+            if (!cPos) return null
+
+            return moduleNodes.map((mPos) => {
               const isModSelected = mPos.id === selectedModuleId
               const meta = MODULE_TYPE_META[mPos.type] || { color: '#10b981' }
               return (
                 <line
                   key={`mod-link-${mPos.id}`}
-                  x1={activeConceptPos.x}
-                  y1={activeConceptPos.y}
+                  x1={cPos.x}
+                  y1={cPos.y}
                   x2={mPos.x}
                   y2={mPos.y}
-                  stroke={isModSelected ? meta.color : 'var(--border)'}
+                  stroke={isModSelected ? meta.color : isConceptSelected ? 'var(--accent-strong)' : 'var(--border)'}
                   className={`satellite-connector-line ${isModSelected ? 'active-satellite-link' : ''}`}
+                  opacity={isConceptSelected ? 0.85 : 0.5}
                 />
               )
-            })}
+            })
+          })}
 
-          {/* SATELLITE MODULE NODES (CLICK DIRECTLY TO OPEN OVERLAY CONTENT) */}
-          {activeConcept &&
-            modulePositions.map((mPos, idx) => {
+          {/* SATELLITE MODULE NODES (WHEN NOT HIDDEN FOR THAT CONCEPT) */}
+          {allConceptModulePositions.map(({ conceptId, moduleNodes }) => {
+            if (hiddenConceptIds.has(conceptId)) return null
+            const isConceptSelected = conceptId === activeConcept?.id
+            const parentConcept = conceptPositions.find(c => c.id === conceptId)
+
+            return moduleNodes.map((mPos, idx) => {
               const isModSelected = mPos.id === selectedModuleId
               const meta = MODULE_TYPE_META[mPos.type] || { icon: '📌', label: 'Module', color: '#10b981' }
 
               return (
                 <g
                   key={`sat-node-${mPos.id}`}
-                  className={`satellite-node-group ${isModSelected ? 'selected-module-node' : ''}`}
+                  className={`satellite-node-group ${isModSelected ? 'selected-module-node' : ''} ${isConceptSelected ? 'concept-active-sat' : 'faint-sat'}`}
                   onClick={(e) => {
                     e.stopPropagation()
-                    onSelectModule(mPos, activeConcept)
+                    onSelectModule(mPos, parentConcept)
                   }}
                   tabIndex="0"
                   role="button"
@@ -197,7 +194,7 @@ function KnowledgeGraphView({
                     <circle
                       cx={mPos.x}
                       cy={mPos.y}
-                      r={28}
+                      r={24}
                       stroke={meta.color}
                       className="satellite-active-ring"
                     />
@@ -207,34 +204,34 @@ function KnowledgeGraphView({
                   <circle
                     cx={mPos.x}
                     cy={mPos.y}
-                    r={21}
+                    r={18}
                     fill="var(--surface)"
-                    stroke={isModSelected ? meta.color : 'var(--border)'}
+                    stroke={isModSelected ? meta.color : isConceptSelected ? 'var(--accent-strong)' : 'var(--border)'}
                     strokeWidth={isModSelected ? 2.5 : 1.5}
                     className="satellite-node-circle"
                   />
 
                   {/* Icon */}
-                  <text x={mPos.x} y={mPos.y + 5} className="satellite-node-icon" textAnchor="middle">
+                  <text x={mPos.x} y={mPos.y + 4.5} className="satellite-node-icon" textAnchor="middle">
                     {meta.icon}
                   </text>
 
                   {/* High-Contrast SVG Module Badge */}
-                  <g transform={`translate(${mPos.x - 44}, ${mPos.y + 25})`}>
+                  <g transform={`translate(${mPos.x - 36}, ${mPos.y + 20})`}>
                     <rect
                       x="0"
                       y="0"
-                      width="88"
-                      height="21"
-                      rx="5"
+                      width="72"
+                      height="18"
+                      rx="4"
                       fill="#090d16"
-                      stroke={isModSelected ? meta.color : 'rgba(255,255,255,0.2)'}
-                      strokeWidth={isModSelected ? 1.8 : 1}
+                      stroke={isModSelected ? meta.color : isConceptSelected ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.18)'}
+                      strokeWidth={isModSelected ? 1.6 : 1}
                       className={`svg-module-badge-rect ${isModSelected ? 'active' : ''}`}
                     />
                     <text
-                      x="44"
-                      y="14.5"
+                      x="36"
+                      y="12.5"
                       textAnchor="middle"
                       fill={isModSelected ? meta.color : '#f1f5f9'}
                       className={`svg-module-badge-text ${isModSelected ? 'active' : ''}`}
@@ -244,26 +241,24 @@ function KnowledgeGraphView({
                   </g>
                 </g>
               )
-            })}
+            })
+          })}
 
           {/* CENTRAL ROOT TECHNOLOGY NODE */}
           <g
             className="graph-root-node-group"
-            onClick={() => {
-              const firstConcept = conceptNodes[0]
-              if (firstConcept) {
-                onSelectConcept(firstConcept.id)
-              }
-            }}
+            tabIndex="0"
+            role="img"
+            aria-label={`${tech?.name} Technology Core`}
           >
-            <circle cx={centerX} cy={centerY} r={58} className="root-node-halo" />
-            <circle cx={centerX} cy={centerY} r={48} fill="url(#rootNodeGradient)" className="root-node-circle" />
+            <circle cx={centerX} cy={centerY} r={60} className="root-node-halo" />
+            <circle cx={centerX} cy={centerY} r={50} fill="url(#rootNodeGradient)" className="root-node-circle" />
 
-            <text x={centerX} y={centerY - 8} className="root-node-icon" textAnchor="middle">
+            <text x={centerX} y={centerY - 9} className="root-node-icon" textAnchor="middle">
               {tech?.icon || '⚡'}
             </text>
 
-            <text x={centerX} y={centerY + 20} className="root-node-label" textAnchor="middle">
+            <text x={centerX} y={centerY + 18} className="root-node-label" textAnchor="middle">
               {tech?.name || 'CORE'}
             </text>
           </g>
@@ -279,7 +274,7 @@ function KnowledgeGraphView({
                 className={`concept-node-group ${isSelected ? 'active-concept-node' : ''}`}
                 onClick={(e) => {
                   e.stopPropagation()
-                  onSelectConcept(pos.id)
+                  handleConceptClick(pos.id)
                 }}
                 tabIndex="0"
                 role="button"
@@ -287,7 +282,7 @@ function KnowledgeGraphView({
               >
                 {/* Active Glowing Halo Ring */}
                 {isSelected && (
-                  <circle cx={pos.x} cy={pos.y} r={55} className="concept-active-aura-ring" />
+                  <circle cx={pos.x} cy={pos.y} r={54} className="concept-active-aura-ring" />
                 )}
 
                 {/* Large Concept Main Circle */}
@@ -321,37 +316,13 @@ function KnowledgeGraphView({
                 ) : (
                   <text
                     x={pos.x}
-                    y={pos.y + 4}
+                    y={pos.y + 5}
                     className="concept-inner-title single-line"
                     textAnchor="middle"
                   >
                     {line1}
                   </text>
                 )}
-
-                {/* Bottom Module Count Pill */}
-                <g transform={`translate(${pos.x - 38}, ${pos.y + 50})`}>
-                  <rect
-                    x="0"
-                    y="0"
-                    width="76"
-                    height="18"
-                    rx="9"
-                    fill="#090d16"
-                    stroke={isSelected ? 'var(--accent-strong)' : 'rgba(255,255,255,0.2)'}
-                    strokeWidth="1"
-                    className="concept-bottom-pill-rect"
-                  />
-                  <text
-                    x="38"
-                    y="12.5"
-                    textAnchor="middle"
-                    fill={isSelected ? 'var(--accent-strong)' : 'var(--text-muted)'}
-                    className="concept-bottom-pill-text"
-                  >
-                    6 Modules
-                  </text>
-                </g>
               </g>
             )
           })}
@@ -369,10 +340,9 @@ function KnowledgeGraphView({
                 key={concept.id}
                 type="button"
                 className={`graph-nav-pill ${isSelected ? 'active' : ''}`}
-                onClick={() => onSelectConcept(concept.id)}
+                onClick={() => handleConceptClick(concept.id)}
               >
                 <span className="nav-pill-name">{concept.label}</span>
-                <span className="nav-pill-badge">6 Modules</span>
               </button>
             )
           })}

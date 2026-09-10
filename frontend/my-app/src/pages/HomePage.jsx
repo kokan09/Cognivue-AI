@@ -5,7 +5,7 @@ import TechSearchDropdown from '../components/TechSearchDropdown'
 import KnowledgeGraphView from '../components/KnowledgeGraphView'
 import ModuleDetailPanel from '../components/ModuleDetailPanel'
 import CurriculumLoader from '../components/CurriculumLoader'
-import { getKnowledgeGraph } from '../service/curriculumService'
+import { getKnowledgeGraph, getAllTechnologies } from '../service/curriculumService'
 import '../styles/main.css'
 import '../styles/components.css'
 
@@ -16,6 +16,8 @@ function HomePage({ theme, setTheme }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [loadingTitle, setLoadingTitle] = useState('')
+
+  const availableTechs = getAllTechnologies()
 
   // Close modal on Escape key press
   useEffect(() => {
@@ -48,29 +50,31 @@ function HomePage({ theme, setTheme }) {
     setIsLoading(true)
     setIsModalOpen(false)
 
-    // Simulate AI neural graph synthesis (1.4s)
+    // Simulate synthesis (1.2s)
     setTimeout(() => {
       setGraphData(graph)
       const initialConcept = graph.initialSelectedTopic || graph.conceptNodes[0] || null
       setSelectedConceptId(initialConcept?.id || null)
       setSelectedModule(initialConcept?.modules?.[0] || null)
       setIsLoading(false)
-    }, 1400)
+    }, 1200)
+  }
+
+  const handleBackToSearch = () => {
+    setGraphData(null)
+    setSelectedConceptId(null)
+    setSelectedModule(null)
+    setIsModalOpen(false)
   }
 
   const handleSelectConcept = (conceptId) => {
-    // If user clicks a new concept, select it and expand its orbiting modules (do NOT open modal)
-    if (conceptId !== selectedConceptId) {
-      setSelectedConceptId(conceptId)
-      const concept = graphData?.conceptNodes?.find(c => c.id === conceptId)
-      if (concept && concept.modules && concept.modules.length > 0) {
-        setSelectedModule(concept.modules[0])
-      }
-      setIsModalOpen(false)
-    } else {
-      // If user clicks the already-selected concept again, open its module viewer modal
-      setIsModalOpen(true)
+    setSelectedConceptId(conceptId)
+    const concept = graphData?.conceptNodes?.find(c => c.id === conceptId)
+    if (concept && concept.modules && concept.modules.length > 0) {
+      setSelectedModule(concept.modules[0])
     }
+    // Clicking main concept nodes should NEVER open the modal box
+    setIsModalOpen(false)
   }
 
   const handleSelectModule = (mod, concept) => {
@@ -78,7 +82,7 @@ function HomePage({ theme, setTheme }) {
       setSelectedConceptId(concept.id)
     }
     setSelectedModule(mod)
-    setIsModalOpen(true) // Clicking any satellite module opens the modal
+    setIsModalOpen(true)
   }
 
   const activeConcept = graphData?.conceptNodes?.find(c => c.id === selectedConceptId) || graphData?.conceptNodes?.[0] || null
@@ -88,52 +92,127 @@ function HomePage({ theme, setTheme }) {
       <div className="page-shell">
         <DashboardHeader theme={theme} setTheme={setTheme} />
 
-        <div className="curriculum-container">
-          {/* Hero Greeting & Search Section */}
-          <section className="curriculum-hero-section">
-            <div className="curriculum-hero-intro">
-              <p className="eyebrow">
-                <span></span> AI Technical Knowledge Graph
-              </p>
-              <h1>
-                Explore <em>Concept Networks</em> &amp; Master Any Skill
-              </h1>
-              <p className="hero-text">
-                Type any skill (e.g. <strong>Java, Python, MERN, React, Node.js, JavaScript</strong>) and press <strong>Enter</strong> to generate an interactive, expansive Knowledge Graph.
-              </p>
+        {/* VIEW 1: SEARCH / INPUT PAGE (WHEN NO GRAPH IS ACTIVE) */}
+        {!graphData && !isLoading && (
+          <div className="curriculum-container search-landing-view fade-in-modules">
+            <section className="curriculum-hero-section">
+              <div className="curriculum-hero-intro">
+                <p className="eyebrow">
+                  <span></span> Interactive Learning Roadmaps
+                </p>
+                <h1>
+                  What do you want to <em>learn</em>?
+                </h1>
+                <p className="hero-text">
+                  Search any programming language or technology to explore a complete visual learning roadmap with theory, videos, quizzes, and code challenges.
+                </p>
+              </div>
+
+              {/* Live Search Bar with Simple 'Search' Button */}
+              <TechSearchDropdown
+                onSelectTopic={handleSelectQuery}
+                selectedTopicId={selectedConceptId}
+              />
+
+              {/* Quick-Pick Popular Skills */}
+              <div className="popular-skills-wrapper">
+                <span className="popular-skills-label">Popular Skills:</span>
+                <div className="popular-skills-chips">
+                  {availableTechs.map((tech) => (
+                    <button
+                      key={tech.id}
+                      type="button"
+                      className="popular-skill-chip-btn"
+                      onClick={() => handleSelectQuery(tech.id)}
+                    >
+                      <span className="chip-icon">{tech.icon}</span>
+                      <span className="chip-name">{tech.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {/* VIEW 2: LOADING SYNTHESIS */}
+        {isLoading && (
+          <div className="curriculum-container loading-container-view fade-in-modules">
+            <CurriculumLoader
+              topicName={`${loadingTitle} Roadmap`}
+              techName={loadingTitle}
+              modules={graphData?.conceptNodes?.[0]?.modules || []}
+            />
+          </div>
+        )}
+
+        {/* VIEW 3: DEDICATED GRAPH / ROADMAP PAGE */}
+        {graphData && !isLoading && (
+          <div className="curriculum-container roadmap-page-view fade-in-modules">
+            {/* Top Navigation Bar with Back Button, Heading + Metrics in Middle, and Skill Badge on Right */}
+            <div className="roadmap-page-top-bar">
+              <div className="roadmap-top-left-group">
+                <button
+                  type="button"
+                  className="back-to-search-btn"
+                  onClick={handleBackToSearch}
+                  aria-label="Back to search page"
+                >
+                  <span className="back-arrow-icon">←</span>
+                  <span>Back to Search</span>
+                </button>
+              </div>
+
+              {/* Learning Roadmap Heading with 4 Concepts • 24 Modules to its right */}
+              <div className="roadmap-header-title-group">
+                <div className="tech-avatar-orb">
+                  <span className="graph-tech-icon">{graphData?.tech?.icon || '⚡'}</span>
+                </div>
+                <div className="roadmap-title-text-col">
+                  <div className="graph-title-eyebrow">
+                    <span className="live-graph-dot"></span>
+                    <span>INTERACTIVE CURRICULUM</span>
+                  </div>
+                  <div className="roadmap-heading-metrics-row">
+                    <h2 className="roadmap-main-heading">
+                      {graphData?.tech?.name || 'Technology'} Learning Roadmap
+                    </h2>
+                    <div className="graph-metrics-pill header-metrics-pill">
+                      <span className="metrics-badge-item">
+                        <strong>{graphData?.conceptNodes?.length || 0}</strong> Concepts
+                      </span>
+                      <span className="dot-sep">&bull;</span>
+                      <span className="metrics-badge-item">
+                        <strong>{(graphData?.conceptNodes?.length || 0) * 6}</strong> Modules
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Side: Skill Badge */}
+              <div className="roadmap-top-right-group">
+                <div className="roadmap-current-skill-badge">
+                  <span className="badge-icon">{graphData?.tech?.icon}</span>
+                  <span className="badge-name">{graphData?.tech?.name}</span>
+                </div>
+              </div>
             </div>
 
-            {/* Live Search Bar with Generate Graph Button */}
-            <TechSearchDropdown
-              onSelectTopic={handleSelectQuery}
-              selectedTopicId={selectedConceptId}
-            />
-          </section>
-
-          {/* Active Expansive Knowledge Graph Section */}
-          <section className="curriculum-modules-section">
-            {isLoading ? (
-              <CurriculumLoader
-                topicName={`${loadingTitle} Knowledge Graph`}
-                techName={loadingTitle}
-                modules={graphData?.conceptNodes?.[0]?.modules || []}
+            {/* EXPANSIVE ROADMAP GRAPH VIEW */}
+            <div className="knowledge-graph-fullscreen-wrapper">
+              <KnowledgeGraphView
+                graphData={graphData}
+                selectedConceptId={selectedConceptId}
+                selectedModuleId={selectedModule?.id}
+                onSelectConcept={handleSelectConcept}
+                onSelectModule={handleSelectModule}
               />
-            ) : graphData ? (
-              <div className="knowledge-graph-fullscreen-wrapper fade-in-modules">
-                {/* LARGE EXPANSIVE KNOWLEDGE GRAPH */}
-                <KnowledgeGraphView
-                  graphData={graphData}
-                  selectedConceptId={selectedConceptId}
-                  selectedModuleId={selectedModule?.id}
-                  onSelectConcept={handleSelectConcept}
-                  onSelectModule={handleSelectModule}
-                />
-              </div>
-            ) : null}
-          </section>
-        </div>
+            </div>
+          </div>
+        )}
 
-        {/* OVERLAY MODAL BOX OVER THE SCREEN WHEN A NODE IS CLICKED */}
+        {/* OVERLAY MODAL BOX OVER SCREEN WHEN A NODE/MODULE IS CLICKED */}
         {isModalOpen && selectedModule && (
           <div
             className="module-modal-overlay-backdrop fade-in-modules"

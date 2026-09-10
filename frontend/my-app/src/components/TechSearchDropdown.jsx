@@ -69,7 +69,7 @@ function TechSearchDropdown({ onSelectTopic, selectedTopicId }) {
         <input
           type="text"
           className="tech-search-input"
-          placeholder="Search any skill (e.g. Java, Python, MERN, React, Java Syntax) & press Enter..."
+          placeholder="What do you want to learn? (e.g. Java, Python, React, MERN, Node.js)..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => {
@@ -96,9 +96,9 @@ function TechSearchDropdown({ onSelectTopic, selectedTopicId }) {
         <button
           type="submit"
           className="tech-search-submit-btn"
-          title="Generate Knowledge Graph"
+          title="Search"
         >
-          <span>Generate Graph</span>
+          <span>Search</span>
           <span className="enter-key-badge">⏎</span>
         </button>
       </div>
@@ -106,12 +106,12 @@ function TechSearchDropdown({ onSelectTopic, selectedTopicId }) {
       {/* Autocomplete Dropdown */}
       {isOpen && (matchedTechnologies.length > 0 || suggestions.length > 0) && (
         <div className="tech-dropdown-menu" role="listbox">
-          {/* 1. MATCHING KNOWLEDGE GRAPHS */}
+          {/* 1. MATCHING SKILLS & ROADMAPS */}
           {matchedTechnologies.length > 0 && (
             <div className="dropdown-section tech-graph-section">
               <div className="dropdown-header">
-                <span>Knowledge Graph Roadmaps</span>
-                <small>Explore full concept network</small>
+                <span>Available Skills & Roadmaps</span>
+                <small>Select to view full roadmap</small>
               </div>
               <div className="dropdown-list">
                 {matchedTechnologies.map((tech) => (
@@ -124,8 +124,8 @@ function TechSearchDropdown({ onSelectTopic, selectedTopicId }) {
                     <div className="dropdown-item-main">
                       <div className="dropdown-tech-header-row">
                         <span className="tech-emoji-icon">{tech.icon}</span>
-                        <strong className="dropdown-topic-title">{tech.name} Knowledge Graph</strong>
-                        <span className="graph-tag-badge">EXPLORE GRAPH</span>
+                        <strong className="dropdown-topic-title">{tech.name}</strong>
+                        <span className="graph-tag-badge">START LEARNING</span>
                       </div>
                       <p className="dropdown-topic-summary">{tech.description}</p>
                     </div>
@@ -138,12 +138,12 @@ function TechSearchDropdown({ onSelectTopic, selectedTopicId }) {
             </div>
           )}
 
-          {/* 2. MATCHING SUB-CONCEPTS & TOPICS */}
+          {/* 2. MATCHING TOPICS & SUB-CONCEPTS */}
           {suggestions.length > 0 && (
             <div className="dropdown-section topics-section">
               <div className="dropdown-header">
-                <span>Direct Concept Modules ({suggestions.length})</span>
-                <small>Jump directly to specific subtopic</small>
+                <span>Topics & Concepts ({suggestions.length})</span>
+                <small>Jump directly to topic</small>
               </div>
               <div className="dropdown-list">
                 {suggestions.map((item) => (
@@ -175,8 +175,8 @@ function TechSearchDropdown({ onSelectTopic, selectedTopicId }) {
       {isOpen && query.trim().length > 0 && matchedTechnologies.length === 0 && suggestions.length === 0 && (
         <div className="tech-dropdown-menu no-results-dropdown">
           <div className="dropdown-no-results">
-            <span>🔎 No exact technical topic matched "{query}"</span>
-            <small>Press Enter to generate a knowledge roadmap for "{query}".</small>
+            <span>🔎 No exact match for "{query}"</span>
+            <small>Press Enter to search for "{query}".</small>
           </div>
         </div>
       )}

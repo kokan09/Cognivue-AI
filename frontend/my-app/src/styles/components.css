@@ -2060,71 +2060,254 @@
 }
 
 /* ==========================================================================
+   SEARCH LANDING VIEW & POPULAR SKILLS
+   ========================================================================== */
+
+.search-landing-view {
+    min-height: calc(100vh - 220px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px 60px;
+    box-sizing: border-box;
+}
+
+.popular-skills-wrapper {
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 760px;
+}
+
+.popular-skills-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.popular-skills-chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.popular-skill-chip-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    color: var(--text-primary);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.popular-skill-chip-btn:hover {
+    border-color: var(--accent-strong);
+    background: color-mix(in srgb, var(--accent-strong) 14%, var(--surface));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.chip-icon {
+    font-size: 16px;
+    line-height: 1;
+}
+
+/* ==========================================================================
+   DEDICATED ROADMAP GRAPH PAGE VIEW
+   ========================================================================== */
+
+.roadmap-page-view {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 1380px;
+    margin: 0 auto;
+    padding: 20px 20px 40px;
+    box-sizing: border-box;
+    min-height: calc(100vh - 180px);
+}
+
+.roadmap-page-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 8px 0 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.roadmap-top-left-group {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.roadmap-header-title-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 280px;
+}
+
+.roadmap-title-text-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.roadmap-heading-metrics-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.roadmap-main-heading {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+}
+
+.header-metrics-pill {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--text-primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.roadmap-top-right-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.back-to-search-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.back-to-search-btn:hover {
+    border-color: var(--accent-strong);
+    color: var(--accent-strong);
+    background: color-mix(in srgb, var(--accent-strong) 12%, var(--surface));
+    transform: translateX(-3px);
+}
+
+.back-arrow-icon {
+    font-size: 16px;
+    font-weight: 900;
+    transition: transform 0.2s ease;
+}
+
+.back-to-search-btn:hover .back-arrow-icon {
+    transform: translateX(-2px);
+}
+
+.roadmap-current-skill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.badge-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* ==========================================================================
    EXPANSIVE LARGE KNOWLEDGE GRAPH & FULLSCREEN DISPLAY
    ========================================================================== */
 
 .knowledge-graph-fullscreen-wrapper {
     width: 100%;
-    max-width: 1320px;
+    max-width: 1400px;
     margin: 0 auto;
     box-sizing: border-box;
 }
 
 /* ==========================================================================
-   LARGE KNOWLEDGE GRAPH PANEL & HIGH-PERFORMANCE SVG CANVAS (PLAIN SEAMLESS BACKGROUND)
+   LARGE KNOWLEDGE GRAPH PANEL & HIGH-PERFORMANCE SVG CANVAS
    ========================================================================== */
 
 .knowledge-graph-panel {
     background: transparent;
     border: none;
     border-radius: 0;
-    padding: 8px 0;
+    padding: 4px 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 16px;
+    gap: 14px;
     box-shadow: none;
     width: 100%;
-    min-height: 680px;
+    min-height: 700px;
     box-sizing: border-box;
 }
 
 .knowledge-graph-panel.large-graph-view {
-    min-height: 700px;
-}
-
-.graph-panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 14px;
-    flex-wrap: wrap;
-    gap: 14px;
-}
-
-.graph-title-group {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+    min-height: 720px;
 }
 
 .tech-avatar-orb {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
     background: var(--surface-alt);
     border: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 24px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
 }
 
 .graph-tech-icon {
-    font-size: 22px;
+    font-size: 24px;
     line-height: 1;
 }
 
@@ -2133,7 +2316,7 @@
     align-items: center;
     gap: 6px;
     font-family: 'DM Mono', monospace;
-    font-size: 10px;
+    font-size: 10.5px;
     font-weight: 700;
     color: var(--accent-strong);
     letter-spacing: 0.6px;
@@ -2142,19 +2325,19 @@
 
 .graph-tech-name {
     margin: 0;
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 22px;
+    font-weight: 800;
     color: var(--text-primary);
 }
 
 .graph-subtitle {
-    font-size: 12.5px;
+    font-size: 13px;
     color: var(--text-secondary);
 }
 
 .graph-metrics-pill {
     font-family: 'DM Mono', monospace;
-    font-size: 11.5px;
+    font-size: 12px;
     color: var(--text-primary);
     background: var(--surface-alt);
     border: 1px solid var(--border);
@@ -2162,11 +2345,29 @@
     border-radius: 8px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 .metrics-badge-item strong {
     color: var(--accent-strong);
+}
+
+.modules-toggle-btn {
+    background: color-mix(in srgb, var(--accent-strong) 18%, var(--surface));
+    border: 1px solid var(--accent-strong);
+    color: var(--accent-strong);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: inherit;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modules-toggle-btn:hover {
+    background: var(--accent-strong);
+    color: #ffffff;
 }
 
 .live-graph-dot {
@@ -2184,8 +2385,8 @@
 /* LARGE SVG CANVAS CONTAINER (CLEAN & SEAMLESS) */
 .svg-canvas-container {
     width: 100%;
-    aspect-ratio: 1040 / 720;
-    min-height: 580px;
+    aspect-ratio: 1260 / 840;
+    min-height: 640px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2197,8 +2398,8 @@
 }
 
 .svg-canvas-container.large-canvas {
-    aspect-ratio: 1040 / 720;
-    min-height: 600px;
+    aspect-ratio: 1260 / 840;
+    min-height: 680px;
 }
 
 .knowledge-graph-svg {
@@ -2250,20 +2451,20 @@
 
 .graph-connector-line.active-link {
     stroke: var(--accent-strong);
-    stroke-width: 2.5;
+    stroke-width: 2.8;
     stroke-dasharray: 6 4;
 }
 
 .synapse-pulse-dot {
     fill: var(--accent-strong);
-    opacity: 0.9;
+    opacity: 0.95;
 }
 
 .satellite-connector-line {
     stroke: var(--accent-strong);
     stroke-width: 1.5;
     stroke-dasharray: 3 3;
-    opacity: 0.75;
+    transition: all 0.2s ease;
 }
 
 .satellite-connector-line.active-satellite-link {
@@ -2274,6 +2475,7 @@
 /* ROOT CENTRAL NODE */
 .graph-root-node-group {
     cursor: pointer;
+    outline: none;
 }
 
 .root-node-halo {
@@ -2287,11 +2489,12 @@
 .root-node-circle {
     stroke: var(--accent-strong);
     stroke-width: 3;
-    transition: stroke-width 0.2s ease;
+    transition: stroke-width 0.2s ease, filter 0.2s ease;
 }
 
 .graph-root-node-group:hover .root-node-circle {
     stroke-width: 4.5;
+    filter: drop-shadow(0 0 10px var(--accent-strong));
 }
 
 .root-node-icon {
@@ -2301,9 +2504,17 @@
 
 .root-node-label {
     font-family: 'DM Mono', monospace;
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: 800;
     fill: #ffffff;
+    pointer-events: none;
+}
+
+.root-node-sublabel {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    font-weight: 600;
+    fill: #94a3b8;
     pointer-events: none;
 }
 
@@ -2317,12 +2528,12 @@
     fill: var(--surface);
     stroke: var(--border);
     stroke-width: 2.5;
-    transition: stroke 0.2s ease, stroke-width 0.2s ease;
+    transition: stroke 0.2s ease, stroke-width 0.2s ease, fill 0.2s ease;
 }
 
 .concept-node-number {
     font-family: 'DM Mono', monospace;
-    font-size: 12.5px;
+    font-size: 13px;
     font-weight: 800;
     fill: var(--text-muted);
     pointer-events: none;
@@ -2332,12 +2543,7 @@
 .concept-node-group.active-concept-node .concept-node-circle {
     stroke: var(--accent-strong);
     stroke-width: 3.5;
-    fill: color-mix(in srgb, var(--accent-strong) 16%, var(--surface));
-}
-
-.concept-node-group:hover .concept-node-number,
-.concept-node-group.active-concept-node .concept-node-number {
-    fill: var(--accent-strong);
+    fill: color-mix(in srgb, var(--accent-strong) 18%, var(--surface));
 }
 
 .concept-active-aura-ring {
@@ -2350,7 +2556,7 @@
 
 .concept-inner-title {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: 700;
     fill: var(--text-primary);
     pointer-events: none;
@@ -2358,7 +2564,7 @@
 }
 
 .concept-inner-title.single-line {
-    font-size: 12.5px;
+    font-size: 13px;
     font-weight: 800;
 }
 
@@ -2374,7 +2580,7 @@
 
 .concept-bottom-pill-text {
     font-family: 'DM Mono', monospace;
-    font-size: 9px;
+    font-size: 9.5px;
     font-weight: 700;
     pointer-events: none;
 }
@@ -2383,6 +2589,15 @@
 .satellite-node-group {
     cursor: pointer;
     outline: none;
+    transition: opacity 0.2s ease;
+}
+
+.satellite-node-group.faint-sat {
+    opacity: 0.85;
+}
+
+.satellite-node-group.concept-active-sat {
+    opacity: 1;
 }
 
 .satellite-node-circle {
@@ -2390,7 +2605,7 @@
 }
 
 .satellite-node-icon {
-    font-size: 12px;
+    font-size: 13px;
     pointer-events: none;
 }
 
@@ -2402,7 +2617,7 @@
 
 .satellite-node-group:hover .satellite-node-circle,
 .satellite-node-group.selected-module-node .satellite-node-circle {
-    stroke-width: 2.5;
+    stroke-width: 2.8;
 }
 
 /* NATIVE SVG MODULE BADGES */
@@ -2412,7 +2627,7 @@
 
 .svg-module-badge-text {
     font-family: 'DM Mono', monospace;
-    font-size: 9.5px;
+    font-size: 10px;
     font-weight: 700;
     pointer-events: none;
 }
