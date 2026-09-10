@@ -3,12 +3,12 @@ import ModuleMcqQuiz from './ModuleMcqQuiz'
 import ModuleSyntaxTest from './ModuleSyntaxTest'
 
 const TYPE_LABELS = {
-  concepts: { name: 'Concept & Fundamentals', icon: '📖', color: '#10b981' },
-  video: { name: 'Video Masterclass', icon: '▶️', color: '#38bdf8' },
-  'code-examples': { name: 'Code Patterns & Examples', icon: '💻', color: '#a855f7' },
-  mcq: { name: 'Knowledge Check (MCQs)', icon: '🎯', color: '#f59e0b' },
-  test: { name: 'Syntax & Debugging Challenge', icon: '⚡', color: '#ef4444' },
-  project: { name: 'Practical Task & Capstone', icon: '🚀', color: '#6366f1' }
+  concepts: { name: 'Concept & Fundamentals', icon: '📖', color: '#F2B880' },
+  video: { name: 'Video Masterclass', icon: '▶️', color: '#D9A77E' },
+  'code-examples': { name: 'Code Patterns & Examples', icon: '💻', color: '#E58A4F' },
+  mcq: { name: 'Knowledge Check (MCQs)', icon: '🎯', color: '#F2B880' },
+  test: { name: 'Syntax & Debugging Challenge', icon: '⚡', color: '#A85F3B' },
+  project: { name: 'Practical Task & Capstone', icon: '🚀', color: '#D9A77E' }
 }
 
 function ModuleDetailPanel({ module, concept, techName, onClose, onSelectModule }) {
@@ -26,7 +26,7 @@ function ModuleDetailPanel({ module, concept, techName, onClose, onSelectModule 
   }
 
   const content = module.content || {}
-  const typeMeta = TYPE_LABELS[module.type] || { name: 'Learning Module', icon: '📌', color: '#10b981' }
+  const typeMeta = TYPE_LABELS[module.type] || { name: 'Learning Module', icon: '📌', color: '#F2B880' }
   const conceptModules = concept?.modules || []
 
   const handleCopyCode = (code, key = 'default') => {

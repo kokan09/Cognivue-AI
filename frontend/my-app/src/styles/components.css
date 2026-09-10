@@ -1009,10 +1009,10 @@
 
 .concept-snippet-box,
 .starter-code-box {
-    background: #0f172a;
+    background: var(--bg-primary);
     border-radius: 12px;
     overflow: hidden;
-    border: 1px solid #334155;
+    border: 1px solid var(--border);
 }
 
 .code-box-header {
@@ -1020,17 +1020,17 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 16px;
-    background: #1e293b;
-    border-bottom: 1px solid #334155;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
     font-family: 'DM Mono', monospace;
     font-size: 12px;
-    color: #94a3b8;
+    color: var(--text-muted);
 }
 
 .copy-snippet-btn {
-    background: #334155;
+    background: var(--surface-alt);
     border: none;
-    color: #e2e8f0;
+    color: var(--text-primary);
     padding: 3px 10px;
     border-radius: 4px;
     font-size: 11px;
@@ -1040,7 +1040,7 @@
 }
 
 .copy-snippet-btn:hover {
-    background: #475569;
+    background: var(--button-bg-hover);
 }
 
 .concept-snippet-box pre,
@@ -1055,7 +1055,7 @@
     font-family: 'DM Mono', monospace;
     font-size: 13px;
     line-height: 1.55;
-    color: #38bdf8;
+    color: var(--accent);
 }
 
 /* VIDEO PANE */
@@ -1152,8 +1152,8 @@
 }
 
 .code-example-card {
-    background: #0f172a;
-    border: 1px solid #334155;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
     border-radius: 12px;
     overflow: hidden;
     display: flex;
@@ -1165,15 +1165,15 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 14px;
-    background: #1e293b;
-    border-bottom: 1px solid #334155;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
 }
 
 .example-card-header h6 {
     margin: 0;
     font-size: 13px;
     font-weight: 600;
-    color: #f1f5f9;
+    color: var(--text-primary);
 }
 
 .example-code-pre {
@@ -1187,17 +1187,17 @@
     font-family: 'DM Mono', monospace;
     font-size: 12.5px;
     line-height: 1.5;
-    color: #34d399;
+    color: var(--accent);
 }
 
 .example-code-desc {
     margin: 0;
     padding: 10px 14px;
-    background: #1e293b;
+    background: var(--surface);
     font-size: 12px;
-    color: #94a3b8;
+    color: var(--text-muted);
     line-height: 1.4;
-    border-top: 1px solid #334155;
+    border-top: 1px solid var(--border);
 }
 
 /* MCQ QUIZ COMPONENT */
@@ -1292,9 +1292,9 @@
 }
 
 .mcq-option-btn.correct {
-    background: rgba(34, 197, 94, 0.15);
-    border-color: #22c55e;
-    color: #16a34a;
+    background: color-mix(in srgb, var(--accent) 15%, var(--surface-alt));
+    border-color: var(--accent);
+    color: var(--accent-strong);
     font-weight: 600;
 }
 
@@ -1341,8 +1341,8 @@
 }
 
 .mcq-feedback-box.correct-feedback {
-    background: rgba(34, 197, 94, 0.12);
-    border: 1px solid rgba(34, 197, 94, 0.3);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
     color: var(--text-primary);
 }
 
@@ -1418,10 +1418,10 @@
 }
 
 .test-code-block {
-    background: #0f172a;
+    background: var(--bg-primary);
     border-radius: 10px;
     overflow: hidden;
-    border: 1px solid #334155;
+    border: 1px solid var(--border);
 }
 
 .test-code-block.buggy {
@@ -1429,7 +1429,7 @@
 }
 
 .test-code-block.solved {
-    border-color: rgba(34, 197, 94, 0.4);
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
 .code-status-pill {
@@ -1446,8 +1446,8 @@
 }
 
 .code-status-pill.success {
-    background: rgba(34, 197, 94, 0.2);
-    color: #4ade80;
+    background: color-mix(in srgb, var(--accent) 20%, transparent);
+    color: var(--accent);
 }
 
 .test-code-block pre {
@@ -1635,7 +1635,7 @@
 .live-status-dot {
     width: 8px;
     height: 8px;
-    background: #10b981;
+    background: var(--accent);
     border-radius: 50%;
     animation: liveDotPulse 1.2s ease infinite alternate;
 }
@@ -1833,7 +1833,7 @@
 }
 
 .loader-node-label-pill {
-    background: #090d16;
+    background: var(--bg-primary);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 6px;
     padding: 2.5px 8px;
@@ -1871,8 +1871,8 @@
 }
 
 .coding-terminal-window {
-    background: #090d16;
-    border: 1px solid #1e293b;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
     border-radius: 12px;
     overflow: hidden;
     display: flex;
@@ -1885,8 +1885,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px 14px;
-    background: #0f172a;
-    border-bottom: 1px solid #1e293b;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
 }
 
 .terminal-traffic-lights {
@@ -1903,7 +1903,7 @@
 
 .traffic-dot.red { background: #ef4444; }
 .traffic-dot.yellow { background: #f59e0b; }
-.traffic-dot.green { background: #10b981; }
+.traffic-dot.green { background: var(--accent); }
 
 .terminal-shell-title {
     font-family: 'DM Mono', monospace;
@@ -1919,9 +1919,9 @@
     font-family: 'DM Mono', monospace;
     font-size: 9.5px;
     font-weight: 700;
-    color: #10b981;
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
     padding: 2px 6px;
     border-radius: 4px;
 }
@@ -1945,7 +1945,7 @@
 }
 
 .terminal-code-body::-webkit-scrollbar-thumb {
-    background: #334155;
+    background: var(--surface-alt);
     border-radius: 3px;
 }
 
@@ -1966,17 +1966,17 @@
 }
 
 .log-line.module-load-line {
-    color: #38bdf8;
+    color: var(--accent);
     font-weight: 500;
 }
 
 .log-line.status-success-line {
-    color: #10b981;
+    color: var(--accent);
     font-weight: 600;
 }
 
 .line-prefix {
-    color: #10b981;
+    color: var(--accent);
     font-weight: 700;
     flex-shrink: 0;
 }
@@ -1989,12 +1989,12 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #10b981;
+    color: var(--accent);
 }
 
 .blinking-terminal-cursor {
     display: inline-block;
-    color: #10b981;
+    color: var(--accent);
     animation: cursorFlash 0.8s infinite;
 }
 
@@ -2007,7 +2007,7 @@
 .terminal-footer-progress {
     padding: 10px 16px;
     background: #0a0f1d;
-    border-top: 1px solid #1e293b;
+    border-top: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -2031,7 +2031,7 @@
 .footer-progress-track {
     width: 100%;
     height: 5px;
-    background: #1e293b;
+    background: var(--surface);
     border-radius: 3px;
     overflow: hidden;
 }
@@ -2358,7 +2358,7 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #10b981;
+    background: var(--accent);
     display: inline-block;
 }
 
@@ -2982,7 +2982,7 @@
 }
 
 .checkmark-icon {
-    color: #10b981;
+    color: var(--accent);
     font-weight: 700;
     flex-shrink: 0;
 }
@@ -2990,8 +2990,8 @@
 /* CODE BOX WITH COPY */
 .concept-code-box,
 .code-example-card {
-    background: #090d16;
-    border: 1px solid #1e293b;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
     border-radius: 10px;
     overflow: hidden;
 }
@@ -3002,8 +3002,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 8px 14px;
-    background: #0f172a;
-    border-bottom: 1px solid #1e293b;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
 }
 
 .code-lang-tag {
@@ -3024,17 +3024,17 @@
     font-family: 'DM Mono', monospace;
     font-size: 11px;
     padding: 4px 10px;
-    background: #1e293b;
-    border: 1px solid #334155;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 4px;
-    color: #e2e8f0;
+    color: var(--text-primary);
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .copy-code-btn:hover {
-    background: #334155;
-    color: #ffffff;
+    background: var(--surface-alt);
+    color: var(--button-text);
 }
 
 .code-pre-block {
@@ -3140,8 +3140,8 @@
 }
 
 .step-check-box.checked {
-    background: #10b981;
-    border-color: #10b981;
+    background: var(--accent);
+    border-color: var(--accent);
 }
 
 .checklist-item.completed-item .step-text {

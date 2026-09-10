@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 
 const MODULE_TYPE_META = {
-  concepts: { icon: '📖', label: 'Theory', color: '#10b981' },
-  video: { icon: '▶️', label: 'Video', color: '#38bdf8' },
-  'code-examples': { icon: '💻', label: 'Code', color: '#a855f7' },
-  mcq: { icon: '🎯', label: 'MCQs', color: '#f59e0b' },
-  test: { icon: '⚡', label: 'Syntax', color: '#ef4444' },
-  project: { icon: '🚀', label: 'Project', color: '#6366f1' }
+  concepts: { icon: '📖', label: 'Theory', color: '#F2B880' },
+  video: { icon: '▶️', label: 'Video', color: '#D9A77E' },
+  'code-examples': { icon: '💻', label: 'Code', color: '#E58A4F' },
+  mcq: { icon: '🎯', label: 'MCQs', color: '#F2B880' },
+  test: { icon: '⚡', label: 'Syntax', color: '#A85F3B' },
+  project: { icon: '🚀', label: 'Project', color: '#D9A77E' }
 }
 
 function formatConceptLines(label) {
@@ -100,8 +100,8 @@ function KnowledgeGraphView({
             </radialGradient>
 
             <linearGradient id="rootNodeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#1e293b" />
-              <stop offset="100%" stopColor="#090d16" />
+              <stop offset="0%" stopColor="#211914" />
+              <stop offset="100%" stopColor="#120E0B" />
             </linearGradient>
           </defs>
 
@@ -151,7 +151,7 @@ function KnowledgeGraphView({
 
             return moduleNodes.map((mPos) => {
               const isModSelected = mPos.id === selectedModuleId
-              const meta = MODULE_TYPE_META[mPos.type] || { color: '#10b981' }
+              const meta = MODULE_TYPE_META[mPos.type] || { color: '#F2B880' }
               return (
                 <line
                   key={`mod-link-${mPos.id}`}
@@ -175,7 +175,7 @@ function KnowledgeGraphView({
 
             return moduleNodes.map((mPos, idx) => {
               const isModSelected = mPos.id === selectedModuleId
-              const meta = MODULE_TYPE_META[mPos.type] || { icon: '📌', label: 'Module', color: '#10b981' }
+              const meta = MODULE_TYPE_META[mPos.type] || { icon: '📌', label: 'Module', color: '#F2B880' }
 
               return (
                 <g
@@ -224,7 +224,7 @@ function KnowledgeGraphView({
                       width="72"
                       height="18"
                       rx="4"
-                      fill="#090d16"
+                      fill="#120E0B"
                       stroke={isModSelected ? meta.color : isConceptSelected ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.18)'}
                       strokeWidth={isModSelected ? 1.6 : 1}
                       className={`svg-module-badge-rect ${isModSelected ? 'active' : ''}`}

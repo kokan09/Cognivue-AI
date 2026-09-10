@@ -80,7 +80,7 @@
 }
 
 .social-google {
-  color: #334756;
+  color: var(--text-primary);
 }
 
 .social-github {
@@ -140,7 +140,7 @@
 
 .auth-form input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(215, 119, 87, 0.12);
+  box-shadow: 0 0 0 4px rgba(229, 138, 79, 0.12);
 }
 
 .auth-submit {
@@ -152,10 +152,10 @@
 .auth-error {
   margin: 0;
   padding: 12px 14px;
-  border: 1px solid rgba(215, 87, 87, 0.35);
+  border: 1px solid rgba(229, 138, 79, 0.35);
   border-radius: 10px;
-  background: rgba(215, 87, 87, 0.1);
-  color: #d75757;
+  background: rgba(229, 138, 79, 0.1);
+  color: var(--accent-strong);
   font-size: 13px;
   line-height: 1.5;
 }
