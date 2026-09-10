@@ -1,66 +1,85 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-function CurriculumLoader({ topic, topicName, techName, modules = [] }) {
-  const currentModules = modules && modules.length > 0
-    ? modules
-    : (topic?.modules || [
-        { id: 'm1', number: 1, title: 'Concept Fundamentals', type: 'concepts' },
-        { id: 'm2', number: 2, title: 'Interactive Practice', type: 'practice' }
-      ])
+function CurriculumLoader({ topicName, techName, techIcon = '⚡', conceptNodes = [], onComplete }) {
+  const nodes = conceptNodes && conceptNodes.length > 0
+    ? conceptNodes
+    : [
+        { id: 'c1', label: 'Core Syntax & Fundamentals' },
+        { id: 'c2', label: 'Architecture & Patterns' },
+        { id: 'c3', label: 'Data Structures & Logic' },
+        { id: 'c4', label: 'Production Workflows' }
+      ]
 
-  const totalModules = currentModules.length
-  const [activeNodeIndex, setActiveNodeIndex] = useState(0)
-  const [progress, setProgress] = useState(12)
+  const totalNodes = nodes.length
+  const [activeNodeIndex, setActiveNodeIndex] = useState(-1)
+  const [progress, setProgress] = useState(10)
   const [terminalLines, setTerminalLines] = useState([])
   const terminalRef = useRef(null)
 
-  const techTitle = topicName || topic?.title || 'Selected Technology'
-  const techLabel = techName || topic?.techName || 'ENGINEERING_CORE'
+  const techTitle = topicName || 'Learning Roadmap'
+  const techLabel = techName || 'Technology'
 
-  // Generate dynamic terminal stream steps specific to the searched topic and its modules
+  const SCAN_DURATION = 2400 // ms per full rotation
+
+  // Dynamic live terminal code streaming & synchronized node scan reveal
   useEffect(() => {
     const rawLogs = [
-      `[INIT] Bootstrapping AST Compiler for "${techTitle}"...`,
-      `[CONFIG] Target: ${techLabel.toUpperCase()} | Modules Count: ${totalModules}`,
-      `[IMPORT] Loading syntax rules & schema definitions...`,
-      `// --- CODE GENERATION PIPELINE ---`,
-      `const roadmap = new CognivuePipeline({ topic: "${techTitle}", depth: ${totalModules} });`,
-      ...currentModules.map((m, i) => `[MODULE ${m.number || i + 1}] Synthesizing "${m.title}" -> [LOADED]`),
-      `[VERIFY] Building interactive quizzes and test sandboxes...`,
+      `[INIT] Initializing AST neural compiler for "${techLabel}"...`,
+      `[CONFIG] Target: ${techLabel.toUpperCase()} | ${totalNodes} Knowledge Nodes detected`,
+      `[IMPORT] Scanning syntax grammar & verified curriculum rules...`,
+      `// --- ROADMAP SYNTHESIS PIPELINE ---`,
+      `const roadmap = new CognivuePipeline({ target: "${techLabel}", nodes: ${totalNodes} });`,
+      ...nodes.map((node, i) => `[NODE ${i + 1}] Verified "${node.label}" -> [OK]`),
+      `[SANDBOX] Linking interactive code challenges & quiz engine...`,
       `[STATUS] 0 errors, 0 warnings. Compilation 100% complete.`,
-      `[RENDER] Mounting ${totalModules} interactive modules to viewport...`
+      `[SUCCESS] Visual learning roadmap ready. Mounting to viewport...`
     ]
 
-    let currentLineIdx = 0
+    let lineIdx = 0
     const logInterval = setInterval(() => {
-      if (currentLineIdx < rawLogs.length) {
-        const nextLog = rawLogs[currentLineIdx]
-        setTerminalLines((prev) => [...prev, nextLog])
-        currentLineIdx++
+      if (lineIdx < rawLogs.length) {
+        const line = rawLogs[lineIdx]
+        setTerminalLines((prev) => [...prev, line])
+        lineIdx++
       } else {
         clearInterval(logInterval)
       }
-    }, 220)
+    }, 160)
 
-    // Module node activator (activating 1 through totalModules)
-    const nodeInterval = setInterval(() => {
-      setActiveNodeIndex((prev) => (prev < totalModules ? prev + 1 : prev))
-    }, Math.max(260, 1700 / totalModules))
+    // Node reveal: triggers exactly when the rotating radar line sweeps across each node angle
+    const nodeTimeouts = nodes.map((_, idx) => {
+      const revealDelay = Math.round((idx / totalNodes) * SCAN_DURATION)
+      return setTimeout(() => {
+        setActiveNodeIndex((prev) => Math.max(prev, idx))
+      }, revealDelay)
+    })
 
-    // Progress counter
+    // Progress bar counter smoothly ascending to 100%
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 98) return 98
-        return prev + Math.floor(Math.random() * 14 + 10)
+        if (prev >= 100) {
+          clearInterval(progressInterval)
+          return 100
+        }
+        const next = prev + Math.floor(Math.random() * 8 + 8)
+        return next > 100 ? 100 : next
       })
-    }, 160)
+    }, 120)
+
+    // When compilation completes, smoothly transition to roadmap
+    const completeTimeout = setTimeout(() => {
+      if (onComplete) {
+        onComplete()
+      }
+    }, SCAN_DURATION + 400)
 
     return () => {
       clearInterval(logInterval)
-      clearInterval(nodeInterval)
       clearInterval(progressInterval)
+      nodeTimeouts.forEach(clearTimeout)
+      clearTimeout(completeTimeout)
     }
-  }, [techTitle, techLabel, totalModules, currentModules])
+  }, [techTitle, techLabel, totalNodes, nodes, onComplete, SCAN_DURATION])
 
   // Auto scroll terminal to bottom
   useEffect(() => {
@@ -69,10 +88,11 @@ function CurriculumLoader({ topic, topicName, techName, modules = [] }) {
     }
   }, [terminalLines])
 
-  // Radar container dimensions for placing module cards around the circle
-  const stageSize = 420
+  // Radar stage dimensions
+  const stageSize = 380
   const centerCoord = stageSize / 2
-  const orbitRadius = 150
+  const orbitRadius = 130
+  const beamLength = orbitRadius + 24
 
   return (
     <div className="dynamic-loader-split-view" role="status" aria-live="polite">
@@ -80,63 +100,122 @@ function CurriculumLoader({ topic, topicName, techName, modules = [] }) {
       <div className="loader-top-bar">
         <div className="loader-tech-badge">
           <span className="live-status-dot"></span>
-          <span>COMPILING ROADMAP: <strong>{techTitle}</strong></span>
+          <span>SYNTHESIZING ROADMAP: <strong>{techLabel}</strong></span>
         </div>
         <span className="loader-module-count-badge">
-          {totalModules} {totalModules === 1 ? 'MODULE' : 'MODULES'} DETECTED
+          {totalNodes} {totalNodes === 1 ? 'CONCEPT NODE' : 'CONCEPT NODES'} DETECTED
         </span>
       </div>
 
-      {/* 2-COLUMN LAYOUT: RADAR WITH PERIMETER MODULE RECTANGLES ON LEFT | CODING TERMINAL ON RIGHT */}
+      {/* 2-COLUMN LAYOUT: RADAR SCANNER ON LEFT | CODING TERMINAL ON RIGHT */}
       <div className="loader-split-grid">
-        {/* LEFT COLUMN: CIRCULAR RADAR WITH RECTANGLE MODULES POSITIONED AROUND CIRCLE */}
+        {/* LEFT COLUMN: RADAR ORBIT STAGE */}
         <div className="radar-orbit-stage-wrapper">
           <div
             className="radar-orbit-stage"
             style={{ width: `${stageSize}px`, height: `${stageSize}px` }}
           >
-            {/* INNER CENTRAL RADAR SCANNER */}
-            <div className="radar-core-disc">
-              <div className="radar-ring-bg ring-1"></div>
-              <div className="radar-ring-bg ring-2"></div>
-              <div className="radar-ring-bg ring-3"></div>
+            {/* SVG BACKGROUND RINGS, AXES, & SYNAPSE LINES */}
+            <svg
+              className="radar-orbit-svg"
+              viewBox={`0 0 ${stageSize} ${stageSize}`}
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
+            >
+              {/* Concentric Guide Circles */}
+              <circle
+                cx={centerCoord}
+                cy={centerCoord}
+                r={orbitRadius}
+                className="radar-orbit-circle outer"
+              />
+              <circle
+                cx={centerCoord}
+                cy={centerCoord}
+                r={orbitRadius * 0.58}
+                className="radar-orbit-circle inner"
+              />
 
-              <div className="radar-axis-horizontal"></div>
-              <div className="radar-axis-vertical"></div>
-              <div className="radar-scan-beam"></div>
+              {/* Grid Crosshairs */}
+              <line
+                x1={centerCoord - orbitRadius - 15}
+                y1={centerCoord}
+                x2={centerCoord + orbitRadius + 15}
+                y2={centerCoord}
+                className="radar-axis-line"
+              />
+              <line
+                x1={centerCoord}
+                y1={centerCoord - orbitRadius - 15}
+                x2={centerCoord}
+                y2={centerCoord + orbitRadius + 15}
+                className="radar-axis-line"
+              />
 
-              <div className="radar-center-hub">
-                <span className="center-hub-pulse"></span>
-                <span className="center-hub-text">{totalModules}M</span>
+              {/* Connector Lines from Center Hub to Nodes */}
+              {nodes.map((node, idx) => {
+                const isVisible = idx <= activeNodeIndex
+                const angle = (idx / totalNodes) * (2 * Math.PI) - Math.PI / 2
+                const x = Math.round(centerCoord + orbitRadius * Math.cos(angle))
+                const y = Math.round(centerCoord + orbitRadius * Math.sin(angle))
+                return (
+                  <line
+                    key={`conn-${idx}`}
+                    x1={centerCoord}
+                    y1={centerCoord}
+                    x2={x}
+                    y2={y}
+                    className={`loader-synapse-line ${isVisible ? 'visible' : 'hidden'}`}
+                  />
+                )
+              })}
+            </svg>
+
+            {/* FULL-STAGE RADAR SWEEP LINE (Sweeps across the node coordinates) */}
+            <div className="radar-full-sweep-container">
+              <div
+                className="radar-sweep-arm"
+                style={{
+                  width: `${beamLength}px`,
+                  animationDuration: `${SCAN_DURATION}ms`
+                }}
+              >
+                <div className="radar-sweep-lead-line"></div>
+                <div className="radar-sweep-cone"></div>
               </div>
             </div>
 
-            {/* DYNAMIC RECTANGLE MODULE CARDS ORBITING AROUND CIRCLE */}
-            {currentModules.map((mod, idx) => {
-              const angle = (idx / totalModules) * (2 * Math.PI) - Math.PI / 2
-              const x = centerCoord + orbitRadius * Math.cos(angle)
-              const y = centerCoord + orbitRadius * Math.sin(angle)
-              const isDone = idx < activeNodeIndex
-              const isCurrent = idx === activeNodeIndex
-              const isRightSide = Math.cos(angle) >= 0
+            {/* CENTER TECH HUB */}
+            <div className="radar-center-hub">
+              <span className="center-hub-text">{techIcon}</span>
+            </div>
+
+            {/* CONDENSED CIRCULAR CONCEPT NODES (APPEARS AS LINE PASSES THROUGH) */}
+            {nodes.map((node, idx) => {
+              const isVisible = idx <= activeNodeIndex
+              const isLatest = idx === activeNodeIndex
+              const angle = (idx / totalNodes) * (2 * Math.PI) - Math.PI / 2
+              const x = Math.round(centerCoord + orbitRadius * Math.cos(angle))
+              const y = Math.round(centerCoord + orbitRadius * Math.sin(angle))
 
               return (
                 <div
-                  key={mod.id || idx}
-                  className={`orbit-module-card ${isDone ? 'done' : isCurrent ? 'building' : 'waiting'} ${
-                    isRightSide ? 'align-right' : 'align-left'
+                  key={node.id || idx}
+                  className={`condensed-loader-node ${isVisible ? 'visible' : 'hidden'} ${
+                    isLatest ? 'just-scanned' : ''
                   }`}
                   style={{
                     left: `${x}px`,
                     top: `${y}px`
                   }}
                 >
-                  <div className="orbit-card-inner">
-                    <span className="orbit-mod-badge">M{mod.number || idx + 1}</span>
-                    <span className="orbit-mod-title">{mod.title}</span>
-                    <span className="orbit-mod-status">
-                      {isDone ? 'READY ✓' : isCurrent ? 'BUILDING...' : 'QUEUED'}
-                    </span>
+                  {/* Compact Circular Node */}
+                  <div className="loader-node-circle">
+                    <span className="node-num-tag">C{idx + 1}</span>
+                  </div>
+
+                  {/* Condensed Title Badge */}
+                  <div className="loader-node-label-pill" title={node.label}>
+                    <span>{node.label}</span>
                   </div>
                 </div>
               )
@@ -157,7 +236,9 @@ function CurriculumLoader({ topic, topicName, techName, modules = [] }) {
               <span className="terminal-shell-title">
                 cognivue-cli // build --target={techLabel.toLowerCase()} --topic="{techTitle}"
               </span>
-              <span className="terminal-ready-badge">RUNNING</span>
+              <span className="terminal-ready-badge">
+                {progress >= 100 ? 'SUCCESS' : 'COMPILING'}
+              </span>
             </div>
 
             {/* STREAMING CODE & LOG BODY */}
@@ -165,13 +246,13 @@ function CurriculumLoader({ topic, topicName, techName, modules = [] }) {
               {terminalLines.map((line, lIdx) => {
                 const isComment = line.startsWith('//')
                 const isStatus = line.startsWith('[STATUS]') || line.startsWith('[SUCCESS]')
-                const isModule = line.startsWith('[MODULE')
+                const isNode = line.startsWith('[NODE')
                 const isCode = line.startsWith('const ')
 
                 let lineClass = 'log-line'
                 if (isComment) lineClass += ' comment-line'
                 else if (isStatus) lineClass += ' status-success-line'
-                else if (isModule) lineClass += ' module-load-line'
+                else if (isNode) lineClass += ' module-load-line'
                 else if (isCode) lineClass += ' code-eval-line'
 
                 return (
@@ -181,22 +262,24 @@ function CurriculumLoader({ topic, topicName, techName, modules = [] }) {
                   </div>
                 )
               })}
-              <div className="terminal-active-cursor-line">
-                <span className="line-prefix">{`>`}</span>
-                <span className="blinking-terminal-cursor">█</span>
-              </div>
+              {progress < 100 && (
+                <div className="terminal-active-cursor-line">
+                  <span className="line-prefix">{`>`}</span>
+                  <span className="blinking-terminal-cursor">█</span>
+                </div>
+              )}
             </div>
 
             {/* SOLID PROGRESS BOTTOM BAR */}
             <div className="terminal-footer-progress">
               <div className="footer-progress-label-row">
-                <span>COMPILATION &amp; AST PARSING</span>
-                <span className="footer-pct">{Math.min(progress, 100)}%</span>
+                <span>AST PARSING &amp; GRAPH SYNTHESIS</span>
+                <span className="footer-pct">{progress}%</span>
               </div>
               <div className="footer-progress-track">
                 <div
                   className="footer-progress-fill"
-                  style={{ width: `${Math.min(progress, 100)}%` }}
+                  style={{ width: `${progress}%` }}
                 ></div>
               </div>
             </div>

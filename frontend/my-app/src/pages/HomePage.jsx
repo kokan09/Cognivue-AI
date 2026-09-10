@@ -16,6 +16,7 @@ function HomePage({ theme, setTheme }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [loadingTitle, setLoadingTitle] = useState('')
+  const [pendingGraph, setPendingGraph] = useState(null)
 
   const availableTechs = getAllTechnologies()
 
@@ -47,17 +48,19 @@ function HomePage({ theme, setTheme }) {
     if (!graph) return
 
     setLoadingTitle(graph.tech?.name || queryOrId)
+    setPendingGraph(graph)
     setIsLoading(true)
     setIsModalOpen(false)
+  }
 
-    // Simulate synthesis (1.2s)
-    setTimeout(() => {
-      setGraphData(graph)
-      const initialConcept = graph.initialSelectedTopic || graph.conceptNodes[0] || null
+  const handleLoadingComplete = () => {
+    if (pendingGraph) {
+      setGraphData(pendingGraph)
+      const initialConcept = pendingGraph.initialSelectedTopic || pendingGraph.conceptNodes[0] || null
       setSelectedConceptId(initialConcept?.id || null)
       setSelectedModule(initialConcept?.modules?.[0] || null)
-      setIsLoading(false)
-    }, 1200)
+    }
+    setIsLoading(false)
   }
 
   const handleBackToSearch = () => {
@@ -141,7 +144,9 @@ function HomePage({ theme, setTheme }) {
             <CurriculumLoader
               topicName={`${loadingTitle} Roadmap`}
               techName={loadingTitle}
-              modules={graphData?.conceptNodes?.[0]?.modules || []}
+              techIcon={pendingGraph?.tech?.icon || '⚡'}
+              conceptNodes={pendingGraph?.conceptNodes || []}
+              onComplete={handleLoadingComplete}
             />
           </div>
         )}
