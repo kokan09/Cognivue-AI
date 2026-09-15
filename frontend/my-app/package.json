@@ -12,6 +12,7 @@
   "dependencies": {
     "@theme-toggles/react": "^5.0.0-rc.0",
     "axios": "^1.19.0",
+    "framer-motion": "^13.3.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.2"

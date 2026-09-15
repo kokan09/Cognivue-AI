@@ -2369,7 +2369,7 @@
 /* LARGE SVG CANVAS CONTAINER (CLEAN & SEAMLESS) */
 .svg-canvas-container {
     width: 100%;
-    aspect-ratio: 1260 / 840;
+    aspect-ratio: 1380 / 900;
     min-height: 640px;
     display: flex;
     align-items: center;
@@ -2377,13 +2377,13 @@
     position: relative;
     background: transparent;
     border: none;
-    border-radius: 0;
-    overflow: visible;
+    border-radius: 16px;
+    overflow: hidden;
 }
 
 .svg-canvas-container.large-canvas {
-    aspect-ratio: 1260 / 840;
-    min-height: 680px;
+    aspect-ratio: 1380 / 900;
+    min-height: 700px;
 }
 
 .knowledge-graph-svg {
@@ -2391,6 +2391,11 @@
     height: 100%;
     display: block;
     user-select: none;
+    overflow: visible;
+}
+
+.knowledge-graph-camera-stage {
+    transform-origin: 0 0;
 }
 
 /* TRACK RINGS & CONNECTOR LINES */
@@ -2502,133 +2507,321 @@
     pointer-events: none;
 }
 
-/* CONCEPT NODES (DIRECT CLICKABLE) */
-.concept-node-group {
+/* CONCEPT NODES IN MACRO MODE (ROCK-SOLID SVG - ZERO JUMP/SHIFT) */
+.concept-node-svg-group {
     cursor: pointer;
     outline: none;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.concept-node-circle {
+.concept-svg-circle {
     fill: var(--surface);
     stroke: var(--border);
     stroke-width: 2.5;
-    transition: stroke 0.2s ease, stroke-width 0.2s ease, fill 0.2s ease;
+    transition: stroke 0.2s ease, stroke-width 0.2s ease, fill 0.2s ease, filter 0.2s ease;
 }
 
-.concept-node-number {
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    font-weight: 800;
-    fill: var(--text-muted);
-    pointer-events: none;
-}
-
-.concept-node-group:hover .concept-node-circle,
-.concept-node-group.active-concept-node .concept-node-circle {
-    stroke: var(--accent-strong);
-    stroke-width: 3.5;
-    fill: color-mix(in srgb, var(--accent-strong) 18%, var(--surface));
-}
-
-.concept-active-aura-ring {
+.concept-svg-aura {
     fill: none;
     stroke: var(--accent-strong);
-    stroke-width: 2;
+    stroke-width: 1.5;
     stroke-dasharray: 4 4;
-    opacity: 0.9;
+    opacity: 0;
+    transition: opacity 0.2s ease, stroke-width 0.2s ease;
 }
 
-.concept-inner-title {
+.concept-svg-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 800;
+    fill: var(--accent-strong);
+    pointer-events: none;
+    letter-spacing: 0.5px;
+}
+
+.concept-svg-title {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 700;
     fill: var(--text-primary);
     pointer-events: none;
     letter-spacing: -0.2px;
+    transition: fill 0.2s ease;
 }
 
-.concept-inner-title.single-line {
-    font-size: 13px;
+.concept-svg-title.single-line {
+    font-size: 12.5px;
     font-weight: 800;
 }
 
-.concept-node-group:hover .concept-inner-title,
-.concept-node-group.active-concept-node .concept-inner-title {
+.concept-node-svg-group:hover .concept-svg-circle,
+.concept-node-svg-group.active-concept-node .concept-svg-circle {
+    stroke: var(--accent-strong);
+    stroke-width: 3.5;
+    fill: color-mix(in srgb, var(--accent-strong) 18%, var(--surface));
+    filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent-strong) 45%, transparent));
+}
+
+.concept-node-svg-group:hover .concept-svg-aura,
+.concept-node-svg-group.active-concept-node .concept-svg-aura {
+    opacity: 0.95;
+    stroke-width: 2;
+}
+
+.concept-node-svg-group:hover .concept-svg-title,
+.concept-node-svg-group.active-concept-node .concept-svg-title {
     fill: #ffffff;
     font-weight: 800;
 }
 
-.concept-bottom-pill-rect {
-    transition: stroke 0.2s ease, fill 0.2s ease;
-}
-
-.concept-bottom-pill-text {
+.concept-svg-subhint-text {
     font-family: 'DM Mono', monospace;
     font-size: 9.5px;
     font-weight: 700;
+    fill: var(--accent-strong);
+    letter-spacing: 0.4px;
     pointer-events: none;
 }
 
-/* SATELLITE MODULE NODES */
-.satellite-node-group {
+/* SATELLITE SUBNODES IN MACRO MODE */
+.subnode-svg-group {
     cursor: pointer;
     outline: none;
     transition: opacity 0.2s ease;
 }
 
-.satellite-node-group.faint-sat {
+.subnode-svg-group.faint-sub {
     opacity: 0.85;
 }
 
-.satellite-node-group.concept-active-sat {
+.subnode-svg-group.concept-active-sub {
     opacity: 1;
 }
 
-.satellite-node-circle {
-    transition: stroke 0.2s ease, stroke-width 0.2s ease;
+.subnode-svg-circle {
+    transition: stroke 0.2s ease, stroke-width 0.2s ease, filter 0.2s ease, transform 0.2s ease;
 }
 
-.satellite-node-icon {
-    font-size: 13px;
+.subnode-svg-icon {
+    font-size: 11px;
     pointer-events: none;
 }
 
-.satellite-active-ring {
-    fill: none;
-    stroke-width: 1.8;
-    stroke-dasharray: 3 3;
-}
-
-.satellite-node-group:hover .satellite-node-circle,
-.satellite-node-group.selected-module-node .satellite-node-circle {
+.subnode-svg-group:hover .subnode-svg-circle {
     stroke-width: 2.8;
+    filter: drop-shadow(0 0 8px var(--accent-strong));
 }
 
-/* NATIVE SVG MODULE BADGES */
-.svg-module-badge-rect {
-    transition: stroke 0.2s ease;
+/* ==========================================================================
+   ZOOMED CONCEPT ROADMAP & ENLARGED SUBNODES VIEW
+   ========================================================================== */
+
+.roadmap-zoom-hud-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 18px;
+    background: color-mix(in srgb, var(--surface-alt) 90%, transparent);
+    border: 1px solid var(--accent-strong);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: fadeInHud 0.25s ease-out;
 }
 
-.svg-module-badge-text {
+@keyframes fadeInHud {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.zoom-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.zoom-back-btn:hover {
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
+    color: #ffffff;
+    transform: translateX(-2px);
+}
+
+.zoomed-concept-title-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.pill-eyebrow {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
+    font-weight: 800;
+    color: var(--accent-strong);
+}
+
+.pill-title {
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.pill-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: color-mix(in srgb, var(--accent-strong) 18%, transparent);
+    color: var(--accent-strong);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+.zoom-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* Zoomed Layer SVG Elements */
+.zoomed-orbit-track-main {
+    fill: none;
+    stroke: var(--accent-strong);
+    stroke-width: 1.8;
+    stroke-dasharray: 6 6;
+    opacity: 0.65;
+}
+
+.zoomed-subnode-connector-line {
+    stroke-width: 2.2;
+    stroke-dasharray: 4 4;
+    opacity: 0.85;
+}
+
+.zoomed-center-concept-group {
+    cursor: pointer;
+    outline: none;
+}
+
+.zoomed-center-halo {
+    fill: none;
+    stroke: var(--accent-strong);
+    stroke-width: 2;
+    stroke-dasharray: 4 6;
+    opacity: 0.7;
+    animation: orbitAuraSpin 25s linear infinite;
+}
+
+.zoomed-center-circle {
+    stroke: var(--accent-strong);
+    stroke-width: 3.5;
+    transition: filter 0.2s ease, stroke-width 0.2s ease;
+}
+
+.zoomed-center-concept-group:hover .zoomed-center-circle {
+    stroke-width: 4.5;
+    filter: drop-shadow(0 0 16px var(--accent-strong));
+}
+
+.zoomed-center-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 800;
+    fill: var(--accent-strong);
+    letter-spacing: 0.8px;
+    pointer-events: none;
+}
+
+.zoomed-center-title {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    fill: #ffffff;
+    pointer-events: none;
+}
+
+.zoomed-center-title.line-1 {
+    font-size: 13.5px;
+}
+
+.zoomed-center-title.line-2 {
+    font-size: 12.5px;
+}
+
+.zoomed-center-subhint {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    fill: var(--text-muted);
+    pointer-events: none;
+}
+
+/* ENLARGED INTERACTIVE SUBNODES IN ZOOMED VIEW */
+.zoomed-subnode-interactive-group {
+    cursor: pointer;
+    outline: none;
+}
+
+.zoomed-subnode-aura-ring {
+    fill: none;
+    stroke-width: 2;
+    stroke-dasharray: 4 4;
+    opacity: 0.6;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    animation: orbitAuraSpin 20s linear infinite;
+}
+
+.zoomed-subnode-circle {
+    transition: stroke-width 0.2s ease, filter 0.2s ease, fill 0.2s ease;
+}
+
+.zoomed-subnode-icon {
+    font-size: 20px;
+    pointer-events: none;
+}
+
+.zoomed-subnode-badge-rect {
+    transition: stroke-width 0.2s ease, filter 0.2s ease;
+}
+
+.zoomed-subnode-badge-text-primary {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11px;
     font-weight: 700;
     pointer-events: none;
 }
 
-.satellite-node-group:hover .svg-module-badge-rect,
-.svg-module-badge-rect.active {
-    stroke-width: 1.8;
+.zoomed-subnode-badge-text-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    pointer-events: none;
 }
 
-/* CONCEPT QUICK NAV */
-.graph-concept-quick-nav {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    border-top: 1px solid var(--border);
-    padding-top: 14px;
+.zoomed-subnode-interactive-group:hover .zoomed-subnode-circle {
+    stroke-width: 4;
+    filter: drop-shadow(0 0 14px var(--accent-strong));
+    fill: color-mix(in srgb, var(--accent-strong) 20%, var(--surface));
+}
+
+.zoomed-subnode-interactive-group:hover .zoomed-subnode-aura-ring {
+    opacity: 1;
+    stroke-width: 2.8;
+}
+
+.zoomed-subnode-interactive-group:hover .zoomed-subnode-badge-rect {
+    stroke-width: 2.4;
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
 }
 
 .quick-nav-label {
@@ -3165,5 +3358,477 @@
     padding: 2px 6px;
     border-radius: 4px;
     letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   IN-PLACE EXPANDING CONCEPT NODE & ORBITAL DETAIL PANEL (FRAMER MOTION)
+   ========================================================================== */
+
+.knowledge-graph-panel.relative-container {
+    position: relative;
+    width: 100%;
+}
+
+.knowledge-graph-base-layer {
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+}
+
+.knowledge-graph-base-layer.is-graph-dimmed {
+    opacity: 0.22;
+    filter: blur(5px);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* HTML Motion Concept Nodes Layer */
+.concept-nodes-html-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.concept-motion-node-btn {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    border: 2px solid var(--border);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    box-sizing: border-box;
+    outline: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    z-index: 10;
+}
+
+.concept-motion-node-btn:hover,
+.concept-motion-node-btn.is-active-concept {
+    border-color: var(--accent-strong);
+    background: color-mix(in srgb, var(--accent-strong) 18%, var(--surface));
+    box-shadow: 0 0 28px color-mix(in srgb, var(--accent-strong) 45%, transparent), 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.concept-motion-aura {
+    position: absolute;
+    inset: -7px;
+    border-radius: 50%;
+    border: 1.5px dashed var(--accent-strong);
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+}
+
+.concept-motion-node-btn:hover .concept-motion-aura,
+.concept-motion-node-btn.is-active-concept .concept-motion-aura {
+    opacity: 0.95;
+    animation: orbitAuraSpin 20s linear infinite;
+}
+
+@keyframes orbitAuraSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.concept-motion-inner-disk {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+}
+
+.concept-motion-num-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--accent-strong);
+    margin-bottom: 2px;
+    letter-spacing: 0.5px;
+}
+
+.concept-motion-title-text {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 4px;
+}
+
+.concept-motion-title-text .line-1 {
+    font-weight: 700;
+}
+
+.concept-motion-title-text .line-2 {
+    font-weight: 600;
+    font-size: 10.5px;
+    opacity: 0.9;
+}
+
+.concept-motion-node-btn:hover .concept-motion-title-text {
+    color: #ffffff;
+}
+
+/* Expansion Host & Centered Morphed Detail Panel */
+.graph-expansion-modal-host {
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.graph-expansion-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1;
+    cursor: pointer;
+}
+
+.concept-expanded-panel-wrapper {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 920px;
+    max-height: 88vh;
+    overflow-y: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    padding: 28px 32px;
+    box-sizing: border-box;
+}
+
+.concept-expanded-panel-wrapper::-webkit-scrollbar {
+    width: 6px;
+}
+
+.concept-expanded-panel-wrapper::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+}
+
+.concept-detail-panel-root {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    outline: none;
+}
+
+/* Header & Breadcrumb-Lite */
+.concept-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    gap: 16px;
+}
+
+.concept-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.concept-breadcrumb-lite {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.crumb-root-tech {
+    color: var(--accent-strong);
+}
+
+.crumb-divider {
+    opacity: 0.4;
+}
+
+.crumb-concept-tag {
+    color: var(--text-secondary);
+}
+
+.concept-main-heading {
+    margin: 2px 0 0;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+}
+
+.concept-summary-subtext {
+    margin: 4px 0 0;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.concept-panel-close-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    flex-shrink: 0;
+    outline: none;
+}
+
+.concept-panel-close-btn:hover {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: #ffffff;
+    transform: scale(1.08);
+}
+
+/* Orbital Module Selector Section */
+.concept-orbit-selector-section {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.orbit-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.orbit-section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--accent-strong);
+    letter-spacing: 0.8px;
+}
+
+.orbit-section-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.module-orbit-ring-container {
+    position: relative;
+    width: 100%;
+    padding: 6px 0;
+}
+
+.orbit-track-visual-layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+}
+
+.orbit-track-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.orbit-dashed-connector-line {
+    stroke: var(--border);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 4;
+    opacity: 0.8;
+}
+
+.module-orbit-nodes-row {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    align-items: center;
+}
+
+.module-orbit-node-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px 4px;
+    outline: none;
+    border-radius: 12px;
+}
+
+.orbit-node-inner-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.module-orbit-node-btn:hover .orbit-node-inner-circle,
+.module-orbit-node-btn.is-active .orbit-node-inner-circle {
+    border-color: var(--node-accent-color, var(--accent-strong));
+    background: color-mix(in srgb, var(--node-accent-color, var(--accent-strong)) 18%, var(--surface));
+    box-shadow: 0 0 16px color-mix(in srgb, var(--node-accent-color, var(--accent-strong)) 40%, transparent);
+    transform: translateY(-2px);
+}
+
+.orbit-node-active-aura {
+    position: absolute;
+    top: 2px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px dashed var(--node-accent-color, var(--accent-strong));
+    pointer-events: none;
+    animation: orbitAuraSpin 15s linear infinite;
+}
+
+.orbit-node-pill-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+
+.orbit-node-pill-index {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.orbit-node-pill-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: color 0.15s ease;
+}
+
+.module-orbit-node-btn.is-active .orbit-node-pill-name {
+    color: var(--text-primary);
+    font-weight: 800;
+}
+
+/* Module Content Card */
+.concept-module-content-card {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.module-card-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.module-card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-primary);
+    width: fit-content;
+}
+
+.module-card-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.module-card-description {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.module-card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.module-card-inner-view {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (max-width: 860px) {
+    .module-orbit-nodes-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .orbit-track-visual-layer {
+        display: none;
+    }
+
+    .concept-expanded-panel-wrapper {
+        padding: 20px 18px;
+    }
 }
 
