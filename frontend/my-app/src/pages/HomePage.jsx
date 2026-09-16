@@ -19,6 +19,7 @@ function HomePage({ theme, setTheme }) {
   const [isLoading, setIsLoading] = useState(false)
   const [loadingTitle, setLoadingTitle] = useState('')
   const [pendingGraph, setPendingGraph] = useState(null)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
   const availableTechs = getAllTechnologies()
 
@@ -154,80 +155,128 @@ function HomePage({ theme, setTheme }) {
           </div>
         )}
 
-        {/* VIEW 3: DEDICATED GRAPH / ROADMAP PAGE */}
+        {/* VIEW 3: DEDICATED GRAPH / ROADMAP PAGE WITH COLLAPSIBLE SIDEBAR */}
         {graphData && !isLoading && (
-          <div className="roadmap-page-view fade-in-modules">
-            {/* UNIFIED TOP NAVIGATION BAR */}
-            <div className="roadmap-unified-top-bar">
-              {/* Left: Cognivue Branding */}
-              <div className="roadmap-brand-container">
+          <div className={`roadmap-layout-shell fade-in-modules ${isSidebarOpen ? 'sidebar-open-mode' : 'sidebar-closed-mode'}`}>
+            
+            {/* FLOATING OPEN TAB (WHEN SIDEBAR IS HIDDEN/COLLAPSED - CENTERED VERTICALLY) */}
+            {!isSidebarOpen && (
+              <button
+                type="button"
+                className="roadmap-sidebar-edge-toggle is-floating-open"
+                onClick={() => setIsSidebarOpen(true)}
+                title="Open Sidebar (→)"
+                aria-label="Open Sidebar"
+              >
+                <span className="edge-arrow-icon">›</span>
+              </button>
+            )}
+
+            {/* DARK COLLAPSIBLE ROADMAP SIDEBAR */}
+            <aside className={`roadmap-left-sidebar ${isSidebarOpen ? 'is-open' : 'is-closed'}`}>
+              {/* VERTICALLY CENTERED TOGGLE BUTTON ON THE SIDEBAR BORDER LINE */}
+              {isSidebarOpen && (
                 <button
                   type="button"
-                  className="roadmap-brand-logo-btn"
-                  onClick={handleBackToSearch}
-                  title="Return to Cognivue Course Hub"
+                  className="roadmap-sidebar-edge-toggle is-sidebar-attached"
+                  onClick={() => setIsSidebarOpen(false)}
+                  title="Collapse Sidebar (←)"
+                  aria-label="Collapse Sidebar"
                 >
-                  <span className="brand-logo-text">Cognivue<span>.</span></span>
+                  <span className="edge-arrow-icon">‹</span>
                 </button>
-              </div>
+              )}
 
-              {/* Center: Topic Name + Metrics */}
-              <div className="roadmap-header-title-group">
-                <div className="tech-avatar-orb">
-                  <span className="graph-tech-icon">{graphData?.tech?.icon || '⚡'}</span>
+              <div className="sidebar-inner-container">
+                {/* 1. TOP BRAND + TOPIC COMPOSITE PILL (AS PER USER SKETCH) */}
+                <div className="sidebar-brand-topic-composite-pill">
+                  <button
+                    type="button"
+                    className="composite-brand-box"
+                    onClick={handleBackToSearch}
+                    title="Return to Cognivue Home"
+                  >
+                    <span className="composite-brand-text">Cognivue<span>.Ai</span></span>
+                  </button>
+                  <div className="composite-topic-box" title={`${graphData?.tech?.name} Curriculum`}>
+                    <span className="composite-topic-icon">{graphData?.tech?.icon || '⚡'}</span>
+                    <span className="composite-topic-text">{graphData?.tech?.name || 'Track'}</span>
+                  </div>
                 </div>
-                <div className="roadmap-title-text-col">
-                  <div className="graph-title-eyebrow">
+
+                {/* 2. BACK TO SEARCH BUTTON */}
+                <div className="sidebar-back-row">
+                  <button
+                    type="button"
+                    className="sidebar-back-btn"
+                    onClick={handleBackToSearch}
+                    aria-label="Back to search page"
+                  >
+                    <span className="back-arrow-icon">←</span>
+                    <span>Back to Search</span>
+                  </button>
+                </div>
+
+                {/* 4. HEADING & METRICS SECTION */}
+                <div className="sidebar-heading-section">
+                  <div className="sidebar-eyebrow">
                     <span className="live-graph-dot"></span>
                     <span>INTERACTIVE CURRICULUM</span>
                   </div>
-                  <div className="roadmap-heading-metrics-row">
-                    <h2 className="roadmap-main-heading">
-                      {graphData?.tech?.name || 'Technology'} Learning Roadmap
-                    </h2>
-                    <div className="graph-metrics-pill header-metrics-pill">
-                      <span className="metrics-badge-item">
-                        <strong>{graphData?.conceptNodes?.length || 0}</strong> Concepts
-                      </span>
-                      <span className="dot-sep">&bull;</span>
-                      <span className="metrics-badge-item">
-                        <strong>{(graphData?.conceptNodes?.length || 0) * 6}</strong> Modules
-                      </span>
-                    </div>
+                  <h2 className="sidebar-roadmap-heading">
+                    {graphData?.tech?.name || 'Technology'} Learning Roadmap
+                  </h2>
+                  <div className="sidebar-metrics-pill">
+                    <span className="metrics-badge-item">
+                      <strong>{graphData?.conceptNodes?.length || 0}</strong> Concepts
+                    </span>
+                    <span className="dot-sep">&bull;</span>
+                    <span className="metrics-badge-item">
+                      <strong>{(graphData?.conceptNodes?.length || 0) * 6}</strong> Modules
+                    </span>
+                  </div>
+                </div>
+
+                {/* 5. CONCEPT TRACK LIST (INTERACTIVE QUICK NAV) */}
+                <div className="sidebar-concept-nav-section">
+                  <span className="sidebar-section-label">CURRICULUM CONCEPTS</span>
+                  <div className="sidebar-concept-pills-list custom-scrollbar">
+                    {graphData?.conceptNodes?.map((concept, idx) => {
+                      const isActive = concept.id === selectedConceptId
+                      return (
+                        <button
+                          key={`sidebar-concept-${concept.id}`}
+                          type="button"
+                          className={`sidebar-concept-item ${isActive ? 'is-active' : ''}`}
+                          onClick={() => handleSelectConcept(concept.id)}
+                          title={`Focus on ${concept.label}`}
+                        >
+                          <span className="concept-item-num">0{idx + 1}</span>
+                          <span className="concept-item-label">{concept.label}</span>
+                          {isActive && <span className="concept-item-active-dot"></span>}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* 6. BOTTOM FOOTER WITH THEME BULB AT BOTTOM RIGHT */}
+                <div className="sidebar-bottom-footer">
+                  <span className="sidebar-footer-text">Cognivue AI</span>
+                  <div
+                    className={`theme-bulb-wrapper ${theme}`}
+                    onClick={() => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))}
+                    style={{ cursor: 'pointer' }}
+                    title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                  >
+                    <Lightbulb aria-pressed={theme === 'light'} />
                   </div>
                 </div>
               </div>
+            </aside>
 
-              {/* Right Side: Skill Badge + Theme Toggle Bulb */}
-              <div className="roadmap-top-right-group">
-                <div className="roadmap-current-skill-badge">
-                  <span className="badge-icon">{graphData?.tech?.icon}</span>
-                  <span className="badge-name">{graphData?.tech?.name}</span>
-                </div>
-
-                <div
-                  className={`theme-bulb-wrapper ${theme}`}
-                  onClick={() => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))}
-                  style={{ cursor: 'pointer' }}
-                  title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-                >
-                  <Lightbulb aria-pressed={theme === 'light'} />
-                </div>
-              </div>
-            </div>
-
-            {/* EXPANSIVE ROADMAP GRAPH VIEW WRAPPER WITH INDEPENDENT BACK BUTTON */}
-            <div className="knowledge-graph-fullscreen-wrapper">
-              <button
-                type="button"
-                className="roadmap-independent-back-btn"
-                onClick={handleBackToSearch}
-                aria-label="Back to search page"
-              >
-                <span className="back-arrow-icon">←</span>
-                <span>Back to Search</span>
-              </button>
-
+            {/* MAIN GRAPH CANVAS AREA */}
+            <main className="roadmap-graph-main-area">
               <KnowledgeGraphView
                 graphData={graphData}
                 selectedConceptId={selectedConceptId}
@@ -235,7 +284,7 @@ function HomePage({ theme, setTheme }) {
                 onSelectConcept={handleSelectConcept}
                 onSelectModule={handleSelectModule}
               />
-            </div>
+            </main>
           </div>
         )}
 

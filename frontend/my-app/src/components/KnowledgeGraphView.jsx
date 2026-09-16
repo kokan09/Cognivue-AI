@@ -21,13 +21,13 @@ function formatConceptLines(label) {
  */
 function calculateConceptCoordinates(totalConcepts, idx, centerX, centerY) {
   if (totalConcepts === 1) {
-    return { x: centerX, y: centerY - 180, angle: -Math.PI / 2 }
+    return { x: centerX, y: centerY - 230, angle: -Math.PI / 2 }
   }
 
   if (totalConcepts === 2) {
     // Balanced horizontal layout across the screen
     const isLeft = idx === 0
-    const x = isLeft ? centerX - 320 : centerX + 320
+    const x = isLeft ? centerX - 420 : centerX + 420
     const y = centerY
     const angle = isLeft ? Math.PI : 0
     return { x, y, angle }
@@ -35,8 +35,8 @@ function calculateConceptCoordinates(totalConcepts, idx, centerX, centerY) {
 
   // 3 or more concepts:
   // Smooth, harmonious elliptical ring with uniform spacing
-  const rx = 360
-  const ry = 210
+  const rx = 470
+  const ry = 285
   const angle = (idx / totalConcepts) * (2 * Math.PI) - Math.PI / 2
   const x = Math.round(centerX + rx * Math.cos(angle))
   const y = Math.round(centerY + ry * Math.sin(angle))
@@ -59,21 +59,21 @@ function KnowledgeGraphView({
   const [activeParentConcept, setActiveParentConcept] = useState(null)
   const [activeModuleType, setActiveModuleType] = useState('concepts')
 
-  // Balanced SVG geometry (1200 x 640)
-  const viewWidth = 1200
-  const viewHeight = 640
+  // Balanced SVG geometry (1360 x 780)
+  const viewWidth = 1360
+  const viewHeight = 780
   const centerX = viewWidth / 2
   const centerY = viewHeight / 2
 
   // Harmonic track geometry
-  const orbitRadiusX = 360
-  const orbitRadiusY = 210
+  const orbitRadiusX = 470
+  const orbitRadiusY = 285
   const totalConcepts = conceptNodes.length || 1
 
   // Distance of subnodes from parent concept center:
-  // Idle: 48px (crisp, compact, non-bulky), Expanded (Zoomed focus): 120px
-  const idleSubnodeDist = 48
-  const expandedSubnodeDist = 120
+  // Idle: 58px (crisp, compact, non-bulky), Expanded (Zoomed focus): 145px
+  const idleSubnodeDist = 58
+  const expandedSubnodeDist = 145
 
   // Calculate coordinates for all concept nodes
   const conceptPositions = conceptNodes.map((concept, idx) => {
@@ -204,13 +204,14 @@ function KnowledgeGraphView({
           {/* BACKGROUND AMBIENT GLOW */}
           <ellipse cx={centerX} cy={centerY} rx={orbitRadiusX * 1.15} ry={orbitRadiusY * 1.2} fill="url(#centerRadialGlow)" />
 
-          {/* CLICK-AWAY CATCHER: Closes expanded focus when dimmed canvas background is clicked */}
+          {/* CLICK-AWAY CATCHER: Closes expanded focus when canvas background is clicked (completely transparent) */}
           {isAnyExpanded && (
             <rect
               x="0"
               y="0"
               width={viewWidth}
               height={viewHeight}
+              fill="transparent"
               className="graph-canvas-zoom-backdrop"
               onClick={handleCollapse}
               style={{ cursor: 'pointer' }}
@@ -261,12 +262,12 @@ function KnowledgeGraphView({
               role="img"
               aria-label={`${tech?.name || 'Technology'} Core`}
             >
-              <circle cx={centerX} cy={centerY} r={44} className="root-node-halo" />
-              <circle cx={centerX} cy={centerY} r={36} fill="url(#rootNodeGradient)" className="root-node-circle" />
-              <text x={centerX} y={centerY - 5} className="root-node-icon" textAnchor="middle">
+              <circle cx={centerX} cy={centerY} r={52} className="root-node-halo" />
+              <circle cx={centerX} cy={centerY} r={42} fill="url(#rootNodeGradient)" className="root-node-circle" />
+              <text x={centerX} y={centerY - 6} className="root-node-icon" textAnchor="middle">
                 {tech?.icon || '🚀'}
               </text>
-              <text x={centerX} y={centerY + 13} className="root-node-label" textAnchor="middle">
+              <text x={centerX} y={centerY + 15} className="root-node-label" textAnchor="middle">
                 {tech?.name || 'CORE'}
               </text>
             </g>
@@ -339,7 +340,7 @@ function KnowledgeGraphView({
                           x2={curDx}
                           y2={curDy}
                           stroke={sub.color || 'var(--accent-strong)'}
-                          strokeWidth={isThisExpanded ? 2 : 1.2}
+                          strokeWidth={isThisExpanded ? 2.2 : 1.3}
                           className={`satellite-connector-line ${isThisExpanded ? 'active-satellite-link' : ''}`}
                           style={{
                             transition: 'x2 0.48s cubic-bezier(0.16, 1, 0.3, 1), y2 0.48s cubic-bezier(0.16, 1, 0.3, 1), stroke-width 0.3s ease'
@@ -378,31 +379,31 @@ function KnowledgeGraphView({
                             <circle
                               cx={0}
                               cy={0}
-                              r={25}
+                              r={28}
                               stroke={subColor}
                               className="zoomed-subnode-aura-ring"
                             />
                           )}
 
-                          {/* Subnode circle: r=18 on focus, r=11.5 on idle */}
+                          {/* Subnode circle: r=20 on focus, r=13 on idle */}
                           <circle
-                            cx={0}
-                            cy={0}
-                            r={isThisExpanded ? 18 : 11.5}
-                            stroke={subColor}
-                            strokeWidth={isThisExpanded ? 2.4 : 1.3}
-                            fill={isThisExpanded ? 'var(--surface-alt)' : 'var(--surface)'}
-                            className="subnode-svg-circle"
-                            style={{
-                              transition: 'r 0.3s ease, stroke-width 0.3s ease, fill 0.3s ease'
-                            }}
-                          />
+                              cx={0}
+                              cy={0}
+                              r={isThisExpanded ? 20 : 13}
+                              stroke={subColor}
+                              strokeWidth={isThisExpanded ? 2.5 : 1.4}
+                              fill={isThisExpanded ? 'var(--surface-alt)' : 'var(--surface)'}
+                              className="subnode-svg-circle"
+                              style={{
+                                transition: 'r 0.3s ease, stroke-width 0.3s ease, fill 0.3s ease'
+                              }}
+                            />
 
                           {/* Subnode icon */}
                           <text
                             x={0}
-                            y={isThisExpanded ? 4.5 : 3.5}
-                            fontSize={isThisExpanded ? '13px' : '9.5px'}
+                            y={isThisExpanded ? 5.5 : 4}
+                            fontSize={isThisExpanded ? '14px' : '10.5px'}
                             className="subnode-svg-icon"
                             textAnchor="middle"
                             style={{
@@ -415,36 +416,36 @@ function KnowledgeGraphView({
                           {/* High-contrast subnode label badge under the node when expanded */}
                           {isThisExpanded && (
                             <g
-                              transform="translate(-55, 22)"
+                              transform="translate(-60, 24)"
                               className="subnode-badge-enter"
                             >
                               <rect
                                 x="0"
                                 y="0"
-                                width="110"
-                                height="22"
-                                rx="5"
+                                width="120"
+                                height="24"
+                                rx="6"
                                 fill="var(--surface)"
                                 stroke={subColor}
                                 strokeWidth="1.4"
                                 className="zoomed-subnode-badge-rect"
                               />
                               <text
-                                x="55"
-                                y="11"
+                                x="60"
+                                y="12"
                                 textAnchor="middle"
                                 fill="var(--text-primary)"
-                                fontSize="10px"
+                                fontSize="10.5px"
                                 className="zoomed-subnode-badge-text-primary"
                               >
                                 {sub.shortName || sub.label}
                               </text>
                               <text
-                                x="55"
-                                y="18.5"
+                                x="60"
+                                y="20"
                                 textAnchor="middle"
                                 fill={subColor}
-                                fontSize="7.5px"
+                                fontSize="8px"
                                 className="zoomed-subnode-badge-text-tag"
                               >
                                 {sub.tag || 'SUB-TYPE'}
@@ -472,11 +473,11 @@ function KnowledgeGraphView({
                     <circle
                       cx={0}
                       cy={0}
-                      r={isThisExpanded ? 54 : 42}
+                      r={isThisExpanded ? 62 : 49}
                       className="concept-svg-aura"
                       style={{
                         opacity: isThisExpanded ? 0.95 : undefined,
-                        strokeWidth: isThisExpanded ? 2.4 : 1.4,
+                        strokeWidth: isThisExpanded ? 2.5 : 1.5,
                         transition: 'r 0.4s ease, opacity 0.4s ease'
                       }}
                     />
@@ -485,8 +486,8 @@ function KnowledgeGraphView({
                     <circle
                       cx={0}
                       cy={0}
-                      r={isThisExpanded ? 45 : 35}
-                      strokeWidth={isThisExpanded ? 3.2 : 2.2}
+                      r={isThisExpanded ? 52 : 41}
+                      strokeWidth={isThisExpanded ? 3.4 : 2.4}
                       fill={
                         isThisExpanded
                           ? 'color-mix(in srgb, var(--accent-strong) 25%, var(--surface))'
@@ -503,8 +504,8 @@ function KnowledgeGraphView({
                     {/* Number Badge */}
                     <text
                       x={0}
-                      y={isThisExpanded ? -17 : -14}
-                      fontSize={isThisExpanded ? '9.5px' : '8.5px'}
+                      y={isThisExpanded ? -20 : -16}
+                      fontSize={isThisExpanded ? '10.5px' : '9.5px'}
                       className="concept-svg-num"
                       textAnchor="middle"
                     >
@@ -516,8 +517,8 @@ function KnowledgeGraphView({
                       <>
                         <text
                           x={0}
-                          y={isThisExpanded ? -2 : -1}
-                          fontSize={isThisExpanded ? '11px' : '9.5px'}
+                          y={isThisExpanded ? -3 : -2}
+                          fontSize={isThisExpanded ? '12px' : '10.5px'}
                           className="concept-svg-title line-1"
                           textAnchor="middle"
                         >
@@ -525,8 +526,8 @@ function KnowledgeGraphView({
                         </text>
                         <text
                           x={0}
-                          y={isThisExpanded ? 11 : 9.5}
-                          fontSize={isThisExpanded ? '10px' : '8.5px'}
+                          y={isThisExpanded ? 13 : 11}
+                          fontSize={isThisExpanded ? '11px' : '9.5px'}
                           className="concept-svg-title line-2"
                           textAnchor="middle"
                         >
@@ -536,8 +537,8 @@ function KnowledgeGraphView({
                     ) : (
                       <text
                         x={0}
-                        y={isThisExpanded ? 5 : 4}
-                        fontSize={isThisExpanded ? '12px' : '10.5px'}
+                        y={isThisExpanded ? 6 : 5}
+                        fontSize={isThisExpanded ? '13px' : '11.5px'}
                         className="concept-svg-title single-line"
                         textAnchor="middle"
                       >
@@ -549,7 +550,7 @@ function KnowledgeGraphView({
                     {isThisExpanded && (
                       <text
                         x={0}
-                        y={28}
+                        y={32}
                         className="concept-svg-subhint-text"
                         textAnchor="middle"
                       >
