@@ -15,6 +15,34 @@ function formatConceptLines(label) {
   }
 }
 
+/**
+ * Calculates balanced, harmonic coordinates for concept nodes
+ * Ensures perfectly proportioned distribution that fits the page cleanly without bulging or clutter
+ */
+function calculateConceptCoordinates(totalConcepts, idx, centerX, centerY) {
+  if (totalConcepts === 1) {
+    return { x: centerX, y: centerY - 180, angle: -Math.PI / 2 }
+  }
+
+  if (totalConcepts === 2) {
+    // Balanced horizontal layout across the screen
+    const isLeft = idx === 0
+    const x = isLeft ? centerX - 320 : centerX + 320
+    const y = centerY
+    const angle = isLeft ? Math.PI : 0
+    return { x, y, angle }
+  }
+
+  // 3 or more concepts:
+  // Smooth, harmonious elliptical ring with uniform spacing
+  const rx = 360
+  const ry = 210
+  const angle = (idx / totalConcepts) * (2 * Math.PI) - Math.PI / 2
+  const x = Math.round(centerX + rx * Math.cos(angle))
+  const y = Math.round(centerY + ry * Math.sin(angle))
+  return { x, y, angle }
+}
+
 function KnowledgeGraphView({
   graphData,
   selectedConceptId,
@@ -31,46 +59,54 @@ function KnowledgeGraphView({
   const [activeParentConcept, setActiveParentConcept] = useState(null)
   const [activeModuleType, setActiveModuleType] = useState('concepts')
 
-  // High-resolution SVG geometry
-  const viewWidth = 1380
-  const viewHeight = 900
+  // Balanced SVG geometry (1200 x 640)
+  const viewWidth = 1200
+  const viewHeight = 640
   const centerX = viewWidth / 2
   const centerY = viewHeight / 2
 
-  // Orbital geometry
-  const conceptOrbitRadius = 310
+  // Harmonic track geometry
+  const orbitRadiusX = 360
+  const orbitRadiusY = 210
   const totalConcepts = conceptNodes.length || 1
 
   // Distance of subnodes from parent concept center:
-  // Idle: 60px, Expanded (Zoomed focus): 132px
-  const idleSubnodeDist = 60
-  const expandedSubnodeDist = 132
+  // Idle: 48px (crisp, compact, non-bulky), Expanded (Zoomed focus): 120px
+  const idleSubnodeDist = 48
+  const expandedSubnodeDist = 120
 
   // Calculate coordinates for all concept nodes
   const conceptPositions = conceptNodes.map((concept, idx) => {
-    const angle = (idx / totalConcepts) * (2 * Math.PI) - Math.PI / 2
-    const x = Math.round(centerX + conceptOrbitRadius * Math.cos(angle))
-    const y = Math.round(centerY + conceptOrbitRadius * Math.sin(angle))
+    const { x, y, angle } = calculateConceptCoordinates(
+      totalConcepts,
+      idx,
+      centerX,
+      centerY
+    )
     const textLines = formatConceptLines(concept.label)
     const subConcepts = concept.subConcepts || []
     const totalSubs = subConcepts.length || 6
 
     const subnodes = subConcepts.map((sub, sIdx) => {
       const subAngle = (sIdx / totalSubs) * (2 * Math.PI) - Math.PI / 2
-      // Idle coordinates
-      const idleX = Math.round(x + idleSubnodeDist * Math.cos(subAngle))
-      const idleY = Math.round(y + idleSubnodeDist * Math.sin(subAngle))
-      // Expanded coordinates
-      const expX = Math.round(x + expandedSubnodeDist * Math.cos(subAngle))
-      const expY = Math.round(y + expandedSubnodeDist * Math.sin(subAngle))
+      // Idle offset from concept center
+      const idleDx = Math.round(idleSubnodeDist * Math.cos(subAngle))
+      const idleDy = Math.round(idleSubnodeDist * Math.sin(subAngle))
+      // Expanded offset from concept center
+      const expDx = Math.round(expandedSubnodeDist * Math.cos(subAngle))
+      const expDy = Math.round(expandedSubnodeDist * Math.sin(subAngle))
 
       return {
         ...sub,
         angle: subAngle,
-        idleX,
-        idleY,
-        expX,
-        expY,
+        idleDx,
+        idleDy,
+        expDx,
+        expDy,
+        idleX: x + idleDx,
+        idleY: y + idleDy,
+        expX: x + expDx,
+        expY: y + expDy,
         parentConcept: concept
       }
     })
@@ -91,8 +127,8 @@ function KnowledgeGraphView({
   const isAnyExpanded = Boolean(expandedConceptId)
 
   // Camera Zoom & Pan Calculations:
-  // Scales up by 1.6x and translates the clicked node to the exact center (centerX, centerY)
-  const cameraScale = isAnyExpanded ? 1.6 : 1
+  // Scale 1.55x and position the clicked concept directly at screen center (centerX, centerY)
+  const cameraScale = isAnyExpanded ? 1.55 : 1
   const cameraTranslateX = isAnyExpanded && expandedConcept
     ? Math.round(centerX - expandedConcept.x * cameraScale)
     : 0
@@ -145,36 +181,7 @@ function KnowledgeGraphView({
 
   return (
     <div className={`knowledge-graph-panel large-graph-view relative-container ${isAnyExpanded ? 'is-camera-zoomed' : ''}`}>
-      {/* STATUS / HINT BANNER WHEN A NODE IS FOCUSED */}
-      {isAnyExpanded && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.2 }}
-          className="roadmap-zoom-hud-bar"
-        >
-          <button
-            type="button"
-            className="zoom-back-btn"
-            onClick={handleCollapse}
-            title="Reset zoom & return to full roadmap (Esc)"
-          >
-            <span className="btn-arrow">←</span>
-            <span>Reset View</span>
-          </button>
-
-          <div className="zoomed-concept-title-pill">
-            <span className="pill-eyebrow">FOCUSED CONCEPT:</span>
-            <span className="pill-title">{expandedConcept?.label}</span>
-            <span className="pill-count">{expandedConcept?.subnodes?.length || 6} Sub-Types</span>
-          </div>
-
-          <span className="zoom-hint">Click any glowing sub-node below to open Theory, Videos, Code &amp; Quizzes</span>
-        </motion.div>
-      )}
-
-      {/* SVG GRAPH CANVAS */}
+      {/* WIDESCREEN SVG GRAPH CANVAS */}
       <div className="svg-canvas-container large-canvas">
         <svg
           viewBox={`0 0 ${viewWidth} ${viewHeight}`}
@@ -183,19 +190,19 @@ function KnowledgeGraphView({
         >
           <defs>
             <radialGradient id="centerRadialGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="var(--accent-strong)" stopOpacity="0.22" />
-              <stop offset="65%" stopColor="var(--accent-strong)" stopOpacity="0.04" />
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.08" />
+              <stop offset="60%" stopColor="var(--accent)" stopOpacity="0.02" />
               <stop offset="100%" stopColor="transparent" stopOpacity="0" />
             </radialGradient>
 
             <linearGradient id="rootNodeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#241b15" />
-              <stop offset="100%" stopColor="#120e0b" />
+              <stop offset="0%" stopColor="var(--surface-alt)" />
+              <stop offset="100%" stopColor="var(--surface)" />
             </linearGradient>
           </defs>
 
           {/* BACKGROUND AMBIENT GLOW */}
-          <circle cx={centerX} cy={centerY} r={conceptOrbitRadius * 1.35} fill="url(#centerRadialGlow)" />
+          <ellipse cx={centerX} cy={centerY} rx={orbitRadiusX * 1.15} ry={orbitRadiusY * 1.2} fill="url(#centerRadialGlow)" />
 
           {/* CLICK-AWAY CATCHER: Closes expanded focus when dimmed canvas background is clicked */}
           {isAnyExpanded && (
@@ -204,7 +211,7 @@ function KnowledgeGraphView({
               y="0"
               width={viewWidth}
               height={viewHeight}
-              fill="rgba(0, 0, 0, 0.42)"
+              className="graph-canvas-zoom-backdrop"
               onClick={handleCollapse}
               style={{ cursor: 'pointer' }}
             />
@@ -221,31 +228,31 @@ function KnowledgeGraphView({
                 ? `translate3d(${cameraTranslateX}px, ${cameraTranslateY}px, 0) scale(${cameraScale})`
                 : 'translate3d(0px, 0px, 0) scale(1)',
               transformOrigin: '0 0',
-              transition: 'transform 0.52s cubic-bezier(0.16, 1, 0.3, 1)',
+              transition: 'transform 0.48s cubic-bezier(0.16, 1, 0.3, 1)',
               willChange: 'transform'
             }}
           >
-            {/* 1. BACKGROUND RADAR TRACKS */}
+            {/* 1. BACKGROUND WIDESCREEN RADAR TRACKS */}
             <g
               style={{
-                opacity: isAnyExpanded ? 0.1 : 0.8,
+                opacity: isAnyExpanded ? 0.08 : 0.75,
                 transition: 'opacity 0.4s ease'
               }}
             >
-              <circle cx={centerX} cy={centerY} r={conceptOrbitRadius * 1.26} className="orbit-track-ring outer-faint-track" />
-              <circle cx={centerX} cy={centerY} r={conceptOrbitRadius} className="orbit-track-ring main-track" />
-              <circle cx={centerX} cy={centerY} r={conceptOrbitRadius * 0.58} className="orbit-track-ring inner-track" />
-              <circle cx={centerX} cy={centerY} r={conceptOrbitRadius * 0.28} className="orbit-track-ring core-faint-track" />
+              <ellipse cx={centerX} cy={centerY} rx={orbitRadiusX * 1.28} ry={orbitRadiusY * 1.26} className="orbit-track-ring outer-faint-track" />
+              <ellipse cx={centerX} cy={centerY} rx={orbitRadiusX} ry={orbitRadiusY} className="orbit-track-ring main-track" />
+              <ellipse cx={centerX} cy={centerY} rx={orbitRadiusX * 0.6} ry={orbitRadiusY * 0.6} className="orbit-track-ring inner-track" />
+              <ellipse cx={centerX} cy={centerY} rx={orbitRadiusX * 0.3} ry={orbitRadiusY * 0.3} className="orbit-track-ring core-faint-track" />
 
-              <line x1={centerX - conceptOrbitRadius * 1.2} y1={centerY} x2={centerX + conceptOrbitRadius * 1.2} y2={centerY} className="radar-grid-line" />
-              <line x1={centerX} y1={centerY - conceptOrbitRadius * 1.2} x2={centerX} y2={centerY + conceptOrbitRadius * 1.2} className="radar-grid-line" />
+              <line x1={centerX - orbitRadiusX * 1.25} y1={centerY} x2={centerX + orbitRadiusX * 1.25} y2={centerY} className="radar-grid-line" />
+              <line x1={centerX} y1={centerY - orbitRadiusY * 1.25} x2={centerX} y2={centerY + orbitRadiusY * 1.25} className="radar-grid-line" />
             </g>
 
-            {/* 2. CENTRAL ROOT TECHNOLOGY NODE ("MERN Stack") */}
+            {/* 2. CENTRAL ROOT TECHNOLOGY NODE ("MERN Stack" / "JavaScript" / "Java") */}
             <g
               className="graph-root-node-group"
               style={{
-                opacity: isAnyExpanded ? 0.18 : 1,
+                opacity: isAnyExpanded ? 0.15 : 1,
                 transition: 'opacity 0.4s ease',
                 pointerEvents: isAnyExpanded ? 'none' : 'auto'
               }}
@@ -254,12 +261,12 @@ function KnowledgeGraphView({
               role="img"
               aria-label={`${tech?.name || 'Technology'} Core`}
             >
-              <circle cx={centerX} cy={centerY} r={58} className="root-node-halo" />
-              <circle cx={centerX} cy={centerY} r={48} fill="url(#rootNodeGradient)" className="root-node-circle" />
-              <text x={centerX} y={centerY - 9} className="root-node-icon" textAnchor="middle">
+              <circle cx={centerX} cy={centerY} r={44} className="root-node-halo" />
+              <circle cx={centerX} cy={centerY} r={36} fill="url(#rootNodeGradient)" className="root-node-circle" />
+              <text x={centerX} y={centerY - 5} className="root-node-icon" textAnchor="middle">
                 {tech?.icon || '🚀'}
               </text>
-              <text x={centerX} y={centerY + 16} className="root-node-label" textAnchor="middle">
+              <text x={centerX} y={centerY + 13} className="root-node-label" textAnchor="middle">
                 {tech?.name || 'CORE'}
               </text>
             </g>
@@ -273,7 +280,7 @@ function KnowledgeGraphView({
                 <g
                   key={`root-link-${pos.id}`}
                   style={{
-                    opacity: isDimmed ? 0.06 : isThisExpanded ? 1 : 0.65,
+                    opacity: isDimmed ? 0.05 : isThisExpanded ? 1 : 0.65,
                     transition: 'opacity 0.4s ease'
                   }}
                 >
@@ -288,7 +295,7 @@ function KnowledgeGraphView({
                     <circle
                       cx={Math.round(centerX + (pos.x - centerX) * 0.5)}
                       cy={Math.round(centerY + (pos.y - centerY) * 0.5)}
-                      r={4.5}
+                      r={4}
                       className="synapse-pulse-dot"
                     />
                   )}
@@ -304,30 +311,38 @@ function KnowledgeGraphView({
               const { line1, line2 } = pos.textLines
 
               return (
-                <g key={`concept-cluster-${pos.id}`}>
+                <g
+                  key={`concept-cluster-${pos.id}`}
+                  transform={`translate(${pos.x}, ${pos.y})`}
+                  style={{
+                    opacity: isDimmed ? 0.08 : 1,
+                    transition: 'opacity 0.4s ease',
+                    pointerEvents: isDimmed ? 'none' : 'auto'
+                  }}
+                >
                   {/* A. CONNECTOR LINES TO SUBNODES */}
                   <g
                     style={{
-                      opacity: isDimmed ? 0.05 : isThisExpanded ? 1 : 0.45,
+                      opacity: isThisExpanded ? 1 : 0.4,
                       transition: 'opacity 0.4s ease'
                     }}
                   >
                     {pos.subnodes.map((sub) => {
-                      const curX = isThisExpanded ? sub.expX : sub.idleX
-                      const curY = isThisExpanded ? sub.expY : sub.idleY
+                      const curDx = isThisExpanded ? sub.expDx : sub.idleDx
+                      const curDy = isThisExpanded ? sub.expDy : sub.idleDy
 
                       return (
                         <line
                           key={`sub-link-${sub.id}`}
-                          x1={pos.x}
-                          y1={pos.y}
-                          x2={curX}
-                          y2={curY}
+                          x1={0}
+                          y1={0}
+                          x2={curDx}
+                          y2={curDy}
                           stroke={sub.color || 'var(--accent-strong)'}
-                          strokeWidth={isThisExpanded ? 2.2 : 1.4}
+                          strokeWidth={isThisExpanded ? 2 : 1.2}
                           className={`satellite-connector-line ${isThisExpanded ? 'active-satellite-link' : ''}`}
                           style={{
-                            transition: 'x2 0.52s cubic-bezier(0.16, 1, 0.3, 1), y2 0.52s cubic-bezier(0.16, 1, 0.3, 1), stroke-width 0.3s ease'
+                            transition: 'x2 0.48s cubic-bezier(0.16, 1, 0.3, 1), y2 0.48s cubic-bezier(0.16, 1, 0.3, 1), stroke-width 0.3s ease'
                           }}
                         />
                       )
@@ -335,24 +350,18 @@ function KnowledgeGraphView({
                   </g>
 
                   {/* B. SUBNODES */}
-                  <g
-                    style={{
-                      opacity: isDimmed ? 0.06 : 1,
-                      pointerEvents: isDimmed ? 'none' : 'auto',
-                      transition: 'opacity 0.4s ease'
-                    }}
-                  >
+                  <g>
                     {pos.subnodes.map((sub) => {
-                      const curX = isThisExpanded ? sub.expX : sub.idleX
-                      const curY = isThisExpanded ? sub.expY : sub.idleY
+                      const curDx = isThisExpanded ? sub.expDx : sub.idleDx
+                      const curDy = isThisExpanded ? sub.expDy : sub.idleDy
                       const subColor = sub.color || '#F2B880'
 
                       return (
                         <g
                           key={`subnode-group-${sub.id}`}
-                          transform={`translate(${curX}, ${curY})`}
+                          transform={`translate(${curDx}, ${curDy})`}
                           style={{
-                            transition: 'transform 0.52s cubic-bezier(0.16, 1, 0.3, 1)',
+                            transition: 'transform 0.48s cubic-bezier(0.16, 1, 0.3, 1)',
                             cursor: 'pointer'
                           }}
                           className={`subnode-svg-group ${isThisExpanded ? 'is-subnode-expanded' : 'is-subnode-idle'}`}
@@ -369,20 +378,20 @@ function KnowledgeGraphView({
                             <circle
                               cx={0}
                               cy={0}
-                              r={28}
+                              r={25}
                               stroke={subColor}
                               className="zoomed-subnode-aura-ring"
                             />
                           )}
 
-                          {/* Subnode circle: r=20 on focus, r=14 on idle */}
+                          {/* Subnode circle: r=18 on focus, r=11.5 on idle */}
                           <circle
                             cx={0}
                             cy={0}
-                            r={isThisExpanded ? 20 : 14}
+                            r={isThisExpanded ? 18 : 11.5}
                             stroke={subColor}
-                            strokeWidth={isThisExpanded ? 2.6 : 1.5}
-                            fill={isThisExpanded ? '#150f0c' : 'var(--surface)'}
+                            strokeWidth={isThisExpanded ? 2.4 : 1.3}
+                            fill={isThisExpanded ? 'var(--surface-alt)' : 'var(--surface)'}
                             className="subnode-svg-circle"
                             style={{
                               transition: 'r 0.3s ease, stroke-width 0.3s ease, fill 0.3s ease'
@@ -392,8 +401,8 @@ function KnowledgeGraphView({
                           {/* Subnode icon */}
                           <text
                             x={0}
-                            y={isThisExpanded ? 5 : 4.5}
-                            fontSize={isThisExpanded ? '14px' : '11px'}
+                            y={isThisExpanded ? 4.5 : 3.5}
+                            fontSize={isThisExpanded ? '13px' : '9.5px'}
                             className="subnode-svg-icon"
                             textAnchor="middle"
                             style={{
@@ -406,7 +415,7 @@ function KnowledgeGraphView({
                           {/* High-contrast subnode label badge under the node when expanded */}
                           {isThisExpanded && (
                             <g
-                              transform="translate(-55, 24)"
+                              transform="translate(-55, 22)"
                               className="subnode-badge-enter"
                             >
                               <rect
@@ -415,16 +424,16 @@ function KnowledgeGraphView({
                                 width="110"
                                 height="22"
                                 rx="5"
-                                fill="#120e0b"
+                                fill="var(--surface)"
                                 stroke={subColor}
-                                strokeWidth="1.3"
+                                strokeWidth="1.4"
                                 className="zoomed-subnode-badge-rect"
                               />
                               <text
                                 x="55"
                                 y="11"
                                 textAnchor="middle"
-                                fill="#ffffff"
+                                fill="var(--text-primary)"
                                 fontSize="10px"
                                 className="zoomed-subnode-badge-text-primary"
                               >
@@ -450,11 +459,6 @@ function KnowledgeGraphView({
                   {/* C. MAIN CONCEPT NODE */}
                   <g
                     className={`concept-node-svg-group ${isThisExpanded ? 'is-active-expanded-node' : ''} ${isSelected ? 'active-concept-node' : ''}`}
-                    style={{
-                      opacity: isDimmed ? 0.12 : 1,
-                      pointerEvents: isDimmed ? 'none' : 'auto',
-                      transition: 'opacity 0.4s ease'
-                    }}
                     onClick={(e) => {
                       e.stopPropagation()
                       handleConceptClick(pos.id)
@@ -466,23 +470,23 @@ function KnowledgeGraphView({
                   >
                     {/* Glowing Animated Outer Aura */}
                     <circle
-                      cx={pos.x}
-                      cy={pos.y}
-                      r={isThisExpanded ? 60 : 52}
+                      cx={0}
+                      cy={0}
+                      r={isThisExpanded ? 54 : 42}
                       className="concept-svg-aura"
                       style={{
                         opacity: isThisExpanded ? 0.95 : undefined,
-                        strokeWidth: isThisExpanded ? 2.5 : 1.5,
+                        strokeWidth: isThisExpanded ? 2.4 : 1.4,
                         transition: 'r 0.4s ease, opacity 0.4s ease'
                       }}
                     />
 
                     {/* Main Concept Circle */}
                     <circle
-                      cx={pos.x}
-                      cy={pos.y}
-                      r={isThisExpanded ? 50 : 44}
-                      strokeWidth={isThisExpanded ? 3.5 : 2.5}
+                      cx={0}
+                      cy={0}
+                      r={isThisExpanded ? 45 : 35}
+                      strokeWidth={isThisExpanded ? 3.2 : 2.2}
                       fill={
                         isThisExpanded
                           ? 'color-mix(in srgb, var(--accent-strong) 25%, var(--surface))'
@@ -498,9 +502,9 @@ function KnowledgeGraphView({
 
                     {/* Number Badge */}
                     <text
-                      x={pos.x}
-                      y={isThisExpanded ? pos.y - 20 : pos.y - 18}
-                      fontSize={isThisExpanded ? '10px' : '10px'}
+                      x={0}
+                      y={isThisExpanded ? -17 : -14}
+                      fontSize={isThisExpanded ? '9.5px' : '8.5px'}
                       className="concept-svg-num"
                       textAnchor="middle"
                     >
@@ -511,18 +515,18 @@ function KnowledgeGraphView({
                     {line2 ? (
                       <>
                         <text
-                          x={pos.x}
-                          y={isThisExpanded ? pos.y - 3 : pos.y - 1}
-                          fontSize={isThisExpanded ? '12px' : '11.5px'}
+                          x={0}
+                          y={isThisExpanded ? -2 : -1}
+                          fontSize={isThisExpanded ? '11px' : '9.5px'}
                           className="concept-svg-title line-1"
                           textAnchor="middle"
                         >
                           {line1}
                         </text>
                         <text
-                          x={pos.x}
-                          y={isThisExpanded ? pos.y + 12 : pos.y + 13}
-                          fontSize={isThisExpanded ? '11px' : '10.5px'}
+                          x={0}
+                          y={isThisExpanded ? 11 : 9.5}
+                          fontSize={isThisExpanded ? '10px' : '8.5px'}
                           className="concept-svg-title line-2"
                           textAnchor="middle"
                         >
@@ -531,9 +535,9 @@ function KnowledgeGraphView({
                       </>
                     ) : (
                       <text
-                        x={pos.x}
-                        y={pos.y + 6}
-                        fontSize={isThisExpanded ? '13px' : '12.5px'}
+                        x={0}
+                        y={isThisExpanded ? 5 : 4}
+                        fontSize={isThisExpanded ? '12px' : '10.5px'}
                         className="concept-svg-title single-line"
                         textAnchor="middle"
                       >
@@ -544,8 +548,8 @@ function KnowledgeGraphView({
                     {/* Subtitle tag when expanded */}
                     {isThisExpanded && (
                       <text
-                        x={pos.x}
-                        y={pos.y + 28}
+                        x={0}
+                        y={28}
                         className="concept-svg-subhint-text"
                         textAnchor="middle"
                       >
@@ -558,28 +562,6 @@ function KnowledgeGraphView({
             })}
           </g>
         </svg>
-      </div>
-
-      {/* QUICK CONCEPT NAVIGATION BAR AT BOTTOM */}
-      <div className="graph-concept-quick-nav">
-        <span className="quick-nav-label">CONCEPTS:</span>
-        <div className="quick-nav-pills">
-          {conceptPositions.map((concept) => {
-            const isSelected = concept.id === (expandedConceptId || selectedConceptId)
-            return (
-              <button
-                key={concept.id}
-                type="button"
-                className={`graph-nav-pill ${isSelected ? 'active' : ''}`}
-                onClick={() => handleConceptClick(concept.id)}
-              >
-                <span className="nav-pill-num">0{concept.index + 1}</span>
-                <span className="nav-pill-name">{concept.label}</span>
-                <span className="nav-pill-badge">{concept.subnodes?.length || 6} Sub-Types</span>
-              </button>
-            )
-          })}
-        </div>
       </div>
 
       {/* DETAIL PANEL MODAL: OPENS WHEN ANY SUBNODE IS CLICKED */}
@@ -597,17 +579,17 @@ function KnowledgeGraphView({
             />
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.92, y: 16 }}
+              initial={{ opacity: 0, scale: 0.94, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.92, y: 16 }}
-              transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-              className="concept-expanded-panel-wrapper"
+              exit={{ opacity: 0, scale: 0.94, y: 16 }}
+              transition={{ type: 'spring', stiffness: 360, damping: 28 }}
+              className="concept-expanded-panel-wrapper widescreen-modal"
               onClick={(e) => e.stopPropagation()}
             >
               <ConceptDetailPanel
                 concept={activeParentConcept}
                 subConcept={activeSubnode}
-                techName={tech?.name || 'MERN Stack'}
+                techName={tech?.name || 'Technology'}
                 activeModuleType={activeModuleType}
                 onSelectModuleType={setActiveModuleType}
                 onClose={handleCloseDetail}

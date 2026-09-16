@@ -514,6 +514,7 @@
         opacity: 0;
         transform: translateY(-6px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -935,6 +936,7 @@
         opacity: 0;
         transform: translateY(-4px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1074,7 +1076,8 @@
 
 .video-embed-container {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    padding-bottom: 56.25%;
+    /* 16:9 aspect ratio */
     height: 0;
     background: #000;
 }
@@ -1641,8 +1644,15 @@
 }
 
 @keyframes liveDotPulse {
-    0% { opacity: 0.3; transform: scale(0.9); }
-    100% { opacity: 1; transform: scale(1.15); }
+    0% {
+        opacity: 0.3;
+        transform: scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1.15);
+    }
 }
 
 .loader-module-count-badge {
@@ -1735,6 +1745,7 @@
     0% {
         transform: rotate(-90deg);
     }
+
     100% {
         transform: rotate(270deg);
     }
@@ -1901,9 +1912,17 @@
     border-radius: 50%;
 }
 
-.traffic-dot.red { background: #ef4444; }
-.traffic-dot.yellow { background: #f59e0b; }
-.traffic-dot.green { background: var(--accent); }
+.traffic-dot.red {
+    background: #ef4444;
+}
+
+.traffic-dot.yellow {
+    background: #f59e0b;
+}
+
+.traffic-dot.green {
+    background: var(--accent);
+}
 
 .terminal-shell-title {
     font-family: 'DM Mono', monospace;
@@ -1999,8 +2018,16 @@
 }
 
 @keyframes cursorFlash {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0; }
+
+    0%,
+    49% {
+        opacity: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+    }
 }
 
 /* TERMINAL FOOTER PROGRESS (SOLID FLAT FILL) */
@@ -2111,79 +2138,191 @@
 }
 
 /* ==========================================================================
-   DEDICATED ROADMAP GRAPH PAGE VIEW
+   DEDICATED ROADMAP GRAPH PAGE VIEW & UNIFIED TOP BAR
    ========================================================================== */
+
+.page-shell.roadmap-fullscreen-shell {
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
 
 .roadmap-page-view {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
     width: 100%;
-    max-width: 1380px;
-    margin: 0 auto;
-    padding: 20px 20px 40px;
+    max-width: 100%;
+    margin: 0;
+    padding: 16px 28px 10px;
     box-sizing: border-box;
-    min-height: calc(100vh - 180px);
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
 }
 
-.roadmap-page-top-bar {
+.roadmap-unified-top-bar {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: center;
     width: 100%;
-    padding: 8px 0 16px;
-    border-bottom: 1px solid var(--border);
-    gap: 18px;
-    flex-wrap: wrap;
+    padding: 0;
+    border-bottom: none;
+    box-sizing: border-box;
 }
 
-.roadmap-top-left-group {
+/* LEFT: BRAND CONTAINER (FAR LEFT) */
+.roadmap-brand-container {
     display: flex;
     align-items: center;
-    flex-shrink: 0;
+    flex: 0 0 auto;
 }
 
+.roadmap-brand-logo-btn {
+    display: inline-flex;
+    align-items: center;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 6px 18px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.roadmap-brand-logo-btn:hover {
+    border-color: var(--accent-strong);
+    background: color-mix(in srgb, var(--accent-strong) 12%, var(--surface));
+    transform: translateY(-1px);
+}
+
+.brand-logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -1px;
+}
+
+.brand-logo-text span {
+    color: var(--accent);
+}
+
+/* INDEPENDENT BACK TO SEARCH BUTTON BELOW COGNIVUE */
+.roadmap-independent-back-btn {
+    position: absolute;
+    top: 80px;
+    left: 28px;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 14px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.roadmap-independent-back-btn:hover {
+    border-color: var(--accent-strong);
+    color: var(--accent-strong);
+    background: color-mix(in srgb, var(--accent-strong) 12%, var(--surface));
+    transform: translateX(-2px);
+}
+
+.roadmap-independent-back-btn .back-arrow-icon {
+    font-size: 14px;
+    font-weight: 900;
+    transition: transform 0.2s ease;
+}
+
+.roadmap-independent-back-btn:hover .back-arrow-icon {
+    transform: translateX(-2px);
+}
+
+/* CENTER: TOPIC NAME SHIFTED UP TO HEADER LEVEL */
 .roadmap-header-title-group {
     display: flex;
     align-items: center;
-    gap: 14px;
-    flex: 1;
-    min-width: 280px;
+    justify-content: center;
+    gap: 12px;
+    flex: 1 1 auto;
+}
+
+.tech-avatar-orb {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    flex-shrink: 0;
+}
+
+.graph-tech-icon {
+    font-size: 19px;
+    line-height: 1;
 }
 
 .roadmap-title-text-col {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 1px;
+}
+
+.graph-title-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--accent-strong);
+    letter-spacing: 0.6px;
 }
 
 .roadmap-heading-metrics-row {
     display: flex;
     align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .roadmap-main-heading {
     margin: 0;
-    font-size: 22px;
+    font-size: 19px;
     font-weight: 800;
     color: var(--text-primary);
     letter-spacing: -0.3px;
+    white-space: nowrap;
 }
 
 .header-metrics-pill {
     background: var(--surface-alt);
     border: 1px solid var(--border);
-    padding: 4px 12px;
+    padding: 3px 10px;
     border-radius: 8px;
-    font-size: 12px;
+    font-size: 11.5px;
     color: var(--text-primary);
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
+    white-space: nowrap;
 }
 
+.metrics-badge-item strong {
+    color: var(--accent-strong);
+}
+
+/* RIGHT: SKILL BADGE + THEME BULB */
 .roadmap-top-right-group {
     display: flex;
     align-items: center;
@@ -2191,54 +2330,22 @@
     flex-shrink: 0;
 }
 
-.back-to-search-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 18px;
-    background: var(--surface-alt);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text-primary);
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.back-to-search-btn:hover {
-    border-color: var(--accent-strong);
-    color: var(--accent-strong);
-    background: color-mix(in srgb, var(--accent-strong) 12%, var(--surface));
-    transform: translateX(-3px);
-}
-
-.back-arrow-icon {
-    font-size: 16px;
-    font-weight: 900;
-    transition: transform 0.2s ease;
-}
-
-.back-to-search-btn:hover .back-arrow-icon {
-    transform: translateX(-2px);
-}
-
 .roadmap-current-skill-badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 18px;
+    padding: 6px 16px;
     background: var(--surface-alt);
     border: 1px solid var(--border);
     border-radius: 20px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--text-primary);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .badge-icon {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1;
 }
 
@@ -2248,9 +2355,12 @@
 
 .knowledge-graph-fullscreen-wrapper {
     width: 100%;
-    max-width: 1400px;
+    max-width: 100%;
     margin: 0 auto;
     box-sizing: border-box;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ==========================================================================
@@ -2261,50 +2371,20 @@
     background: transparent;
     border: none;
     border-radius: 0;
-    padding: 4px 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 14px;
+    gap: 4px;
     box-shadow: none;
     width: 100%;
-    min-height: 700px;
+    flex: 1;
+    min-height: unset;
     box-sizing: border-box;
 }
 
 .knowledge-graph-panel.large-graph-view {
-    min-height: 720px;
-}
-
-.tech-avatar-orb {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    background: var(--surface-alt);
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-    flex-shrink: 0;
-}
-
-.graph-tech-icon {
-    font-size: 24px;
-    line-height: 1;
-}
-
-.graph-title-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10.5px;
-    font-weight: 700;
-    color: var(--accent-strong);
-    letter-spacing: 0.6px;
-    margin-bottom: 2px;
+    min-height: unset;
 }
 
 .graph-tech-name {
@@ -2330,10 +2410,6 @@
     display: flex;
     align-items: center;
     gap: 10px;
-}
-
-.metrics-badge-item strong {
-    color: var(--accent-strong);
 }
 
 .modules-toggle-btn {
@@ -2369,8 +2445,9 @@
 /* LARGE SVG CANVAS CONTAINER (CLEAN & SEAMLESS) */
 .svg-canvas-container {
     width: 100%;
-    aspect-ratio: 1380 / 900;
-    min-height: 640px;
+    aspect-ratio: 1200 / 640;
+    min-height: 520px;
+    max-height: calc(100vh - 85px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2379,11 +2456,13 @@
     border: none;
     border-radius: 16px;
     overflow: hidden;
+    flex: 1;
 }
 
 .svg-canvas-container.large-canvas {
-    aspect-ratio: 1380 / 900;
-    min-height: 700px;
+    aspect-ratio: 1200 / 640;
+    min-height: 540px;
+    max-height: calc(100vh - 85px);
 }
 
 .knowledge-graph-svg {
@@ -2495,7 +2574,7 @@
     font-family: 'DM Mono', monospace;
     font-size: 12px;
     font-weight: 800;
-    fill: #ffffff;
+    fill: var(--text-primary);
     pointer-events: none;
 }
 
@@ -2503,7 +2582,7 @@
     font-family: 'DM Mono', monospace;
     font-size: 8px;
     font-weight: 600;
-    fill: #94a3b8;
+    fill: var(--text-muted);
     pointer-events: none;
 }
 
@@ -2559,7 +2638,7 @@
     stroke: var(--accent-strong);
     stroke-width: 3.5;
     fill: color-mix(in srgb, var(--accent-strong) 18%, var(--surface));
-    filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent-strong) 45%, transparent));
+    filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent-strong) 40%, transparent));
 }
 
 .concept-node-svg-group:hover .concept-svg-aura,
@@ -2570,7 +2649,7 @@
 
 .concept-node-svg-group:hover .concept-svg-title,
 .concept-node-svg-group.active-concept-node .concept-svg-title {
-    fill: #ffffff;
+    fill: var(--text-primary);
     font-weight: 800;
 }
 
@@ -2616,81 +2695,14 @@
    ZOOMED CONCEPT ROADMAP & ENLARGED SUBNODES VIEW
    ========================================================================== */
 
-.roadmap-zoom-hud-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 10px 18px;
-    background: color-mix(in srgb, var(--surface-alt) 90%, transparent);
-    border: 1px solid var(--accent-strong);
-    border-radius: 12px;
-    margin-bottom: 12px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    animation: fadeInHud 0.25s ease-out;
+/* Theme-adaptive backdrop overlay when a concept is expanded */
+.graph-canvas-zoom-backdrop {
+    fill: rgba(0, 0, 0, 0.45);
+    transition: fill 0.3s ease;
 }
 
-@keyframes fadeInHud {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.zoom-back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 14px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text-primary);
-    font-family: inherit;
-    font-size: 12.5px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.zoom-back-btn:hover {
-    background: var(--accent-strong);
-    border-color: var(--accent-strong);
-    color: #ffffff;
-    transform: translateX(-2px);
-}
-
-.zoomed-concept-title-pill {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-}
-
-.pill-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 800;
-    color: var(--accent-strong);
-}
-
-.pill-title {
-    font-weight: 800;
-    color: var(--text-primary);
-}
-
-.pill-count {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    background: color-mix(in srgb, var(--accent-strong) 18%, transparent);
-    color: var(--accent-strong);
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-weight: 700;
-}
-
-.zoom-hint {
-    font-size: 12px;
-    color: var(--text-muted);
+:root:not([data-theme="dark"]) .graph-canvas-zoom-backdrop {
+    fill: rgba(250, 246, 240, 0.72);
 }
 
 /* Zoomed Layer SVG Elements */
@@ -2746,7 +2758,7 @@
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 14px;
     font-weight: 800;
-    fill: #ffffff;
+    fill: var(--text-primary);
     pointer-events: none;
 }
 
@@ -2797,6 +2809,7 @@
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 11px;
     font-weight: 700;
+    fill: var(--text-primary);
     pointer-events: none;
 }
 
@@ -2819,9 +2832,10 @@
     stroke-width: 2.8;
 }
 
+.subnode-svg-group:hover .zoomed-subnode-badge-rect,
 .zoomed-subnode-interactive-group:hover .zoomed-subnode-badge-rect {
-    stroke-width: 2.4;
-    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+    stroke-width: 2.2;
+    filter: drop-shadow(0 4px 10px rgba(122, 63, 45, 0.2));
 }
 
 .quick-nav-label {
@@ -2904,8 +2918,13 @@
 }
 
 @keyframes modalFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .module-modal-dialog-box {
@@ -2921,8 +2940,15 @@
 }
 
 @keyframes modalSlideUp {
-    from { opacity: 0; transform: translateY(24px) scale(0.97); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .modal-inner-panel {
@@ -3371,8 +3397,8 @@
 
 .knowledge-graph-base-layer {
     transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        filter 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
 }
 
@@ -3437,8 +3463,13 @@
 }
 
 @keyframes orbitAuraSpin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .concept-motion-inner-disk {
@@ -3488,9 +3519,9 @@
 
 /* Expansion Host & Centered Morphed Detail Panel */
 .graph-expansion-modal-host {
-    position: absolute;
+    position: fixed;
     inset: 0;
-    z-index: 60;
+    z-index: 99999;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3501,9 +3532,9 @@
 .graph-expansion-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.72);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     z-index: 1;
     cursor: pointer;
 }
@@ -3512,15 +3543,22 @@
     position: relative;
     z-index: 2;
     width: 100%;
-    max-width: 920px;
-    max-height: 88vh;
+    max-width: 960px;
+    max-height: 90vh;
     overflow-y: auto;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 22px;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
-    padding: 28px 32px;
+    border-radius: 20px;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    padding: 26px 30px;
     box-sizing: border-box;
+    margin: auto;
+}
+
+.concept-expanded-panel-wrapper.widescreen-modal {
+    max-width: 1220px;
+    width: min(1220px, 95vw);
+    max-height: 88vh;
 }
 
 .concept-expanded-panel-wrapper::-webkit-scrollbar {
@@ -3537,6 +3575,86 @@
     flex-direction: column;
     gap: 20px;
     outline: none;
+}
+
+/* Widescreen 2-Column Dashboard Grid */
+.concept-detail-widescreen-grid {
+    display: grid;
+    grid-template-columns: 310px 1fr;
+    gap: 22px;
+    align-items: start;
+}
+
+.detail-sidebar-column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.detail-main-content-column {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.sidebar-orbit-box {
+    padding: 14px 16px;
+}
+
+.sidebar-orbit-box .module-orbit-nodes-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.topic-meta-sidebar-card {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.meta-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.meta-card-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--accent-strong);
+    background: color-mix(in srgb, var(--accent-strong) 15%, transparent);
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+.meta-card-level {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.meta-card-text {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.concept-module-content-card.widescreen-content-card {
+    padding: 22px 26px;
+}
+
+@media (max-width: 960px) {
+    .concept-detail-widescreen-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Header & Breadcrumb-Lite */
@@ -3575,12 +3693,30 @@
     opacity: 0.4;
 }
 
+.crumb-parent-concept {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
 .crumb-concept-tag {
-    color: var(--text-secondary);
+    color: var(--accent-strong);
+    font-weight: 700;
+}
+
+.concept-title-icon-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.concept-header-icon {
+    font-size: 26px;
+    line-height: 1;
 }
 
 .concept-main-heading {
-    margin: 2px 0 0;
+    margin: 0;
     font-size: 24px;
     font-weight: 800;
     color: var(--text-primary);
@@ -3831,4 +3967,3 @@
         padding: 20px 18px;
     }
 }
-

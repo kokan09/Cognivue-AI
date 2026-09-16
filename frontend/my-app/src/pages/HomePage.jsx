@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { Lightbulb } from '@theme-toggles/react'
+import '@theme-toggles/react/styles/lightbulb.css'
 import DashboardHeader from '../components/DashboardHeader'
 import Footer from '../components/Footer'
 import TechSearchDropdown from '../components/TechSearchDropdown'
@@ -92,8 +94,9 @@ function HomePage({ theme, setTheme }) {
 
   return (
     <main className="home-dashboard-page curriculum-home-view">
-      <div className="page-shell">
-        <DashboardHeader theme={theme} setTheme={setTheme} />
+      <div className={`page-shell ${graphData ? 'roadmap-fullscreen-shell' : ''}`}>
+        {/* TOP HEADER FOR INPUT / SEARCH PAGE (WITH LOG OUT & THEME BULB) */}
+        {!graphData && <DashboardHeader theme={theme} setTheme={setTheme} />}
 
         {/* VIEW 1: SEARCH / INPUT PAGE (WHEN NO GRAPH IS ACTIVE) */}
         {!graphData && !isLoading && (
@@ -153,22 +156,22 @@ function HomePage({ theme, setTheme }) {
 
         {/* VIEW 3: DEDICATED GRAPH / ROADMAP PAGE */}
         {graphData && !isLoading && (
-          <div className="curriculum-container roadmap-page-view fade-in-modules">
-            {/* Top Navigation Bar with Back Button, Heading + Metrics in Middle, and Skill Badge on Right */}
-            <div className="roadmap-page-top-bar">
-              <div className="roadmap-top-left-group">
+          <div className="roadmap-page-view fade-in-modules">
+            {/* UNIFIED TOP NAVIGATION BAR */}
+            <div className="roadmap-unified-top-bar">
+              {/* Left: Cognivue Branding */}
+              <div className="roadmap-brand-container">
                 <button
                   type="button"
-                  className="back-to-search-btn"
+                  className="roadmap-brand-logo-btn"
                   onClick={handleBackToSearch}
-                  aria-label="Back to search page"
+                  title="Return to Cognivue Course Hub"
                 >
-                  <span className="back-arrow-icon">←</span>
-                  <span>Back to Search</span>
+                  <span className="brand-logo-text">Cognivue<span>.</span></span>
                 </button>
               </div>
 
-              {/* Learning Roadmap Heading with 4 Concepts • 24 Modules to its right */}
+              {/* Center: Topic Name + Metrics */}
               <div className="roadmap-header-title-group">
                 <div className="tech-avatar-orb">
                   <span className="graph-tech-icon">{graphData?.tech?.icon || '⚡'}</span>
@@ -195,17 +198,36 @@ function HomePage({ theme, setTheme }) {
                 </div>
               </div>
 
-              {/* Right Side: Skill Badge */}
+              {/* Right Side: Skill Badge + Theme Toggle Bulb */}
               <div className="roadmap-top-right-group">
                 <div className="roadmap-current-skill-badge">
                   <span className="badge-icon">{graphData?.tech?.icon}</span>
                   <span className="badge-name">{graphData?.tech?.name}</span>
                 </div>
+
+                <div
+                  className={`theme-bulb-wrapper ${theme}`}
+                  onClick={() => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))}
+                  style={{ cursor: 'pointer' }}
+                  title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                >
+                  <Lightbulb aria-pressed={theme === 'light'} />
+                </div>
               </div>
             </div>
 
-            {/* EXPANSIVE ROADMAP GRAPH VIEW */}
+            {/* EXPANSIVE ROADMAP GRAPH VIEW WRAPPER WITH INDEPENDENT BACK BUTTON */}
             <div className="knowledge-graph-fullscreen-wrapper">
+              <button
+                type="button"
+                className="roadmap-independent-back-btn"
+                onClick={handleBackToSearch}
+                aria-label="Back to search page"
+              >
+                <span className="back-arrow-icon">←</span>
+                <span>Back to Search</span>
+              </button>
+
               <KnowledgeGraphView
                 graphData={graphData}
                 selectedConceptId={selectedConceptId}
@@ -238,7 +260,7 @@ function HomePage({ theme, setTheme }) {
           </div>
         )}
 
-        <Footer />
+        {!graphData && <Footer />}
       </div>
     </main>
   )
