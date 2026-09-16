@@ -16,30 +16,29 @@ function formatConceptLines(label) {
 }
 
 /**
- * Calculates balanced, harmonic coordinates for concept nodes
- * Ensures perfectly proportioned distribution that fits the page cleanly without bulging or clutter
+ * Calculates balanced, harmonic circular coordinates for concept nodes
+ * Ensures a perfectly round, spread-out circular planetary orbit
  */
 function calculateConceptCoordinates(totalConcepts, idx, centerX, centerY) {
   if (totalConcepts === 1) {
-    return { x: centerX, y: centerY - 230, angle: -Math.PI / 2 }
+    return { x: centerX, y: centerY - 300, angle: -Math.PI / 2 }
   }
 
   if (totalConcepts === 2) {
-    // Balanced horizontal layout across the screen
+    // Balanced horizontal layout across the circular canvas
     const isLeft = idx === 0
-    const x = isLeft ? centerX - 420 : centerX + 420
+    const x = isLeft ? centerX - 320 : centerX + 320
     const y = centerY
     const angle = isLeft ? Math.PI : 0
     return { x, y, angle }
   }
 
   // 3 or more concepts:
-  // Smooth, harmonious elliptical ring with uniform spacing
-  const rx = 470
-  const ry = 285
+  // Grand, spread-out circular orbit that fully occupies the screen
+  const orbitRadius = 320
   const angle = (idx / totalConcepts) * (2 * Math.PI) - Math.PI / 2
-  const x = Math.round(centerX + rx * Math.cos(angle))
-  const y = Math.round(centerY + ry * Math.sin(angle))
+  const x = Math.round(centerX + orbitRadius * Math.cos(angle))
+  const y = Math.round(centerY + orbitRadius * Math.sin(angle))
   return { x, y, angle }
 }
 
@@ -51,7 +50,11 @@ function KnowledgeGraphView({
 }) {
   const { tech, conceptNodes = [] } = graphData || {}
 
-  // 1. Focused Concept Node state (camera focus & subnodes expansion)
+  // 1. Root Core expansion state:
+  // Level 0 (false): Only the central MERN Stack / Tech node is displayed with invitation badge
+  // Level 1 (true, expandedConceptId=null): Concepts revealed along orbit WITHOUT subnodes
+  // Level 2 (true, expandedConceptId=ID): Focused concept zoomed in and its 6 subnodes blossom outward
+  const [isRootExpanded, setIsRootExpanded] = useState(false)
   const [expandedConceptId, setExpandedConceptId] = useState(null)
 
   // 2. Active Sub-node state (opens full Theory / Test / Module page)
@@ -59,21 +62,18 @@ function KnowledgeGraphView({
   const [activeParentConcept, setActiveParentConcept] = useState(null)
   const [activeModuleType, setActiveModuleType] = useState('concepts')
 
-  // Balanced SVG geometry (1360 x 780)
-  const viewWidth = 1360
-  const viewHeight = 780
+  // Balanced Circular SVG geometry (1000 x 800) - Expansive and fills the screen with zero vertical scrolling
+  const viewWidth = 1000
+  const viewHeight = 800
   const centerX = viewWidth / 2
   const centerY = viewHeight / 2
 
-  // Harmonic track geometry
-  const orbitRadiusX = 470
-  const orbitRadiusY = 285
+  // Pure Grand Circular Track Geometry (Equal X and Y radius)
+  const orbitRadius = 320
   const totalConcepts = conceptNodes.length || 1
 
-  // Distance of subnodes from parent concept center:
-  // Idle: 58px (crisp, compact, non-bulky), Expanded (Zoomed focus): 145px
-  const idleSubnodeDist = 58
-  const expandedSubnodeDist = 145
+  // Distance of subnodes when focused in Level 2: 160px
+  const expandedSubnodeDist = 160
 
   // Calculate coordinates for all concept nodes
   const conceptPositions = conceptNodes.map((concept, idx) => {
@@ -89,22 +89,14 @@ function KnowledgeGraphView({
 
     const subnodes = subConcepts.map((sub, sIdx) => {
       const subAngle = (sIdx / totalSubs) * (2 * Math.PI) - Math.PI / 2
-      // Idle offset from concept center
-      const idleDx = Math.round(idleSubnodeDist * Math.cos(subAngle))
-      const idleDy = Math.round(idleSubnodeDist * Math.sin(subAngle))
-      // Expanded offset from concept center
       const expDx = Math.round(expandedSubnodeDist * Math.cos(subAngle))
       const expDy = Math.round(expandedSubnodeDist * Math.sin(subAngle))
 
       return {
         ...sub,
         angle: subAngle,
-        idleDx,
-        idleDy,
         expDx,
         expDy,
-        idleX: x + idleDx,
-        idleY: y + idleDy,
         expX: x + expDx,
         expY: y + expDy,
         parentConcept: concept
@@ -122,13 +114,28 @@ function KnowledgeGraphView({
     }
   })
 
+  // Sync when selectedConceptId is passed from parent (e.g. sidebar navigation)
+  useEffect(() => {
+    if (selectedConceptId) {
+      setIsRootExpanded(true)
+      setExpandedConceptId(selectedConceptId)
+    }
+  }, [selectedConceptId])
+
+  // Reset to Level 0 whenever tech changes
+  useEffect(() => {
+    setIsRootExpanded(false)
+    setExpandedConceptId(null)
+    setActiveSubnode(null)
+  }, [graphData?.tech?.name])
+
   // Currently expanded concept object
   const expandedConcept = conceptPositions.find(c => c.id === expandedConceptId) || null
   const isAnyExpanded = Boolean(expandedConceptId)
 
   // Camera Zoom & Pan Calculations:
-  // Scale 1.55x and position the clicked concept directly at screen center (centerX, centerY)
-  const cameraScale = isAnyExpanded ? 1.55 : 1
+  // In Level 2: Scale 1.48x and center the clicked concept directly at (centerX, centerY)
+  const cameraScale = isAnyExpanded ? 1.48 : 1
   const cameraTranslateX = isAnyExpanded && expandedConcept
     ? Math.round(centerX - expandedConcept.x * cameraScale)
     : 0
@@ -136,17 +143,34 @@ function KnowledgeGraphView({
     ? Math.round(centerY - expandedConcept.y * cameraScale)
     : 0
 
-  // Handle clicking a main concept node -> Smooth camera pan/zoom to center it & expand its subnodes
-  const handleConceptClick = (conceptId) => {
-    if (expandedConceptId === conceptId) {
+  // Handle clicking the central root tech node
+  const handleRootNodeClick = () => {
+    if (!isRootExpanded) {
+      // Level 0 -> Level 1: Reveal all concept nodes
+      setIsRootExpanded(true)
+    } else if (expandedConceptId) {
+      // Level 2 -> Level 1: Zoom out back to all concepts
       setExpandedConceptId(null)
     } else {
+      // Level 1 -> Level 0: Collapse back to root
+      setIsRootExpanded(false)
+    }
+  }
+
+  // Handle clicking a main concept node
+  const handleConceptClick = (conceptId) => {
+    if (expandedConceptId === conceptId) {
+      // Return to Level 1
+      setExpandedConceptId(null)
+    } else {
+      // Level 1 -> Level 2: Zoom into this concept and blossom its subnodes
+      setIsRootExpanded(true)
       setExpandedConceptId(conceptId)
       onSelectConcept?.(conceptId)
     }
   }
 
-  // Handle clicking a subnode -> Open its interactive learning module page
+  // Handle clicking a subnode -> Open its interactive learning module modal
   const handleSubnodeClick = (sub, parent) => {
     setActiveSubnode(sub)
     setActiveParentConcept(parent || expandedConcept)
@@ -154,9 +178,13 @@ function KnowledgeGraphView({
     onSelectModule?.(sub, parent)
   }
 
-  // Handle collapsing zoom focus
+  // Handle collapsing focus
   const handleCollapse = () => {
-    setExpandedConceptId(null)
+    if (expandedConceptId) {
+      setExpandedConceptId(null)
+    } else if (isRootExpanded) {
+      setIsRootExpanded(false)
+    }
   }
 
   // Handle closing detail panel
@@ -171,13 +199,15 @@ function KnowledgeGraphView({
         if (activeSubnode) {
           handleCloseDetail()
         } else if (expandedConceptId) {
-          handleCollapse()
+          setExpandedConceptId(null)
+        } else if (isRootExpanded) {
+          setIsRootExpanded(false)
         }
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [activeSubnode, expandedConceptId])
+  }, [activeSubnode, expandedConceptId, isRootExpanded])
 
   return (
     <div className={`knowledge-graph-panel large-graph-view relative-container ${isAnyExpanded ? 'is-camera-zoomed' : ''}`}>
@@ -190,7 +220,7 @@ function KnowledgeGraphView({
         >
           <defs>
             <radialGradient id="centerRadialGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.08" />
+              <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.09" />
               <stop offset="60%" stopColor="var(--accent)" stopOpacity="0.02" />
               <stop offset="100%" stopColor="transparent" stopOpacity="0" />
             </radialGradient>
@@ -202,9 +232,9 @@ function KnowledgeGraphView({
           </defs>
 
           {/* BACKGROUND AMBIENT GLOW */}
-          <ellipse cx={centerX} cy={centerY} rx={orbitRadiusX * 1.15} ry={orbitRadiusY * 1.2} fill="url(#centerRadialGlow)" />
+          <circle cx={centerX} cy={centerY} r={orbitRadius * 1.35} fill="url(#centerRadialGlow)" />
 
-          {/* CLICK-AWAY CATCHER: Closes expanded focus when canvas background is clicked (completely transparent) */}
+          {/* CLICK-AWAY CATCHER: Closes expanded focus when canvas background is clicked */}
           {isAnyExpanded && (
             <rect
               x="0"
@@ -233,334 +263,383 @@ function KnowledgeGraphView({
               willChange: 'transform'
             }}
           >
-            {/* 1. BACKGROUND WIDESCREEN RADAR TRACKS */}
+            {/* 1. BACKGROUND WIDESCREEN RADAR TRACKS (PURE CIRCLES) */}
             <g
               style={{
-                opacity: isAnyExpanded ? 0.08 : 0.75,
+                opacity: isAnyExpanded ? 0.08 : isRootExpanded ? 0.75 : 0.55,
                 transition: 'opacity 0.4s ease'
               }}
             >
-              <ellipse cx={centerX} cy={centerY} rx={orbitRadiusX * 1.28} ry={orbitRadiusY * 1.26} className="orbit-track-ring outer-faint-track" />
-              <ellipse cx={centerX} cy={centerY} rx={orbitRadiusX} ry={orbitRadiusY} className="orbit-track-ring main-track" />
-              <ellipse cx={centerX} cy={centerY} rx={orbitRadiusX * 0.6} ry={orbitRadiusY * 0.6} className="orbit-track-ring inner-track" />
-              <ellipse cx={centerX} cy={centerY} rx={orbitRadiusX * 0.3} ry={orbitRadiusY * 0.3} className="orbit-track-ring core-faint-track" />
+              <circle cx={centerX} cy={centerY} r={orbitRadius * 1.28} className="orbit-track-ring outer-faint-track" />
+              <circle cx={centerX} cy={centerY} r={orbitRadius} className="orbit-track-ring main-track" />
+              <circle cx={centerX} cy={centerY} r={orbitRadius * 0.62} className="orbit-track-ring inner-track" />
+              <circle cx={centerX} cy={centerY} r={orbitRadius * 0.32} className="orbit-track-ring core-faint-track" />
 
-              <line x1={centerX - orbitRadiusX * 1.25} y1={centerY} x2={centerX + orbitRadiusX * 1.25} y2={centerY} className="radar-grid-line" />
-              <line x1={centerX} y1={centerY - orbitRadiusY * 1.25} x2={centerX} y2={centerY + orbitRadiusY * 1.25} className="radar-grid-line" />
+              <line x1={centerX - orbitRadius * 1.25} y1={centerY} x2={centerX + orbitRadius * 1.25} y2={centerY} className="radar-grid-line" />
+              <line x1={centerX} y1={centerY - orbitRadius * 1.25} x2={centerX} y2={centerY + orbitRadius * 1.25} className="radar-grid-line" />
             </g>
 
             {/* 2. CENTRAL ROOT TECHNOLOGY NODE ("MERN Stack" / "JavaScript" / "Java") */}
             <g
-              className="graph-root-node-group"
+              className={`graph-root-node-group ${!isRootExpanded ? 'is-level-0-root' : ''}`}
               style={{
-                opacity: isAnyExpanded ? 0.15 : 1,
-                transition: 'opacity 0.4s ease',
-                pointerEvents: isAnyExpanded ? 'none' : 'auto'
+                opacity: isAnyExpanded ? 0.12 : 1,
+                transition: 'opacity 0.4s ease, transform 0.25s ease',
+                pointerEvents: isAnyExpanded ? 'none' : 'auto',
+                cursor: 'pointer'
               }}
-              onClick={handleCollapse}
+              onClick={handleRootNodeClick}
               tabIndex={isAnyExpanded ? -1 : 0}
-              role="img"
-              aria-label={`${tech?.name || 'Technology'} Core`}
+              role="button"
+              aria-label={`${tech?.name || 'Technology'} Core Node. Click to ${isRootExpanded ? 'collapse' : 'expand curriculum'}.`}
             >
-              <circle cx={centerX} cy={centerY} r={52} className="root-node-halo" />
-              <circle cx={centerX} cy={centerY} r={42} fill="url(#rootNodeGradient)" className="root-node-circle" />
-              <text x={centerX} y={centerY - 6} className="root-node-icon" textAnchor="middle">
+              {/* Outer Pulsing Halo */}
+              <circle
+                cx={centerX}
+                cy={centerY}
+                r={!isRootExpanded ? 72 : 64}
+                className={`root-node-halo ${!isRootExpanded ? 'is-pulsing-halo' : ''}`}
+                style={{
+                  transition: 'r 0.35s ease'
+                }}
+              />
+
+              {/* Main Core Circle */}
+              <circle cx={centerX} cy={centerY} r={54} fill="url(#rootNodeGradient)" className="root-node-circle" />
+
+              {/* Technology Icon */}
+              <text x={centerX} y={centerY - 8} className="root-node-icon" textAnchor="middle" style={{ fontSize: '34px' }}>
                 {tech?.icon || '🚀'}
               </text>
-              <text x={centerX} y={centerY + 15} className="root-node-label" textAnchor="middle">
+
+              {/* Technology Label */}
+              <text x={centerX} y={centerY + 18} className="root-node-label" textAnchor="middle" style={{ fontSize: '15px' }}>
                 {tech?.name || 'CORE'}
               </text>
             </g>
 
-            {/* 3. CONNECTOR LINES: ROOT TO CONCEPT NODES */}
-            {conceptPositions.map((pos) => {
-              const isThisExpanded = pos.id === expandedConceptId
-              const isDimmed = isAnyExpanded && !isThisExpanded
+            {/* 3. CONNECTOR LINES: ROOT TO CONCEPT NODES (SPRING ANIMATED RADIAL EXTENSION) */}
+            <AnimatePresence>
+              {isRootExpanded && (
+                <g className="graph-spoke-lines-layer">
+                  {conceptPositions.map((pos, idx) => {
+                    const isThisExpanded = pos.id === expandedConceptId
+                    const isDimmed = isAnyExpanded && !isThisExpanded
 
-              return (
-                <g
-                  key={`root-link-${pos.id}`}
-                  style={{
-                    opacity: isDimmed ? 0.05 : isThisExpanded ? 1 : 0.65,
-                    transition: 'opacity 0.4s ease'
-                  }}
-                >
-                  <line
-                    x1={centerX}
-                    y1={centerY}
-                    x2={pos.x}
-                    y2={pos.y}
-                    className={`graph-connector-line ${isThisExpanded ? 'active-link' : ''}`}
-                  />
-                  {isThisExpanded && (
-                    <circle
-                      cx={Math.round(centerX + (pos.x - centerX) * 0.5)}
-                      cy={Math.round(centerY + (pos.y - centerY) * 0.5)}
-                      r={4}
-                      className="synapse-pulse-dot"
-                    />
-                  )}
+                    return (
+                      <motion.g
+                        key={`root-link-${pos.id}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: isDimmed ? 0.04 : isThisExpanded ? 1 : 0.65 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                      >
+                        <motion.line
+                          x1={centerX}
+                          y1={centerY}
+                          initial={{ x2: centerX, y2: centerY }}
+                          animate={{ x2: pos.x, y2: pos.y }}
+                          exit={{ x2: centerX, y2: centerY }}
+                          transition={{
+                            type: 'spring',
+                            stiffness: 180,
+                            damping: 22,
+                            delay: idx * 0.03
+                          }}
+                          className={`graph-connector-line ${isThisExpanded ? 'active-link' : ''}`}
+                        />
+                        {isThisExpanded && (
+                          <circle
+                            cx={Math.round(centerX + (pos.x - centerX) * 0.5)}
+                            cy={Math.round(centerY + (pos.y - centerY) * 0.5)}
+                            r={5}
+                            className="synapse-pulse-dot"
+                          />
+                        )}
+                      </motion.g>
+                    )
+                  })}
                 </g>
-              )
-            })}
+              )}
+            </AnimatePresence>
 
-            {/* 4. MAIN CONCEPT NODES & THEIR SUBNODES */}
-            {conceptPositions.map((pos) => {
-              const isThisExpanded = pos.id === expandedConceptId
-              const isDimmed = isAnyExpanded && !isThisExpanded
-              const isSelected = pos.id === selectedConceptId
-              const { line1, line2 } = pos.textLines
+            {/* 4. MAIN CONCEPT NODES & SUBNODES (SPRING ANIMATED RADIAL BLOSSOM) */}
+            <AnimatePresence>
+              {isRootExpanded && conceptPositions.map((pos, idx) => {
+                const isThisExpanded = pos.id === expandedConceptId
+                const isDimmed = isAnyExpanded && !isThisExpanded
+                const isSelected = pos.id === selectedConceptId
+                const { line1, line2 } = pos.textLines
 
-              return (
-                <g
-                  key={`concept-cluster-${pos.id}`}
-                  transform={`translate(${pos.x}, ${pos.y})`}
-                  style={{
-                    opacity: isDimmed ? 0.08 : 1,
-                    transition: 'opacity 0.4s ease',
-                    pointerEvents: isDimmed ? 'none' : 'auto'
-                  }}
-                >
-                  {/* A. CONNECTOR LINES TO SUBNODES */}
-                  <g
+                return (
+                  <motion.g
+                    key={`concept-cluster-${pos.id}`}
+                    initial={{
+                      opacity: 0,
+                      scale: 0.2,
+                      x: centerX,
+                      y: centerY
+                    }}
+                    animate={{
+                      opacity: isDimmed ? 0.08 : 1,
+                      scale: 1,
+                      x: pos.x,
+                      y: pos.y
+                    }}
+                    exit={{
+                      opacity: 0,
+                      scale: 0.2,
+                      x: centerX,
+                      y: centerY
+                    }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 240,
+                      damping: 22,
+                      delay: idx * 0.035
+                    }}
                     style={{
-                      opacity: isThisExpanded ? 1 : 0.4,
-                      transition: 'opacity 0.4s ease'
+                      pointerEvents: isDimmed ? 'none' : 'auto'
                     }}
                   >
-                    {pos.subnodes.map((sub) => {
-                      const curDx = isThisExpanded ? sub.expDx : sub.idleDx
-                      const curDy = isThisExpanded ? sub.expDy : sub.idleDy
-
-                      return (
-                        <line
-                          key={`sub-link-${sub.id}`}
-                          x1={0}
-                          y1={0}
-                          x2={curDx}
-                          y2={curDy}
-                          stroke={sub.color || 'var(--accent-strong)'}
-                          strokeWidth={isThisExpanded ? 2.2 : 1.3}
-                          className={`satellite-connector-line ${isThisExpanded ? 'active-satellite-link' : ''}`}
-                          style={{
-                            transition: 'x2 0.48s cubic-bezier(0.16, 1, 0.3, 1), y2 0.48s cubic-bezier(0.16, 1, 0.3, 1), stroke-width 0.3s ease'
-                          }}
-                        />
-                      )
-                    })}
-                  </g>
-
-                  {/* B. SUBNODES */}
-                  <g>
-                    {pos.subnodes.map((sub) => {
-                      const curDx = isThisExpanded ? sub.expDx : sub.idleDx
-                      const curDy = isThisExpanded ? sub.expDy : sub.idleDy
-                      const subColor = sub.color || '#F2B880'
-
-                      return (
-                        <g
-                          key={`subnode-group-${sub.id}`}
-                          transform={`translate(${curDx}, ${curDy})`}
-                          style={{
-                            transition: 'transform 0.48s cubic-bezier(0.16, 1, 0.3, 1)',
-                            cursor: 'pointer'
-                          }}
-                          className={`subnode-svg-group ${isThisExpanded ? 'is-subnode-expanded' : 'is-subnode-idle'}`}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleSubnodeClick(sub, pos)
-                          }}
-                          tabIndex={isDimmed ? -1 : 0}
-                          role="button"
-                          aria-label={`Sub-concept: ${sub.label}. Click to open Theory & Tests.`}
+                    {/* A. SUBNODES (ANIMATED ORBITAL BURST IN LEVEL 2) */}
+                    <AnimatePresence>
+                      {isThisExpanded && (
+                        <motion.g
+                          key={`subnodes-container-${pos.id}`}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="concept-expanded-subnodes-layer"
                         >
-                          {/* Outer glowing aura ring when expanded */}
-                          {isThisExpanded && (
-                            <circle
-                              cx={0}
-                              cy={0}
-                              r={28}
-                              stroke={subColor}
-                              className="zoomed-subnode-aura-ring"
-                            />
-                          )}
-
-                          {/* Subnode circle: r=20 on focus, r=13 on idle */}
-                          <circle
-                              cx={0}
-                              cy={0}
-                              r={isThisExpanded ? 20 : 13}
-                              stroke={subColor}
-                              strokeWidth={isThisExpanded ? 2.5 : 1.4}
-                              fill={isThisExpanded ? 'var(--surface-alt)' : 'var(--surface)'}
-                              className="subnode-svg-circle"
-                              style={{
-                                transition: 'r 0.3s ease, stroke-width 0.3s ease, fill 0.3s ease'
+                          {/* Satellite connector lines */}
+                          {pos.subnodes.map((sub, sIdx) => (
+                            <motion.line
+                              key={`sub-link-${sub.id}`}
+                              x1={0}
+                              y1={0}
+                              initial={{ x2: 0, y2: 0, opacity: 0 }}
+                              animate={{ x2: sub.expDx, y2: sub.expDy, opacity: 1 }}
+                              exit={{ x2: 0, y2: 0, opacity: 0 }}
+                              transition={{
+                                type: 'spring',
+                                stiffness: 280,
+                                damping: 24,
+                                delay: sIdx * 0.035
                               }}
+                              stroke={sub.color || 'var(--accent-strong)'}
+                              strokeWidth={2.4}
+                              className="satellite-connector-line active-satellite-link"
                             />
+                          ))}
 
-                          {/* Subnode icon */}
+                          {/* Satellite subnodes */}
+                          {pos.subnodes.map((sub, sIdx) => {
+                            const subColor = sub.color || '#F2B880'
+
+                            return (
+                              <motion.g
+                                key={`subnode-group-${sub.id}`}
+                                initial={{ opacity: 0, scale: 0.2, x: 0, y: 0 }}
+                                animate={{ opacity: 1, scale: 1, x: sub.expDx, y: sub.expDy }}
+                                exit={{ opacity: 0, scale: 0.2, x: 0, y: 0 }}
+                                transition={{
+                                  type: 'spring',
+                                  stiffness: 300,
+                                  damping: 23,
+                                  delay: sIdx * 0.035
+                                }}
+                                style={{ cursor: 'pointer' }}
+                                className="subnode-svg-group is-subnode-expanded"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleSubnodeClick(sub, pos)
+                                }}
+                                tabIndex={0}
+                                role="button"
+                                aria-label={`Sub-concept: ${sub.label}. Click to open Theory & Tests.`}
+                              >
+                                {/* Outer glowing aura ring */}
+                                <circle
+                                  cx={0}
+                                  cy={0}
+                                  r={34}
+                                  stroke={subColor}
+                                  className="zoomed-subnode-aura-ring"
+                                />
+
+                                {/* Subnode circle */}
+                                <circle
+                                  cx={0}
+                                  cy={0}
+                                  r={26}
+                                  stroke={subColor}
+                                  strokeWidth={3}
+                                  fill="var(--surface-alt)"
+                                  className="subnode-svg-circle"
+                                />
+
+                                {/* Subnode icon */}
+                                <text
+                                  x={0}
+                                  y={7.5}
+                                  fontSize="18px"
+                                  className="subnode-svg-icon"
+                                  textAnchor="middle"
+                                >
+                                  {sub.icon || '📌'}
+                                </text>
+
+                                {/* High-contrast subnode label badge */}
+                                <g
+                                  transform="translate(-65, 32)"
+                                  className="subnode-badge-enter"
+                                >
+                                  <rect
+                                    x="0"
+                                    y="0"
+                                    width="130"
+                                    height="26"
+                                    rx="7"
+                                    fill="var(--surface)"
+                                    stroke={subColor}
+                                    strokeWidth="1.5"
+                                    className="zoomed-subnode-badge-rect"
+                                  />
+                                  <text
+                                    x="65"
+                                    y="13"
+                                    textAnchor="middle"
+                                    fill="var(--text-primary)"
+                                    fontSize="11px"
+                                    className="zoomed-subnode-badge-text-primary"
+                                  >
+                                    {sub.shortName || sub.label}
+                                  </text>
+                                  <text
+                                    x="65"
+                                    y="22"
+                                    textAnchor="middle"
+                                    fill={subColor}
+                                    fontSize="8.5px"
+                                    className="zoomed-subnode-badge-text-tag"
+                                  >
+                                    {sub.tag || 'SUB-TYPE'}
+                                  </text>
+                                </g>
+                              </motion.g>
+                            )
+                          })}
+                        </motion.g>
+                      )}
+                    </AnimatePresence>
+
+                    {/* B. MAIN CONCEPT NODE (CLICKABLE TO ZOOM AND REVEAL SUBNODES) */}
+                    <g
+                      className={`concept-node-svg-group ${isThisExpanded ? 'is-active-expanded-node' : ''} ${isSelected ? 'active-concept-node' : ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleConceptClick(pos.id)
+                      }}
+                      tabIndex={isDimmed ? -1 : 0}
+                      role="button"
+                      aria-label={`Concept: ${pos.label}. Click to ${isThisExpanded ? 'collapse' : 'focus and inspect subnodes'}.`}
+                      aria-expanded={isThisExpanded}
+                    >
+                      {/* Glowing Animated Outer Aura */}
+                      <circle
+                        cx={0}
+                        cy={0}
+                        r={isThisExpanded ? 78 : 62}
+                        className="concept-svg-aura"
+                        style={{
+                          opacity: isThisExpanded ? 0.95 : undefined,
+                          strokeWidth: isThisExpanded ? 2.8 : 1.8,
+                          transition: 'r 0.4s ease, opacity 0.4s ease'
+                        }}
+                      />
+
+                      {/* Main Concept Circle */}
+                      <circle
+                        cx={0}
+                        cy={0}
+                        r={isThisExpanded ? 66 : 52}
+                        strokeWidth={isThisExpanded ? 3.6 : 2.6}
+                        fill={
+                          isThisExpanded
+                            ? 'color-mix(in srgb, var(--accent-strong) 25%, var(--surface))'
+                            : isSelected
+                              ? 'color-mix(in srgb, var(--accent-strong) 18%, var(--surface))'
+                              : 'var(--surface)'
+                        }
+                        className="concept-svg-circle"
+                        style={{
+                          transition: 'r 0.4s ease, stroke-width 0.4s ease, fill 0.4s ease'
+                        }}
+                      />
+
+                      {/* Number Badge */}
+                      <text
+                        x={0}
+                        y={isThisExpanded ? -24 : -20}
+                        fontSize={isThisExpanded ? '12px' : '11px'}
+                        className="concept-svg-num"
+                        textAnchor="middle"
+                      >
+                        0{pos.index + 1}
+                      </text>
+
+                      {/* Multiline title text */}
+                      {line2 ? (
+                        <>
                           <text
                             x={0}
-                            y={isThisExpanded ? 5.5 : 4}
-                            fontSize={isThisExpanded ? '14px' : '10.5px'}
-                            className="subnode-svg-icon"
+                            y={isThisExpanded ? -4 : -3}
+                            fontSize={isThisExpanded ? '13.5px' : '12px'}
+                            className="concept-svg-title line-1"
                             textAnchor="middle"
-                            style={{
-                              transition: 'font-size 0.3s ease, y 0.3s ease'
-                            }}
                           >
-                            {sub.icon || '📌'}
+                            {line1}
                           </text>
-
-                          {/* High-contrast subnode label badge under the node when expanded */}
-                          {isThisExpanded && (
-                            <g
-                              transform="translate(-60, 24)"
-                              className="subnode-badge-enter"
-                            >
-                              <rect
-                                x="0"
-                                y="0"
-                                width="120"
-                                height="24"
-                                rx="6"
-                                fill="var(--surface)"
-                                stroke={subColor}
-                                strokeWidth="1.4"
-                                className="zoomed-subnode-badge-rect"
-                              />
-                              <text
-                                x="60"
-                                y="12"
-                                textAnchor="middle"
-                                fill="var(--text-primary)"
-                                fontSize="10.5px"
-                                className="zoomed-subnode-badge-text-primary"
-                              >
-                                {sub.shortName || sub.label}
-                              </text>
-                              <text
-                                x="60"
-                                y="20"
-                                textAnchor="middle"
-                                fill={subColor}
-                                fontSize="8px"
-                                className="zoomed-subnode-badge-text-tag"
-                              >
-                                {sub.tag || 'SUB-TYPE'}
-                              </text>
-                            </g>
-                          )}
-                        </g>
-                      )
-                    })}
-                  </g>
-
-                  {/* C. MAIN CONCEPT NODE */}
-                  <g
-                    className={`concept-node-svg-group ${isThisExpanded ? 'is-active-expanded-node' : ''} ${isSelected ? 'active-concept-node' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleConceptClick(pos.id)
-                    }}
-                    tabIndex={isDimmed ? -1 : 0}
-                    role="button"
-                    aria-label={`Concept: ${pos.label}. Click to ${isThisExpanded ? 'collapse' : 'focus and inspect subnodes'}.`}
-                    aria-expanded={isThisExpanded}
-                  >
-                    {/* Glowing Animated Outer Aura */}
-                    <circle
-                      cx={0}
-                      cy={0}
-                      r={isThisExpanded ? 62 : 49}
-                      className="concept-svg-aura"
-                      style={{
-                        opacity: isThisExpanded ? 0.95 : undefined,
-                        strokeWidth: isThisExpanded ? 2.5 : 1.5,
-                        transition: 'r 0.4s ease, opacity 0.4s ease'
-                      }}
-                    />
-
-                    {/* Main Concept Circle */}
-                    <circle
-                      cx={0}
-                      cy={0}
-                      r={isThisExpanded ? 52 : 41}
-                      strokeWidth={isThisExpanded ? 3.4 : 2.4}
-                      fill={
-                        isThisExpanded
-                          ? 'color-mix(in srgb, var(--accent-strong) 25%, var(--surface))'
-                          : isSelected
-                          ? 'color-mix(in srgb, var(--accent-strong) 18%, var(--surface))'
-                          : 'var(--surface)'
-                      }
-                      className="concept-svg-circle"
-                      style={{
-                        transition: 'r 0.4s ease, stroke-width 0.4s ease, fill 0.4s ease'
-                      }}
-                    />
-
-                    {/* Number Badge */}
-                    <text
-                      x={0}
-                      y={isThisExpanded ? -20 : -16}
-                      fontSize={isThisExpanded ? '10.5px' : '9.5px'}
-                      className="concept-svg-num"
-                      textAnchor="middle"
-                    >
-                      0{pos.index + 1}
-                    </text>
-
-                    {/* Multiline title text */}
-                    {line2 ? (
-                      <>
+                          <text
+                            x={0}
+                            y={isThisExpanded ? 15 : 13}
+                            fontSize={isThisExpanded ? '12.5px' : '11px'}
+                            className="concept-svg-title line-2"
+                            textAnchor="middle"
+                          >
+                            {line2}
+                          </text>
+                        </>
+                      ) : (
                         <text
                           x={0}
-                          y={isThisExpanded ? -3 : -2}
-                          fontSize={isThisExpanded ? '12px' : '10.5px'}
-                          className="concept-svg-title line-1"
+                          y={isThisExpanded ? 7 : 6}
+                          fontSize={isThisExpanded ? '15px' : '13.5px'}
+                          className="concept-svg-title single-line"
                           textAnchor="middle"
                         >
                           {line1}
                         </text>
+                      )}
+
+                      {/* Subtitle tag when expanded */}
+                      {isThisExpanded && (
                         <text
                           x={0}
-                          y={isThisExpanded ? 13 : 11}
-                          fontSize={isThisExpanded ? '11px' : '9.5px'}
-                          className="concept-svg-title line-2"
+                          y={38}
+                          className="concept-svg-subhint-text"
                           textAnchor="middle"
                         >
-                          {line2}
+                          6 Subtypes • Click to reset
                         </text>
-                      </>
-                    ) : (
-                      <text
-                        x={0}
-                        y={isThisExpanded ? 6 : 5}
-                        fontSize={isThisExpanded ? '13px' : '11.5px'}
-                        className="concept-svg-title single-line"
-                        textAnchor="middle"
-                      >
-                        {line1}
-                      </text>
-                    )}
-
-                    {/* Subtitle tag when expanded */}
-                    {isThisExpanded && (
-                      <text
-                        x={0}
-                        y={32}
-                        className="concept-svg-subhint-text"
-                        textAnchor="middle"
-                      >
-                        6 Subtypes • Click to reset
-                      </text>
-                    )}
-                  </g>
-                </g>
-              )
-            })}
+                      )}
+                    </g>
+                  </motion.g>
+                )
+              })}
+            </AnimatePresence>
           </g>
         </svg>
       </div>
