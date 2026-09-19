@@ -2831,8 +2831,17 @@
 }
 
 @keyframes navPulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.4); opacity: 0.55; }
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.4);
+        opacity: 0.55;
+    }
 }
 
 .nav-pill-text {
@@ -2919,11 +2928,14 @@
 }
 
 @keyframes haloBreathe {
-    0%, 100% {
+
+    0%,
+    100% {
         stroke-width: 1.5;
         opacity: 0.45;
         stroke: var(--accent-strong);
     }
+
     50% {
         stroke-width: 2.8;
         opacity: 0.95;
@@ -3183,6 +3195,7 @@
     opacity: 0.6;
     transition: opacity 0.2s ease, transform 0.2s ease;
     animation: orbitAuraSpin 20s linear infinite;
+    
 }
 
 .zoomed-subnode-circle {
