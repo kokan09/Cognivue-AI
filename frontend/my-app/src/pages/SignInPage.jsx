@@ -8,6 +8,7 @@ function SignInPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const {sign_in_user} = useAuthContext();
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -17,8 +18,19 @@ function SignInPage() {
       return
     }
 
+     const form = event.currentTarget;
+
+    const payload = {
+      email: form.elements.email.value,
+      password: form.elements.password.value
+    };
+
+    const resp = await sign_in_user(payload);
+
     setError('')
     setLoading(true)
+
+    alert(resp.message);
 
     setTimeout(() => {
       setLoading(false)

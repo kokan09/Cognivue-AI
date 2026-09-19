@@ -7,6 +7,8 @@ import scraperRouter from "./routes/scraper.route.js";
 
 //Routes
 import authRouter from "./routes/auth.route.js";
+import courseRoute from "./routes/course.route.js";
+import knowledgeGraphRoutes from "./routes/knowledgeGraph.route.js";
 
 const app = express();
 
@@ -24,6 +26,8 @@ else app.use(morgan("dev"));
 //Routes
 app.use("/api/auth", authRouter);
 app.use("/api/scraper", scraperRouter);
+app.use("/api/courses", courseRoute);
+app.use("/api/knowledge-graph", knowledgeGraphRoutes);
 
 app.get("/", (req, res) => {
     res.status(200).json({

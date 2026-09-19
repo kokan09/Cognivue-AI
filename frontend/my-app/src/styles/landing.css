@@ -58,6 +58,10 @@
   gap: 20px;
 }
 
+.text-button{
+  color: var(--text-link);
+}
+
 .hero-note {
   margin-top: 30px;
   color: var(--text-muted);

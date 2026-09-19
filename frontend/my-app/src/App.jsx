@@ -4,7 +4,6 @@ import LandingPage from './pages/LandingPage'
 import SignInPage from './pages/SignInPage'
 import SignUpPage from './pages/SignUpPage'
 import HomePage from './pages/HomePage'
-import TestPage from './pages/TestPage'
 import { AuthContextProvider } from './Features/auth/auth.context.jsx'
 
 function getInitialTheme() {
